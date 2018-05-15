@@ -14,7 +14,7 @@
 				<input 
 				class="my-input" 
 				v-model="loginInfo.key" 
-				placeholder="用户名热更新"
+				placeholder="用户名123456"
 				type="text"
 				></input>
 			</div>
