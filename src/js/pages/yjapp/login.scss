@@ -1,0 +1,63 @@
+@import 'src/js/css/base';
+.login-content {
+  position: relative;
+  width:750px;
+  height: 1334px;
+  background-repeat: no-repeat;
+  background-size: 750px 1334px;
+}
+.login-box {
+  position: relative;
+  margin-left: 89px;
+  margin-top: 268px;
+  width: 572px;
+  height: 684px;
+  background-color: rgba(255,255,255,0.8);
+  text-align: center;
+}
+.image {
+  display: block;
+  margin-left: 185px;
+  margin-top: 65px;
+  margin-bottom: 86px;
+  width:220px; 
+  height:78px; 
+  
+}
+.my-icon-input {
+  flex-direction: row;
+  width:505px; 
+  height: 78px;
+  margin-left: 36px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #68b8f6;
+}
+.user-icon {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  left: 20px;
+  top: 24px;
+}
+.my-input {
+  width:505px; 
+  height:74px; 
+  font-size: 24px;
+  line-height: 74px;
+  font-size: 36px; 
+  text-align: center;
+  color: #2e2e2e ;
+}
+.login-btn {
+  width: 544px;
+  height: 128px;
+  margin-top: 77px;
+  justify-content: center;
+  margin-left: 30px;
+}
+.title-bg1 {
+  width: 750px;
+  height: 1334px;
+  position:absolute;
+}
