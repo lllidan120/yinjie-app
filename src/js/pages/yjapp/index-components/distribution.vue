@@ -2,15 +2,23 @@
 	<waterfall :show-scrollbar="false">
 		<header class="top"> 
 				<image 
-				src="bmlocal://assets/distribution/bg.png" 
+				src="http://yj.kiy.cn/Content/Images/App/assets/distribution/bg.png" 
 				class="top-img" ></image>
 		</header>
-		<cell class="bottom">
-			<div class="bottom-box" v-for="item in bottomList" @click="goPage(item)" v-if="item.sub">
+		<cell class="bottom" >
+			<div class="bottom-box" v-for="item in bottomList" @click="goPage(item)" >
 				<image class="bottom-box-left" :src="item.icon"></image>
 				<text class="bottom-box-center">{{ item.sub }}</text>
 				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
 			</div>
+			<!-- <div class="bottom-box" @click="wxPay">
+				<text class="bottom-box-center">微信支付</text>
+				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
+			</div>
+			<div class="bottom-box" @click="toMap">
+				<text class="bottom-box-center">地图</text>
+				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
+			</div> -->
 		</cell>
 	</waterfall>      
 </template>
@@ -24,7 +32,26 @@
 		},
 		data () {
 			return {
-				bottomList : Config.distribution
+				bottomList : [
+					// {
+					// 	title: '未收货',
+					// 	icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文档.png',
+					// 	sub: '批量收货',
+					// 	type: {
+					// 		'@orderStatu': '1,2,5,10,6,7,8'
+					// 	},
+					// 	name: 'dis-list'
+					// }, 
+					{
+						title: '未收款',
+						icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件记录.png',
+						sub: '批量收款',
+						type: {
+							'@isPay': 0
+						},
+						name: 'dis-list'
+					}
+				]
 			}
 		},
 		beforeCreate: function () {
@@ -50,7 +77,30 @@
 	    				type: item.type
 	    			}
 	    		})
-	    	}
+	    	},
+			wxPay() {
+				var _this = this;
+				var bmWXPay = weex.requireModule('bmPay')
+				var result = bmWXPay.isInstallWXApp(function(res){
+					
+					if(res.data) {
+						// 已安装微信
+						_this.$notice.toast({
+							message: '已经安装微信'
+						})
+					} else {
+						 _this.$notice.toast({
+							message: '请先安装微信'
+						})
+					}
+				})
+			},
+			toMap() {
+				this.$router.open({
+	    			name: 'map',
+	    			type: 'PUSH'
+	    		})
+			}
 	    }
 	}
 </script>

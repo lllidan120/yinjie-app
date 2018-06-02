@@ -1,11 +1,12 @@
 <template>
   <div>
     <datepick @selectTime="selectTime" @startDateFinish="startDateFinish" @endDateFinish="endDateFinish"></datepick>
-    <list @loadmore="getData" ref="list" loadmoreoffset="10" :showRefresh="true" @refresh="onrefresh">
+     <!-- @loadmore="getData" -->
+    <list  ref="list" loadmoreoffset="10" :showRefresh="true" @refresh="onrefresh">
       <cell v-for="(item,index) in listData" :key="index">
         <div class="border-cell" @click="toDetail(item)">
-          <img class="img left" v-if="item.payType === '微信'" src="bmlocal://assets/wechatpay.png" alt="">
-          <img class="img left" v-if="item.payType === '支付宝'" src="bmlocal://assets/alipay.png" alt="">
+          <img class="img left" v-if="item.payType != '支付宝'|| item.payType === '中信微信'" :src="wechatpay" alt="">
+          <img class="img left" v-if="item.payType === '支付宝'|| item.payType === '中信支付宝'" :src="alipay" alt="">
           <div class="center">
             <text class="text">{{item.out_trade_no}}</text>
             <text class="text overflow">订单号：{{item.strIDs}}</text>
@@ -14,8 +15,12 @@
           <text class="right">{{item.intMoney}}元</text>
         </div>
       </cell>
+      <loading class="loading" @loading="getData" :display="showload ? 'show' : 'hide'">
+        <text class="indicator-text">加载更多 ...</text>
+        <loading-indicator class="indicator"></loading-indicator>
+      </loading>
     </list>
-    <image src='http://img.lanrentuku.com/img/allimg/1212/5-121204194026.gif' v-if="showload" style="height:40px;width:300px,align-items:center;background-color:#fff;" resize="contain" quality="original"></image>
+    <!-- <image src='http://img.lanrentuku.com/img/allimg/1212/5-121204194026.gif' v-if="showload" style="height:40px;width:300px,align-items:center;background-color:#fff;" resize="contain" quality="original"></image> -->
   </div>
 </template>
 <script>
@@ -33,8 +38,8 @@ export default {
         "@rowIndex": 0,
         "@pageSize": 20
       },
-      wechatpay: "bmlocal://assets/wechatpay.png",
-      alipay: "bmlocal://assets/alipay.png",
+      wechatpay: "http://yj.kiy.cn/Content/Images/App/wechatpay.png",
+      alipay: "http://yj.kiy.cn/Content/Images/App/alipay.png",
       showload: false,
       refresh: false,
     };
@@ -58,6 +63,9 @@ export default {
       this.param = Object.assign(this.param, { "@adminId": this.userInfo.adminId });
       try {
         var RES = await API.YJ_PAYMENTLIST(this.param);
+        if(this.param["@rowIndex"] === 1) {
+          this.listData = []
+        }
         var RESDATA = JSON.parse(RES.DATA);
         var DGDATA = JSON.parse(RESDATA.dgData);
         if (DGDATA.length != 0) {
@@ -99,18 +107,18 @@ export default {
     },
     startDateFinish (startDate) {
       this.reset()
-      this.param["@beginDate"] = startDate + " 00:00:00";
-      console.log(this.param["@endDate"])
-      if(this.param["@endDate"] == undefined) {
-        this.param["@endDate"] = " 23:59:59"
+      this.param["@StartDate"] = startDate + " 00:00:00";
+      console.log(this.param["@EndDate"])
+      if(this.param["@EndDate"] == undefined) {
+        this.param["@EndDate"] = startDate +  " 23:59:59"
       }
       this.getData()
     },
     endDateFinish (endDate) {
       this.reset()
-      this.param["@endDate"] = endDate + " 23:59:59";
-      if(this.param["@beginDate"] == undefined) {
-        this.param["@beginDate"] = " 00:00:00"
+      this.param["@EndDate"] = endDate + " 23:59:59";
+      if(this.param["@StartDate"] == undefined) {
+        this.param["@StartDate"] = endDate + " 00:00:00"
       }
       this.getData()
     },
@@ -175,5 +183,25 @@ export default {
   line-height: 100px;
   color: #000;
 }
-
+.loading {
+    width: 750;
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    align-items: center;
+  }
+  .indicator-text {
+    color: #888888;
+    font-size: 42px;
+    text-align: center;
+  }
+  .indicator {
+    margin-top: 16px;
+    height: 40px;
+    width: 40px;
+    color: blue;
+  }
 </style>

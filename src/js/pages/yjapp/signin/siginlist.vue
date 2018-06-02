@@ -7,8 +7,8 @@
         <text class="col-3">公里数</text>
         <text class="col-4">审核状态</text>
       </div>
-      <list @loadmore="getData" ref="list" loadmoreoffset="10" :showRefresh="true" @refresh="onrefresh">
-        <cell v-for="(item,index) in listData" :key="index">
+      <list  ref="list" loadmoreoffset="10" :showRefresh="true" @refresh="onrefresh">
+        <cell v-for="(item,index) in listData"  :key="index">
           <div class="row">
             <text class="col-1 text-color">{{item.rowNum}}</text>
             <text class="col-2 text-color">{{item.startTime}}</text>
@@ -16,6 +16,10 @@
             <text class="col-4 text-color">{{item.AuditingState}}</text>
           </div>
         </cell>
+        <loading class="loading" @loading="getData" :display="showload ? 'show' : 'hide'">
+          <text class="indicator-text">加载更多 ...</text>
+          <loading-indicator class="indicator"></loading-indicator>
+        </loading>
       </list>
     </div>
   </div>
@@ -62,6 +66,11 @@ export default {
       });
 
       try {
+        if(this.refresh) {
+
+        } else {
+          this.showload = true;
+        }
         const RES = await API.YJ_GETDRIVINGRECORD(this.param);
         const RESDATA = JSON.parse(RES.DATA);
         const DGDATA = JSON.parse(RESDATA.dgData);
@@ -72,6 +81,8 @@ export default {
         if (this.refresh) {
           this.$refs["list"].refreshEnd();
           this.refresh = false;
+        } else {
+          this.showload = false;
         }
       } catch (error) {}
     },
@@ -124,4 +135,25 @@ export default {
 .text-color {
   color: #333333;
 }
+.loading {
+    width: 750;
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    align-items: center;
+  }
+  .indicator-text {
+    color: #888888;
+    font-size: 42px;
+    text-align: center;
+  }
+  .indicator {
+    margin-top: 16px;
+    height: 40px;
+    width: 40px;
+    color: blue;
+  }
 </style>

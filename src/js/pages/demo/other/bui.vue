@@ -25,7 +25,7 @@
                             ></bui-swipe-cell>
         </div>
     </scroller>
-</template>
+</template> 
 
 <script>
 import { buiSwipeCell } from 'bui-weex'

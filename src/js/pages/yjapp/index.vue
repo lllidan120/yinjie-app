@@ -1,11 +1,13 @@
 <template>
+  
   <wxc-tab-bar :tab-titles="tabTitles"
   :tab-styles="tabStyles"
   title-type="icon"
   @wxcTabBarCurrentTabSelected="wxcTabBarCurrentTabSelected">
   <!-- 第一个页面内容-->
   <div class="item-container" :style="contentStyle">
-   <mian></mian>
+    
+   <mian :menu="menu" :access="accessList"></mian>
  </div>
 
  <!-- 第二个页面内容-->
@@ -31,20 +33,40 @@
 </style>
 <script>
   import API from 'Utils/api.js'
+  import { buiTip } from 'bui-weex'
   import { WxcTabBar, Utils } from 'weex-ui';
   import mian from './index-components/main'
   import person from './index-components/person'
   import distribution from './index-components/distribution'
   import Config from './config'
-
   export default {
-    components: { WxcTabBar ,mian ,distribution ,person},
+    components: { WxcTabBar ,mian ,distribution ,person , buiTip},
     data: () => ({
       tabTitles: Config.tabTitles,
       tabStyles: Config.tabStyles,
       curHomeBackTriggerTimes: 1,
       maxHomeBackTriggerTimes: 2,
+      accessList: [{
+        title: '物流订单',
+        pages: []
+      },{
+        title: '彩印通',
+        pages: []
+      },{
+        title: '财务',
+        pages: []
+      },{
+        title: '签到',
+        pages: []
+      }]
     }),
+		beforeCreate: function () {
+			var domModule = weex.requireModule('dom');
+			domModule.addRule('fontFace', {
+				fontFamily: 'iconfont',
+				'src': 'url(\'//at.alicdn.com/t/font_672109_rspxvp5skf9od2t9.ttf\')'
+			});
+		},
     created () {
       const tabPageHeight = Utils.env.getPageHeight();
 
@@ -57,12 +79,14 @@
     },
     mounted () {
       this.isLogin()
+      this.getAccessBtn()
+      // this.getAccess()
     },
     methods: {
       wxcTabBarCurrentTabSelected (e) {
         const index = e.page;
-        
       },
+      
       androidFinishApp () {
         const globalEvent = weex.requireModule('globalEvent')
         globalEvent.addEventListener('homeBack', options => {
@@ -86,6 +110,21 @@
           name: 'login',
           type: 'PRESENT',
           canBack: false
+        })
+      },
+      async getAccessBtn( index , code) {
+        var par = {
+          '@pCode': '1005',
+          '@userId': this.userInfo.adminId
+        }
+        var RESBTN = await API.get_accessBtn(par)
+        var btnGroup = JSON.parse(RESBTN.DATA)
+        this.accessList.map(item => {
+          btnGroup.map(obj => {
+            if(item.title === obj.category){
+              item.pages.push(obj)
+            }
+          })
         })
       }
     }

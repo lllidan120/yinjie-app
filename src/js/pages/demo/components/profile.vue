@@ -119,5 +119,5 @@ export default {
 .icon {
   color: #FFFFFF;
   font-family: iconfont-eros;
-}
+} 
 </style>

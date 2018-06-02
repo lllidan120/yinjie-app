@@ -12,18 +12,16 @@
 			<div class="search-batch">
 				<text class="search-batch-btn" v-if="sub == '批量收款'" @click="payType">{{sub}}</text>
 				<text class="search-batch-btn" v-if="sub == '批量收货'" @click="ok">{{sub}}</text>
-				<div class="example">
+				<!-- <div class="example">
 					<text class="label">全选</text>
 					<switch :checked="selectAllStatu" @change="selectAll" ref="selectAll"></switch>
-				</div>
+				</div> -->
 			</div>
 		</div>
 		<scroller class="scroller" :show-scrollbar="false" @loadmore="getData" loadmoreoffset="10">
-			<wxc-checkbox-list :list="listData" @wxcCheckBoxListChecked="wxcCheckBoxListChecked"></wxc-checkbox-list>
+			<wxc-checkbox-list ref="payList" :list="listData" @wxcCheckBoxListChecked="wxcCheckBoxListChecked"></wxc-checkbox-list>
 		</scroller>
 		<image src='http://img.lanrentuku.com/img/allimg/1212/5-121204194026.gif' v-if="showload" style="height:40px;width:300px,align-items:center;background-color:#fff;" resize="contain" quality="original"></image>
-
-
 		<bmmask class="mask" animation="transition" position="top" :duration="300" ref="payType">
 			<bmpop class="modal-top">
 				<div class="pay-content">
@@ -31,8 +29,8 @@
 						<text>请选择支付方式>></text>
 					</div>
 					<div class="pay-group">
-						<image class="pay-type" src='bmlocal://assets/list/wechatpay.png' @click="pay(true)"></image>
-						<image class="pay-type" src='bmlocal://assets/list/alipay.png' v-on:click="pay(false)" style="margin-left:80px;"></image>
+						<image class="pay-type" src='http://yj.kiy.cn/Content/Images/App/assets/list/wechatpay.png' @click="pay(true)"></image>
+						<image class="pay-type" src='http://yj.kiy.cn/Content/Images/App/assets/list/alipay.png' @click="pay(false)" style="margin-left:80px;"></image>
 					</div>
 				</div>
 			</bmpop>
@@ -41,7 +39,7 @@
 	</div>
 
 </template>
-
+// 批量操作列表
 <script>
 import searchBar from "../_mods/search-bar";
 import { WxcCheckboxList, WxcPopover } from "weex-ui";
@@ -109,17 +107,39 @@ export default {
     });
   },
   methods: {
-    wxcCheckBoxListChecked(e) {
-      console.log(e);
+    wxcCheckBoxListChecked(e , i) {
+      if(e.checkedList.length != this.listData.length) {
+          this.selectAllStatu = false
+      } else {
+          this.selectAllStatu = true
+      }
+      // if(e.checkedList.length != 0){
+      //   this.listData.map((item , index) => {
+      //     e.checkedList.map(obj => {
+      //       if(item.Id === obj) {
+      //         this.listData[index].checked = true
+      //       } else {
+      //         if(this.listData[index].checked) {
+
+      //         }else {
+      //           this.listData[index].checked = false
+      //         }
+      //       }
+      //     })
+      //   })
+      // } else {
+      //   this.selectAll({value: false})
+      // }
+      
     },
     selectAll(type) {
+      // 全选
+      
       this.selectAllStatu = type.value;
-      var arr = [];
+      
       this.listData.map((item, index) => {
-        item.checked = type.value;
-        arr.push(item);
+        this.listData[index].checked = type.value;
       });
-      this.listData = arr;
     },
     async getData() {
       var _this = this;
@@ -128,19 +148,18 @@ export default {
         "@adminId": this.userInfo.adminId
       });
       this.param = Object.assign(this.param, this.listType);
-      // this.param = Object.assign(this.param , this.searchDate)
       if (this.searchValue != "") {
         if (this.searchType == "物流号") {
           this.param = Object.assign(this.param, { "@id": this.searchValue });
         } else if (this.searchType == "会员号") {
-          this.param = Object.assign(this.param, {
-            "@userId": this.searchValue
-          });
+          this.param = Object.assign(this.param, {"@userId": this.searchValue});
         } else if (this.searchType == "订单号") {
-          this.param = Object.assign(this.param, {
-            "@orderId": this.searchValue
-          });
+          this.param = Object.assign(this.param, {"@orderId": this.searchValue});
         }
+      } else {
+        this.param = Object.assign(this.param, { "@id": undefined });
+        this.param = Object.assign(this.param, {"@userId": undefined});
+        this.param = Object.assign(this.param, {"@orderId": undefined});
       }
 
       if (this.param["@rowIndex"] === 1) {
@@ -151,13 +170,18 @@ export default {
 
       var RES = await API.YJ_SEARCH(this.param);
       if (RES.SUCCESS) {
+        if (this.param["@rowIndex"] === 1) {
+          this.listData = []
+        }
         var RESDATA = JSON.parse(RES.DATA);
         var DGDATA = JSON.parse(RESDATA.dgData);
         if (DGDATA.length != 0) {
           DGDATA.map(item => {
             item.title = `订单号:${item.Id} | 会员号：${item.UserId} | 代收：${
-              item.Deposit
+              item.Price
             }元`;
+            item.value = item.Id
+            item.checked = false
             this.listData.push(item);
           });
         } else {
@@ -203,6 +227,7 @@ export default {
       this.refresh();
     },
     searchClick(value) {
+      this.searchValue = value
       this.refresh();
     },
     refresh() {
@@ -215,15 +240,14 @@ export default {
     },
     startDateFinish(startDate) {
       this.param["@beginDate"] = startDate + " 00:00:00";
-      console.log(this.param["@endDate"]);
       if (this.param["@endDate"] == undefined) {
-        this.param["@endDate"] = " 23:59:59";
+        this.param["@endDate"] = startDate + " 23:59:59";
       }
     },
     endDateFinish(endDate) {
       this.param["@endDate"] = endDate + " 23:59:59";
       if (this.param["@beginDate"] == undefined) {
-        this.param["@beginDate"] = " 00:00:00";
+        this.param["@beginDate"] = endDate + " 00:00:00";
       }
     },
     ok() {
@@ -275,31 +299,48 @@ export default {
     payType() {
       this.payGroup = [];
       this.$refs["payType"].show();
-      this.listData.map(item => {
-        if (item.checked) {
-          this.payGroup.push(item);
-        }
-      });
+      // this.listData.map(item => {
+      //   if (item.checked) {
+      //     this.payGroup.push(item);
+      //   }
+      // });
     },
     selectThat(item) {
       console.log(item);
     },
     async pay(type) {
+      const checkList = this.$refs.payList.checkedList;
+      // return
+      var selectList = []
+      checkList.map(item => {
+        this.listData.map(obj => {
+          if(obj.Id === item) {
+            selectList.push(obj)
+          }
+        })
+      })
+      if(selectList.length === 0) {
+        this.$notice.toast({
+          message: "请至少选择一条单支付"
+        });
+        return
+      }
       const userInfo = this.userInfo;
-      const payGroup = this.payGroup;
-      const len = this.payGroup.length - 1;
+      const payGroup = selectList;
+      const len = selectList.length - 1;
       let orderGroup = "";
       let keyGroup = "";
       let payMoney = 0;
       payGroup.map((item, index) => {
-        if (index === len) {
-          orderGroup += item.ThirdPlatformOrderNo;
-          keyGroup += item.Id;
-        } else {
-          orderGroup += item.ThirdPlatformOrderNo + ",";
-          keyGroup += item.Id + ",";
-        }
-        payMoney += item.Price;
+          if (index === len) {
+            orderGroup += item.CytMallId;
+            keyGroup += item.Id;
+          } else {
+            orderGroup += item.CytMallId + ",";
+            keyGroup += item.Id + ",";
+          }
+          payMoney += item.Price;
+        
       });
       const param = {
         intMustPay: payMoney,

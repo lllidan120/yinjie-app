@@ -23,7 +23,12 @@ module.exports = {
         'js/pages/yjapp/signin/sigin.vue',
         'js/pages/yjapp/signin/siginlist.vue',
         'js/pages/yjapp/signin/sigindetail.vue',
-        'js/pages/yjapp/404.vue'
+        'js/pages/yjapp/404.vue',
+        'js/pages/yjapp/map/map.vue',
+        'js/pages/yjapp/invoice/list.vue',
+        'js/pages/yjapp/invoice/detail.vue',
+        'js/pages/yjapp/echart/list.vue',
+        'js/pages/yjapp/help/index.vue'
     ],
     'alias': {
         'Components': 'js/components',
@@ -34,7 +39,7 @@ module.exports = {
         'Utils': 'js/utils'
     },
     'diff': {
-        'pwd': '/server/yjapp/opensource/eros-diff-folder',
+        'pwd': '/yjappversion/',
         'proxy': 'http://47.106.121.134:3001/static/'
 
     },

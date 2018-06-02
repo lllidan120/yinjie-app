@@ -40,11 +40,11 @@ export default {
         url: '/pages/yjapp/batch-list/batch-list.js'
     },
     'collection' : {
-        title: '收款汇总',
+        title: '财务记录',
         url: '/pages/yjapp/collection/collection.js'
     },
     'collectionlist': {
-        title: '收款汇总',
+        title: '财务记录',
         url: '/pages/yjapp/collection/collectionlist.js'
     },
     'person' : {
@@ -66,5 +66,27 @@ export default {
     '404' : {
         title: '404',
         url: '/pages/yjapp/404.js'
+    },
+    'map' : {
+        title: '地图',
+        url: '/pages/yjapp/map/map.js'
+    },
+    'invoice-list': {
+        title: '发货单列表',
+        url: '/pages/yjapp/invoice/list.js'
+    },
+    'invoice-detail': {
+        title: '发货单详情',
+        url: '/pages/yjapp/invoice/detail.js'
+    },
+    'echartlist' : {
+        title: '收款汇总',
+        url: '/pages/yjapp/echart/list.js'
+    },
+    'helpindex': {
+        title: '帮助中心',
+        url: '/pages/yjapp/help/index.js'
     }
+
+
 }

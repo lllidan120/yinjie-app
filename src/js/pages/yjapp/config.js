@@ -4,18 +4,18 @@ export default {
   tabTitles: [
   {
     title: '首页',
-    icon: 'bmlocal://assets/main/main.png',
-    activeIcon: 'bmlocal://assets/main/main-active.png'
+    icon: 'http://yj.kiy.cn/Content/Images/App/assets/main/main.png',
+    activeIcon: 'http://yj.kiy.cn/Content/Images/App/assets/main/main-active.png'
   },
   {
     title: '批量操作',
-    icon: 'bmlocal://assets/main/list.png',
-    activeIcon: 'bmlocal://assets/main/list-active.png'
+    icon: 'http://yj.kiy.cn/Content/Images/App/assets/main/list.png',
+    activeIcon: 'http://yj.kiy.cn/Content/Images/App/assets/main/list-active.png'
   },
   {
     title: '个人中心',
-    icon: 'bmlocal://assets/main/person.png',
-    activeIcon: 'bmlocal://assets/main/person-active.png'
+    icon: 'http://yj.kiy.cn/Content/Images/App/assets/main/person.png',
+    activeIcon: 'http://yj.kiy.cn/Content/Images/App/assets/main/person-active.png'
   }
   ],
   tabStyles: {
@@ -73,47 +73,105 @@ export default {
   },
   distribution : [
     {
-      title: '未收货',
-      icon: 'bmlocal://assets/icon/1.png',
-      sub: '批量收货',
-      type: {'@orderStatu' : '1,2,5,10,6,7,8'}
-    },
-    {
-      title: '未收款',
-      icon: 'bmlocal://assets/icon/2.png',
-      sub: '批量收款',
-      type: {'@isPay' : 0}
-    },
-    {
-      title: '已收款',
-      icon: 'bmlocal://assets/icon/3.png',
-      type: {'@isPay' : 1}
-    },
-    {
-      title: '已收货',
-      icon: 'bmlocal://assets/icon/4.png',
-      type: {'@orderStatu' : '50,51,48,33'}
-    },
+      title: '物流订单',
+      pages: [
+        {
+            title: '未收货',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文档.png',
+            sub: '批量收货',
+            type: {
+                '@orderStatu': '1,2,5,10,6,7,8'
+            },
+            name: 'dis-list'
+        }, {
+            title: '未收款',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件记录.png',
+            sub: '批量收款',
+            type: {
+                '@isPay': 0
+            },
+            name: 'dis-list'
+        }, {
+            title: '已收款',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件整理.png',
+            type: {
+                '@isPay': 1
+            },
+            name: 'dis-list'
+        }, {
+            title: '已收货',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件夹.png',
+            type: {
+                '@orderStatu': '50,51,48,33'
+            },
+            name: 'dis-list'
+        }, {
+            title: '发货单',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/链接.png',
+            name: 'invoice-list'
+        }, {
+
+            title: '平台订单',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/插座.png',
+            name: 'order-list'
+        }, {
+            title: '财务记录',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/公文包.png',
+            name: 'collectionlist'
+        }, 
+        // {
+
+        //     title: '收款汇总',
+        //     icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/统计.png',
+        //     name: 'echartlist'
+        // }
+
+        {
+            title: '签到记录',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/统计.png',
+            name: 'signinlist'
+        },
+        // {
+        //     title: '未扫单',
+        //     icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/对话.png',
+        //     type: {
+        //         '@orderStatu': '1,5,7,8'
+        //     },
+        //     name: 'dis-list'
+        // },
+        // {
+        //     title: '已扫单',
+        //     icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/声音.png',
+        //     type: {
+        //         '@orderStatu': '10,50'
+        //     },
+        //     name: 'dis-list'
+        // }
+
+
+      ]
+    }
+
     ],
     mainList : [
       {
         title: '彩印通订单',
-        icon: 'bmlocal://assets/icon/5.png',
+        icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/5.png',
         name: 'order-list'
       },
       {
         title: '财务记录',
-        icon: 'bmlocal://assets/icon/6.png',
+        icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/6.png',
         name:'collectionlist'
       },
       {
         title: '签到',
-        icon: 'bmlocal://assets/icon/7.png',
+        icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/7.png',
         name: 'signin'
       },
       {
         title: '签到记录',
-        icon: 'bmlocal://assets/icon/8.png',
+        icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/8.png',
         name: 'signinlist'
       }
     ]

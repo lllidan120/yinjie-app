@@ -1,9 +1,9 @@
 <template>
-	<list ref="listTop" :showRefresh="true" @refresh="onrefresh">
-		<cell>
+	<list ref="listTop"  :showRefresh="true" @refresh="onrefresh"  :class="['aliColor' , payInfo.bweixin && 'wxColor' , payInfo.bweixin]">
+		<cell :class="['aliColor' , payInfo.bweixin && 'wxColor' , payInfo.bweixin]">
 			<text class="title">订单详情</text>
 		</cell>
-		<cell>
+		<cell :class="['aliColor' , payInfo.bweixin && 'wxColor' , payInfo.bweixin]">
 			<div class="list">
 				<div class="list-box">
 					<div class="list-box-title">
@@ -12,12 +12,12 @@
 					<div class="list-box-content">
 						<div class="list-box-content-left">
 							<div class="col" >
-								<image src="bmlocal://assets/list/3.png" class="col-icon"></image>
-								<text class="text">订单编号：</text>
+								<image src="http://yj.kiy.cn/Content/Images/App/assets/list/3.png" class="col-icon"></image>
+								<text class="text">平台单号：</text>
 								<text class="text address">{{ payInfo.orderId }}</text>
 							</div>
 							<div class="col" >
-								<image src="bmlocal://assets/list/4.png" class="col-icon"></image>
+								<image src="http://yj.kiy.cn/Content/Images/App/assets/list/4.png" class="col-icon"></image>
 								<text class="text">物流单号：</text>
 								<text class="address text">{{payInfo.key}}</text>
 							</div>
@@ -29,13 +29,13 @@
 				</div>
 			</div>
 		</cell>
-		<cell>
+		<cell :class="['aliColor' , payInfo.bweixin && 'wxColor' , payInfo.bweixin]">
 			<text class="title" v-if="payInfo.bweixin">打开微信扫一扫(点击二维码打开大图)>></text>	
 			<text class="title" v-if="!payInfo.bweixin">打开支付宝扫一扫(点击二维码打开大图)>></text>	
 		</cell>
-		<cell>
+		<cell :class="['aliColor' , payInfo.bweixin && 'wxColor' , payInfo.bweixin]">
 			<div class="code-content">
-				<image src="bmlocal://assets/list/codebg.png" class="code-bg"></image>
+				<image src="http://yj.kiy.cn/Content/Images/App/assets/list/codebg.png" class="code-bg"></image>
 				<image :src="payInfo.strUrl" class="code-img" @click="preview"></image>
 			</div>
 		</cell>
@@ -72,8 +72,9 @@
 				}
 				var RES = await API.YJ_PAYCHECK(par)
 				if(RES.SUCCESS = true) {
-					if(DATA[0].success > 0) {
-						this.payInfo.strUrl = 'bmlocal://assets/demo.jpg'
+					const data = JSON.parse(RES.DATA)
+					if(data[0].success > 0) {
+						this.payInfo.strUrl = 'http://yj.kiy.cn/Content/Images/App/pays.png'
 						this.$event.emit('paySuccess')
 						this.$notice.toast({
 							message: '支付成功'
@@ -127,7 +128,7 @@
   .title {
   	margin-top: 28px;
   	margin-left: 36px;
-  	color: #666666;
+  	color: #fff;
   	font-size: 26px;
   }
   .list-box-content {
@@ -192,7 +193,8 @@
   }
   .code-content {
   	margin-top: 30px;
-  	height: 400px;
+	  height: 400px;
+	  margin-bottom: 200px;
   	width: 750px;
 	align-items: center;
 	justify-content: center;
@@ -208,5 +210,11 @@
 	top: 30px;
 	width: 350px;
 	height: 350px;
+  }
+  .wxColor {
+	  background-color: rgb(69, 144, 88)
+  }
+  .aliColor {
+	  background-color: #2096f2;
   }
 </style>

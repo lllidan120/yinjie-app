@@ -1,9 +1,15 @@
 <template>
 	<div>
 		<div class="search-bar">
-			<div class="search-bar-left" slot="left"  @click="typeClick">
+			<div class="search-bar-left" slot="left"  @click="typeClick(1)">
 				<div>
 					<text class="search-bar-left-text">{{ searchType }}</text>
+				</div>
+				<image src="http://yj.kiy.cn/Content/Images/App/assets/la.png" class="search-bar-left-icon"></image>
+			</div>
+            <div class="search-bar-left" slot="left"  @click="typeClick(2)">
+				<div>
+					<text class="search-bar-left-text">{{ searchTypeTwo }}</text>
 				</div>
 				<image src="http://yj.kiy.cn/Content/Images/App/assets/la.png" class="search-bar-left-icon"></image>
 			</div>
@@ -15,7 +21,6 @@
 				return-key-type="search" 
 				:placeholder="placeholder" 
 				@input="inputChange"
-				@blur="blurChange"
 				@change="searchClick"
 				/>
 			</div>
@@ -36,6 +41,7 @@
 		components: {   },
 		props: {
             searchType: String,
+            searchTypeTwo: String,
             placeholder: {
                 type: String,
                 defalut: '请输入单号'
@@ -62,11 +68,11 @@
             }
         },
 		methods : {
-			typeClick () {
-				this.$emit('onChange')
+			typeClick (type) {
+				this.$emit('onChange' , type)
 			},
-			inputChange () {
-				this.$emit('inputChange' , this.value)
+			inputChange (val) {
+				this.$emit('inputChange' , val)
 			},
 			scanClick() {
 				this.$tools.scan().then((resData) => {
@@ -85,8 +91,6 @@
 				} else {
 					this.$emit('searchClick' , this.value)
 				}
-				
-				
 			}
 		}
 	}
@@ -137,7 +141,7 @@
 	.wxc-search-bar {
 		margin-top: 10px;
 		background-color: #ffffff;
-		width: 423px;
+		width: 241px;
 		height: 100px;
 		flex-direction: row;
 	}
@@ -152,8 +156,8 @@
 		width: 423px;
 		height: 60px;
 		line-height: 64px;
-		background-color: #E5E5E5;
 		color: #000;
+		background-color: #E5E5E5;
 		border-radius: 6px;
 	}
 

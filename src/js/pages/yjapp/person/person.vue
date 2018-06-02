@@ -1,8 +1,8 @@
 <template>
   <div class="login-box">
-			<!-- <img class="image" src="bmlocal://assets/login/logo.png"> -->
+			<!-- <img class="image" src="http://yj.kiy.cn/Content/Images/App/assets/login/logo.png"> -->
 			<div class="my-icon-input" style="margin-bottom: 64px">
-				<img class="user-icon" src="bmlocal://assets/person/old.png">
+				<img class="user-icon" src="http://yj.kiy.cn/Content/Images/App/assets/person/old.png">
 				<input 
 				class="my-input" 
 				v-model="oldPassword" 
@@ -11,7 +11,7 @@
 				></input>
 			</div>
 			<div class="my-icon-input" >
-				<img class="user-icon" src="bmlocal://assets/person/new.png">
+				<img class="user-icon" src="http://yj.kiy.cn/Content/Images/App/assets/person/new.png">
 				<input 
 				v-model="newPassword" 
 				placeholder="重新输入新密码"
@@ -20,7 +20,7 @@
 				></input>
 			</div>
 
-			<img class="login-btn" src="bmlocal://assets/person/submit.png" @click="submit">
+			<img class="login-btn" src="http://yj.kiy.cn/Content/Images/App/assets/person/submit.png" @click="submit">
 	</div>
 </template>
 <script>

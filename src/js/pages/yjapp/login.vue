@@ -5,21 +5,21 @@
 		:style="{'height': deviceHeight}"
 		>
 		<!-- 背景图片start -->
-		<image resize="stretch" class="title-bg1" src="bmlocal://assets/login/loginbg.png"></image>
+		<image resize="stretch" class="title-bg1" src="http://yj.kiy.cn/Content/Images/App/assets/login/loginbg.png"></image>
 		<!-- end -->
 		<div class="login-box">
-			<img class="image" src="bmlocal://assets/login/logo.png">
+			<img class="image" src="http://yj.kiy.cn/Content/Images/App/assets/login/logo.png" @click="checkQRCODE">
 			<div class="my-icon-input" style="margin-bottom: 30px">
-				<img class="user-icon" src="bmlocal://assets/login/usericon.png">
+				<img class="user-icon" src="http://yj.kiy.cn/Content/Images/App/assets/login/usericon.png">
 				<input 
 				class="my-input" 
 				v-model="loginInfo.key" 
-				placeholder="用户名123456"
+				placeholder="用户名"
 				type="text"
 				></input>
 			</div>
 			<div class="my-icon-input" >
-				<img class="user-icon" src="bmlocal://assets/login/pwdicon.png">
+				<img class="user-icon" src="http://yj.kiy.cn/Content/Images/App/assets/login/pwdicon.png">
 				<input 
 				v-model="loginInfo.pwd" 
 				placeholder="登录密码"
@@ -28,7 +28,8 @@
 				></input>
 			</div>
 
-			<img class="login-btn" src="bmlocal://assets/login/loginbtn.png" @click="login">
+			<img class="login-btn" src="http://yj.kiy.cn/Content/Images/App/assets/login/loginbtn.png" @click="login">
+			<text style="text-align: center;color: #999;margin-top:10px;" @click="downLoad">点击下载最新APP</text>
 		</div>
 	</div>
 
@@ -44,7 +45,10 @@
 				loginInfo : {
 					key: '',
 					pwd: '',
-				}
+				},
+				jsVersion: weex.config.eros.jsVersion,
+				curHomeBackTriggerTimes: 1,
+      			maxHomeBackTriggerTimes: 2
 			}
 		},
 		components: {
@@ -55,8 +59,16 @@
 		},
 		mounted () {
 			this.loadStorage()
+			this.androidFinishApp()
 		},
 		methods : {
+			androidFinishApp () {
+				const globalEvent = weex.requireModule('globalEvent')
+				globalEvent.addEventListener('homeBack', options => {
+				(this.curHomeBackTriggerTimes === this.maxHomeBackTriggerTimes) && this.$router.finish()
+					this.curHomeBackTriggerTimes++
+				})
+			},
             loadStorage () {
                 var nameAndPwd = this.$storage.getSync('nameAndPwd')
                 if(nameAndPwd) {
@@ -79,6 +91,7 @@
 						})
 					}
 				} catch (e) {
+					this.$notice.loading.hide()
 					this.$notice.toast({
 						message: '登录失败'
 					})
@@ -86,10 +99,20 @@
 				
 			},
 			goMain() {
-				this.$router.open({
-					name: 'main',
-					type: 'PUSH',
-					canBack: false
+				this.$router.setHomePage('/pages/yjapp/index.js')
+				// this.$router.open({
+				// 	name: 'main',
+				// 	type: 'PUSH',
+				// 	canBack: false
+				// })
+			},
+			downLoad () {
+				this.$router.openBrowser('http://yj.kiy.cn/Global/HotUpdate/HttpDownload')
+			},
+			checkQRCODE () {
+				this.$image.preview({
+					index: 1,                     // 所点击图片下标
+					images: ['http://yj.kiy.cn/Content/Images/App/download.png'],        // 图片的网络地址
 				})
 			}
 		}

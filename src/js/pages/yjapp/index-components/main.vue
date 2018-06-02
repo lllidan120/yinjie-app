@@ -1,7 +1,7 @@
 <template>
 		<waterfall :show-scrollbar="false">
 			<header class="top"> 
-					<img src="bmlocal://assets/main/main-bg1.png" class="top-bg" alt="">
+					<img src="http://yj.kiy.cn/Content/Images/App/assets/main/main-bg1.png" class="top-bg" alt="">
 					<image 
 					ref="inner" 
 					src="http://www.easybui.com/scenes/source/common/images/round/round-inner.png" 
@@ -14,25 +14,25 @@
 					></image>
 					<text class="select-btn" @click="selectWarhoursCode">{{selectWarhours.WarhoursName}}</text>
 			</header>
-			<cell class="center"> 
-				<div v-for="(item , index) in centerList"  class="center-item" :key="index">
-					<div  @click="toPage(item)" >
-						<image :src="item.icon" class="center-icon"></image>
-						<text class="center-text">{{ item.title }}</text>
+			<cell style="background-color: #fff;" v-for="(obj , i ) in centerList" :key="i"> 
+				<text class="center-title">{{obj.title}}</text>
+				<div class="center">
+					<div v-for="(item , index) in obj.pages"  class="center-item" :key="index">
+						<div  @click="toPage(item)" >
+							<image :src="item.icon" class="center-icon"></image>
+							<text class="center-text">{{ item.title }}</text>
+						</div>
 					</div>
 				</div>
 			</cell>
-			<cell class="center"> 
+			<!-- <cell class="center"> 
 				<div v-for="(item , index) in bottomList"  class="center-item" :key="index">
 					<div  @click="goTo(item)" >
 						<image :src="item.icon" class="center-icon"></image>
 						<text class="center-text">{{ item.title }}</text>
 					</div>
 				</div>
-			</cell>
-			<cell>
-				
-			</cell>
+			</cell> -->
 		</waterfall>     
 </template>
 <script>
@@ -41,8 +41,15 @@
 	import API from 'Utils/api'
 	const animation = weex.requireModule('animation')
 	const picker = weex.requireModule('picker')
+	
 
 	export default {
+		props: {
+			accessList:{
+				type: Array,
+				default: []
+			}
+		},
 		data () {
 			return {
 				statusBarHeight: weex.config.eros.statusBarHeight ? weex.config.eros.statusBarHeight : 40,
@@ -51,26 +58,13 @@
 				warhours: [],
 				index: -1,
 				selectWarhours : {
-					WarhoursName: '测试热更新V5555'
+					WarhoursName: '请选择仓库'
 				},
+				count: 0,
 				bottomList : Config.mainList,
 			  centerList : Config.distribution,
-			  isLeftShow: false,
-			  list: [
-					{ title: '选项1', value: 1 },
-					{ title: '选项2', value: 2, checked: true },
-					{ title: '选项3', value: 3 },
-					{ title: '选项4', value: 4 },
-				]
+			  isLeftShow: false
 			}
-		},
-		beforeCreate: function () {
-			var domModule = weex.requireModule('dom');
-
-			domModule.addRule('fontFace', {
-				fontFamily: 'iconfont-eros',
-				'src': 'url(\'bmlocal://iconfont/iconfont-eros.ttf\')'
-			});
 		},
 		created () {
 			var _this = this;
@@ -81,10 +75,8 @@
 	    mounted () {
 	    	var _this = this
 	    	_this.init()
-	    	_this.getWarhoursCode()
+			_this.getWarhoursCode()
 			
-			this.getData()
-
 	    },
 	    computed :  {
 	    	value () {
@@ -92,9 +84,69 @@
 		          return items[this.index]
 		        }
 		        return ''
-		      }
+		    }
 	    },	
 	    methods : {
+			async scanLogisticalOrder () {
+	        	var _this =this;
+				var userInfo = await API.get_userInfo(this);
+	        	this.$tools.scan().then((resData) => {
+					_this.$storage.setSync('QR_Code', resData)
+	        		var par = {
+	        			roleId: userInfo.RoleId,
+	        			qr_code: resData ,
+	        			warhoursCode: _this.selectWarhours.Id,
+	        			adminId: userInfo.adminId
+					}
+					_this.scanSuccess(par)
+					// _this.scanLogisticalOrder()
+					
+				}).catch (ex => {
+				}) 
+	        },
+			async scanSuccess (par) {
+				var _this = this;
+				try {
+					this.$notice.loading.show();
+					var res = await API.YJ_SCAN(par)
+					this.$notice.loading.hide();
+				    // var res = {
+					// 		MESSAGE: '该付款单应付XX元，是否前往？',
+					// 		DATA: JSON.stringify({url : 'invoice-detail'})
+					// 	}
+					
+					if(res.DATA) {
+						var DATA = JSON.parse(res.DATA)
+						if(DATA.url) {
+							_this.$notice.confirm({
+								title: '扫描成功',
+								message: res.MESSAGE,
+								okTitle: '确认',
+								cancelTitle: '取消',
+								okCallback() {
+									_this.$router.open({
+										name: DATA.url,
+										type: 'PUSH',
+										params: DATA
+									})	
+								},
+								cancelCallback() {
+									_this.scanLogisticalOrder(par)
+								}
+							})
+						}else {
+							this.$notice.toast({message: res.MESSAGE})
+							_this.scanLogisticalOrder(par)
+						}
+					} else {
+						this.$notice.toast({message: res.MESSAGE})
+						_this.scanLogisticalOrder(par)
+					}
+				} catch (error) {
+					this.$notice.loading.hide();
+					_this.scanLogisticalOrder(par)
+				}
+	        },
 	    	init () {
 	    		var _this = this;
 	    		var inner = this.$refs.inner;
@@ -104,16 +156,14 @@
 		          styles: {
 		            transform: 'rotate(360deg)'
 		          },
-		          duration: 100000, //ms
+		          duration: 10000, //ms
 		          timingFunction: 'ease',
 		          delay: 0 //ms
 		        })
 	    	},
 	    	async getWarhoursCode () {
 				var warhoursCode = API.get_warhoursCode(this)
-				warhoursCode= ''
 	    		if( warhoursCode == '') {
-				
 					const RES = await API.YJ_WARHOURSCODE({})
 		    		if(RES.SUCCESS) {
 						var arr = []
@@ -132,28 +182,8 @@
 	        wxcTabBarCurrentTabSelected (e) {
 	        	const index = e.page;
 	        },
-	        async scanLogisticalOrder () {
-	        	var _this =this;
-	        	var userInfo = this.userInfo;
-	        	this.$tools.scan().then((resData) => {
-	        		var par = {
-	        			roleId: userInfo.RoleId,
-	        			qr_code: resData ,
-	        			warhoursCode: _this.selectWarhours.Id,
-	        			adminId: userInfo.adminId
-	        		}
-				    _this.scanSuccess(par)
-				}).catch (ex => {
-				}) 
-	        },
-	        async scanSuccess (par) {
-	        	var _this = this;
-	        	var res = await API.YJ_SCAN(par)
-	        		this.$notice.toast({
-					    message: res.MESSAGE
-					})
-					_this.scanLogisticalOrder()
-	        },
+	        
+	        
 	        selectWarhoursCode () {
 				var warhours = this.warhours
 				var items = [];
@@ -176,7 +206,7 @@
 			},
 	        toPage (item) {
 	        	this.$router.open({
-	    			name: 'dis-list',
+	    			name: item.name,
 	    			type: 'PUSH',
 	    			params: {
 	    				params: item,
@@ -200,6 +230,7 @@
 			popupOverlayLeftClick () {
 				this.isLeftShow = false;
 			}
+			
 	    }
 	}
 </script>

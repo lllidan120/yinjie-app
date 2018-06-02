@@ -8,14 +8,14 @@ module.exports = {
         'iOS': '1.0.0'
     },
     'page': {
-        'homePage': '/pages/yjapp/index.js',
+        'homePage': '/pages/yjapp/login.js',
         'mediatorPage': '/mediator/index.js',
         'navBarColor': '#2096f2',
         'navItemColor': '#ffffff'
     },
     'url': {
-        'image': 'https://lev-inf.benmu-health.com/test/xxx',
-        'bundleUpdate': 'http://47.106.121.134:3001/app/check'
+        'image': 'http://yj.kiy.cn/Global/HotUpdate/UpLoadHeadIcon',
+        'bundleUpdate': 'http://yj.kiy.cn/Global/HotUpdate/CheckUpdate'
 
     },
     'zipFolder': {
@@ -23,7 +23,7 @@ module.exports = {
         'android': '/android/WeexFrameworkWrapper/app/src/main/assets'
     },
     'getui': {
-        'enabled': 'false',
+        'enabled': 'true',
         'appId': 'kUKePtEOlT6DtDS16j8Db2',
         'appKey': 'vaQQo76BsX7mHUEvIXfSw3',
         'appSecret': 'StJwwDk6Ms6LtlcSa4cmY8'

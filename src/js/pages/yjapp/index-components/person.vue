@@ -1,8 +1,8 @@
 <template>
   <waterfall :show-scrollbar="false">
     <header class="top"> 
-      <image class="top-content-image" src="bmlocal://assets/person/top.png"></image>
-      <image class="top-content-head" src="bmlocal://assets/person/head.png"></image>
+      <image class="top-content-image" src="http://yj.kiy.cn/Content/Images/App/assets/person/top.png"></image>
+      <image class="top-content-head" src="http://yj.kiy.cn/Content/Images/App/assets/person/head.png" @click="uplaodHead"></image>
       <text class="top-content-text user">ID: {{ userInfo.Account }}</text>
       <text class="top-content-text date">角色: {{ userInfo.RoleName }}</text>
     </header>
@@ -40,15 +40,20 @@
         },
         bottomList : [
           {
-            title: '修改密码',
-            icon: 'bmlocal://assets/main/开始配送.png',
-            name: 'person'
+            title: '帮助',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/main/开始配送.png',
+            name: 'helpindex'
+          },
+          {
+            title: 'APP版本检测   6-2',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/main/开始配送.png',
+            name: 'update'
           }
         ],
         bottomList2 : [
           {
             title: '退出登录',
-            icon: 'bmlocal://assets/main/拜访登记.png',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/main/拜访登记.png',
             name: 'login'
           }
         ]
@@ -62,8 +67,6 @@
     },
     mounted () {
       this.userInfo = API.get_userInfo(this)
-
-
     },
     computed :  {
 
@@ -72,11 +75,14 @@
       goPage (item) {
         if(item.name == 'login'){
           this.$storage.deleteSync('userInfo')
-          this.$router.open({
-            name: item.name,
-            type: 'PUSH',
-            canBack: false
-          })
+          this.$router.setHomePage('/pages/yjapp/login.js')
+          // this.$router.open({
+          //   name: item.name,
+          //   type: 'PUSH',
+          //   canBack: false
+          // })
+        } else if (item.name == 'update') {
+          this.checkUpdate()
         } else {
           this.$router.open({
             name: item.name,
@@ -84,7 +90,34 @@
             params: item
           })
         }
-        
+      },
+      async checkUpdate() {
+        this.$notice.loading.show("检测APP版本...")
+        var _this = this;
+        var attr = weex.config.eros
+        var data = {
+          jsVersion: attr.jsVersion,
+          appName: attr.appName,
+          os: attr.os
+        }
+        this.$notice.toast({
+          message: `${attr.jsVersion}`
+        });
+        var RES = await API.check_version(data)
+        this.$notice.loading.hide()
+        this.$notice.alert({
+            title: '版本检测',
+            message: RES.msg,
+            okTitle: '确认',
+            callback() {
+              if(RES.resCode === 0) {
+                // 需要更新
+                _this.$router.finish()
+              }
+            }
+        })
+      },
+      uplaodHead() {
       }
     }
   }
@@ -121,7 +154,6 @@
   .top-content-text {
     text-align: center;
     color: #000;
-    
   }
   .user {
     margin-top: 10px;
@@ -133,7 +165,6 @@
   .bottom-box {
     flex-direction:row;
     align-items:center;
-
     width: 750px;
     height: 95px;
     background-color: #fff;
@@ -150,7 +181,7 @@
   }
   .bottom-box-center {
     margin-left: 36px;
-    width: 200px;
+    width: 400px;
     height: 95px;
     line-height: 95px;
     font-size: 26px;

@@ -5,7 +5,7 @@
 				<div>
 					<text class="search-bar-left-text">{{ type }}</text>
 				</div>
-				<image src="bmlocal://assets/la.png" class="search-bar-left-icon"></image>
+				<image src="http://yj.kiy.cn/Content/Images/App/assets/la.png" class="search-bar-left-icon"></image>
 			</div>
 
 			<div class="wxc-search-bar" slot="middle">
@@ -21,13 +21,13 @@
 				<div>
 					<text class="search-bar-left-text">{{ type }}</text>
 				</div>
-				<image src="bmlocal://assets/la.png" class="search-bar-left-icon"></image>
+				<image src="http://yj.kiy.cn/Content/Images/App/assets/la.png" class="search-bar-left-icon"></image>
 			</div>
 			<div class="search-bar-left" @click="changeProper(2)">
 				<div>
 					<text class="search-bar-left-text">{{ proper }}</text>
 				</div>
-				<image src="bmlocal://assets/la.png" class="search-bar-left-icon"></image>
+				<image src="http://yj.kiy.cn/Content/Images/App/assets/la.png" class="search-bar-left-icon"></image>
 			</div>
 		</div> -->
 	</div>

@@ -17,14 +17,29 @@ let api = {
 	YJ_GETDRIVINGRECORD: (data) => axios.getAjaxData(data, 'search', 'GetDriving_record'),
 	// 获取子单列表
 	YJ_ORDERLIST: (data) => axios.getAjaxData(data, 'search', 'YJApp_OrderList'),
+	// 获取子单物流状态
+	YJ_ORDERLISTSTATUS: (data) => axios.getAjaxData(data , undefined , 'QueryOrderRecordsList' , '217141a5-01d0-4696-9500-ae2d82a8cb4c'),
 	// 查彩印通订单
 	KIY_SEARCHORDER : (data) => axios.postApiData(data , 'http://www.kiy.cn/webapi/Himall.NewShop.GetOrderInfo'),
+	//权限 
+	get_access: (data) => axios.getAjaxData(data , 'search' , 'AppMenuAuthor' ),
+	get_accessBtn: (data) => axios.getAjaxData(data , 'search' , 'AppButtonBizAuthor' ),
+	// 获取发货单列表
+	get_fahuoList: (data) => axios.getAjaxData(data , 'search' , 'getFahuoList' ),
+	// 获取发货信息
+	get_fahuoInfo : (data) => axios.getAjaxData(data , 'search' , 'getFahuoInfo'),
+	// 发货单确认到货 
+	YJ_enterFahuo: (data) => axios.getAjaxData(data , 'orderGroup' , 'enterOrderGroup'),
 	// 以下是缓存到store的参数
 	get_warhoursCode : (vm) => {return vm.$storage.getSync('warhoursCode')},
 	get_userInfo : (vm) => {return vm.$storage.getSync('userInfo')},
-	
+	check_version: (data) => axios.postApiData(data,`http://yj.kiy.cn/Global/HotUpdate/CheckUpdate?isDiff=1&jsVersion=${data.jsVersion}&appName=${data.appName}&${data.os}=1.0`),
+	// 上传头像
+	post_uploadHead: (data) => axios.postApiData(data , `http://yj.kiy.cn/Global/HotUpdate/UpLoadHeadIcon?realName=${data.realName}`),
+
 	// 请求其他
 	post: (options) => axios.postApiData(options.data, options.url , options.type ),
+	
 
 	// 获取日期
 	get_date : (type , isOrder) => {
@@ -61,7 +76,6 @@ let api = {
 	    		} else {
 	    			today = {'startTime' : fornow + startTime , 'endTime' : fornow + endTime}
 	    		}
-	    		console.log(today)
 	    		return today
 	    	break;
 	    	case '一周内' :

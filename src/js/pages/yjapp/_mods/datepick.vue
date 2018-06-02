@@ -30,13 +30,13 @@ export default {
   data() {
     return {
       searchDate: {
-        "@beginDate": 2018 - 4 - 4,
-        "@endDate": 2018 - 4 - 4
+        "@beginDate": '',
+        "@endDate": ''
       }
     };
   },
   mounted() {
-    this.searchDate = API.get_date("今天");
+    // this.searchDate = API.get_date("今天");
   },
   methods: {
     selectTime(timeName) {
@@ -45,10 +45,21 @@ export default {
     startDateFinish(params) {
       this.searchDate["@beginDate"] = params.startDate;
       this.$emit("startDateFinish", params.startDate);
+      if(this.searchDate['@endDate'] === ''){
+        this.searchDate['@endDate'] = params.endDate;
+        this.$emit("startDateFinish", params.startDate);
+      }
+      this.$refs['startDate'].hide();
     },
     endDateFinish(params) {
       this.searchDate["@endDate"] = params.endDate;
       this.$emit("endDateFinish", params.endDate);
+      console.log(this.searchDate["@endDate"] , this.searchDate["@beginDate"])
+      if(this.searchDate['@beginDate'] === ''){
+        this.searchDate['@beginDate'] = params.endDate;
+        this.$emit("startDateFinish", params.startDate);
+      }
+      this.$refs['endDate'].hide();
     }
   }
 };

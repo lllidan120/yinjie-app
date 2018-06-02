@@ -1,6 +1,6 @@
 <template>
   <div class="wxc-title" :aria-hidden="true">
-    <image class="logo" src="bmlocal://assets/yj.png"></image>
+    <image class="logo" src="http://yj.kiy.cn/Content/Images/App/assets/yj.png"></image>
     <text class="text">{{title}}</text>
   </div>
 </template>

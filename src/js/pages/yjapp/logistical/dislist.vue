@@ -12,26 +12,26 @@
             <div class="list-box-title" @click="toDetail(item)">
               <div class="list-col" style="width:300px;padding-left:15px;">
                 <div class="icon-title-content">
-                  <img class="list-title-icon" src="bmlocal://assets/icon/time.png">
+                  <img class="list-title-icon" src="http://yj.kiy.cn/Content/Images/App/assets/icon/time.png">
                   <text class="title">入仓时间</text>
                 </div>
                 <text class="text center text-color">{{ item.DistributorDate ? item.DistributorDate : '暂无' }}</text>
               </div>
               <div class="list-col">
                 <div class="icon-title-content">
-                  <img class="list-title-icon" src="bmlocal://assets/icon/user.png">
+                  <img class="list-title-icon" src="http://yj.kiy.cn/Content/Images/App/assets/icon/user.png">
                   <text class="title">会员号</text>
                 </div>
                 <text class="text center text-color">{{item.ThirdPlatformId}}</text>
               </div>
               <div class="list-col">
-                <text class="blue">总额 : {{ item.Price }}</text>
-                <text class="blue">代收 : {{ item.Deposit }}</text>
+                <text class="blue">总金额: {{ item.Price }}</text>
+                <text class="text">平台单:{{ item.CytMallId }}</text>
               </div>
             </div>
             <div class="list-box-content">
               <div class="list-box-content-left" @click="toDetail(item)">
-                <image src="bmlocal://assets/icon/tabimg.png" class="list-box-content-left-icon"></image>
+                <image src="http://yj.kiy.cn/Content/Images/App/assets/icon/tabimg.png" class="list-box-content-left-icon"></image>
                 <div class="col">
                   <text class="text gray-color">货物数量  </text>
                   <text class="text num-color" style="width:110px;">X{{item.Goods_Qty}}</text>
@@ -42,11 +42,11 @@
                 <div class="col">
                   <text class="text gray-color">物流编号  </text>
                   <text class="text text-color" style="width:110px;">{{item.Id}}</text>
-                  <text class="text gray-color">第三方单号  </text>
+                  <text class="text gray-color">生产单号  </text>
                   <text class="text text-color">{{item.ThirdPlatformOrderNo}} </text>
                 </div>
                 <div class="col" style="height: 100px;">
-                  <image src="bmlocal://assets/icon/company.png" class="col-icon"></image>
+                  <image src="http://yj.kiy.cn/Content/Images/App/assets/icon/company.png" class="col-icon"></image>
                   <text class="address text text-color">{{ item.ReceiveName }}</text>
                 </div>
               </div>
@@ -68,8 +68,8 @@
             <text>请选择支付方式>></text>
           </div>
           <div class="pay-group">
-            <image class="pay-type" src='bmlocal://assets/list/wechatpay.png' @click="pay(true)"></image>
-            <image class="pay-type" src='bmlocal://assets/list/alipay.png' v-on:click="pay(false)" style="margin-left:80px;"></image>
+            <image class="pay-type" src='http://yj.kiy.cn/Content/Images/App/assets/list/wechatpay.png' @click="pay(true)"></image>
+            <image class="pay-type" src='http://yj.kiy.cn/Content/Images/App/assets/list/alipay.png' v-on:click="pay(false)" style="margin-left:80px;"></image>
           </div>
         </div>
       </bmpop>
@@ -160,6 +160,10 @@ export default {
             "@orderId": this.searchValue
           });
         }
+      } else {
+        this.param = Object.assign(this.param, { "@id": undefined });
+        this.param = Object.assign(this.param, {"@userId": undefined});
+        this.param = Object.assign(this.param, {"@orderId": undefined});
       }
 
       if (this.param["@rowIndex"] === 1) {
@@ -169,6 +173,9 @@ export default {
       }
       var RES = await API.YJ_SEARCH(this.param);
       if (RES.SUCCESS) {
+        if (this.param["@rowIndex"] === 1)  {
+          this.listData = []
+        }
         var RESDATA = JSON.parse(RES.DATA);
         var DGDATA = JSON.parse(RESDATA.dgData);
         if (DGDATA.length != 0) {
@@ -216,7 +223,8 @@ export default {
       this.searchValue = val;
       this.refresh();
     },
-    searchClick(value) {
+    searchClick(val) {
+      this.searchValue = val
       this.refresh();
     },
     refresh() {
@@ -227,14 +235,14 @@ export default {
     startDateFinish(startDate) {
       this.param["@beginDate"] = startDate + " 00:00:00";
       if (this.param["@endDate"] == undefined) {
-        this.param["@endDate"] = " 23:59:59";
+        this.param["@endDate"] = startDate + " 23:59:59";
       }
       console.log(this.param)
     },
     endDateFinish(endDate) {
       this.param["@endDate"] = endDate + " 23:59:59";
       if (this.param["@beginDate"] == undefined) {
-        this.param["@beginDate"] = " 00:00:00";
+        this.param["@beginDate"] = endDate + " 00:00:00";
       }
       console.log(this.param)
     },
@@ -257,8 +265,12 @@ export default {
 
       const RES = await API.YJ_ENTER(param);
       this.$notice.loading.hide();
-      console.log(RES);
       if (RES.SUCCESS) {
+        this.listData.map((listItem , index) => {
+          if(listItem.Id == item.Id) {
+            this.listData[index].logState = 50;
+          }
+        })
         this.$notice.toast({
           message: RES.MESSAGE
         });
@@ -286,10 +298,10 @@ export default {
       let payMoney = 0;
       payGroup.map((item, index) => {
         if (index === len) {
-          orderGroup += item.ThirdPlatformOrderNo;
+          orderGroup += item.CytMallId;
           keyGroup += item.Id;
         } else {
-          orderGroup += item.ThirdPlatformOrderNo + ",";
+          orderGroup += item.CytMallId + ",";
           keyGroup += item.Id + ",";
         }
         payMoney += item.Price;
@@ -389,7 +401,7 @@ export default {
   border-color: #e2e2e2;
 }
 .list-col {
-  width: 172px;
+  width: 152px;
   text-align: center;
 }
 .list-box-content {
@@ -439,7 +451,7 @@ export default {
   margin-right: 15px;
 }
 .address {
-  width: 350px;
+  width: 450px;
   lines: 3;
   text-overflow: ellipsis;
 }

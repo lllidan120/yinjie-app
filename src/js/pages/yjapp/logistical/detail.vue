@@ -1,24 +1,35 @@
 <template>
-    <scroller>
+    <list ref="list" :showRefresh="true" @refresh="getData">
+      <cell>
         <div class="top content">
             <div class="top-row">
-                <img class="top-row-icon" src="bmlocal://assets/icon/time.png">
+                <img class="top-row-icon" src="http://yj.kiy.cn/Content/Images/App/assets/icon/time.png">
                 <text class="gray-color">&nbsp;配送时间</text>
                 <text class="text-color">&nbsp;{{listItem.DistributorDate}}</text>
             </div>
             <div class="top-row">
-                <img class="top-row-icon" src="bmlocal://assets/icon/time.png">
+                <img class="top-row-icon" src="http://yj.kiy.cn/Content/Images/App/assets/icon/time.png">
+                <text class="gray-color">&nbsp;生产单号</text>
+                <text class="text-color">&nbsp;{{listItem.ThirdPlatformOrderNo}}</text>
+            </div>
+            <div class="top-row">
+                <img class="top-row-icon" src="http://yj.kiy.cn/Content/Images/App/assets/icon/time.png">
+                <text class="gray-color">&nbsp;平台单号</text>
+                <text class="text-color">&nbsp;{{listItem.CytMallId}}</text>
+            </div>
+            <div class="top-row">
+                <img class="top-row-icon" src="http://yj.kiy.cn/Content/Images/App/assets/icon/time.png">
                 <text class="gray-color">&nbsp;物流单号</text>
                 <text class="text-color">&nbsp;{{listItem.Id}}</text>
             </div>
         </div>
 
         <div class="content top-two">
-            <image src="bmlocal://assets/icon/orderimg.png" class="content-left"></image>
-            <div class="content-right">
+            <image src="http://yj.kiy.cn/Content/Images/App/assets/icon/orderimg.png" class="content-left"></image>
+            <scroller class="content-right">
                 <div class="content-right-col">
                     <text class="gray-color">联系电话&nbsp;</text>
-                    <text>{{listItem.ReceiveTelePhone}}</text>
+                    <text style="color: blue;" @click="call(listItem.ReceiveTelePhone)">{{listItem.ReceiveTelePhone}}</text>
                 </div>
                 <div class="content-right-col">
                     <text class="gray-color">路线&nbsp;</text>
@@ -27,43 +38,10 @@
                 <div class="content-right-col">
                     <text class="address">{{listItem.address}}</text>
                 </div>
-            </div>
+            </scroller>
         </div>
 
-        <div class="content top-three">
-            <div class="top-three-top">
-                <image src="bmlocal://assets/icon/orderimg.png" class="top-three-top-img"></image>
-                <text class="text-color">{{listItem.MemberCard}}</text>
-            </div>
-            <div>
-                <image src='http://img.lanrentuku.com/img/allimg/1212/5-121204194026.gif' v-if="showload" style="height:40px;width:300px,align-items:center;background-color:#fff;" resize="contain" quality="original"></image>
-                <div class="top-three-center" v-for="(item , index) in list" :key="index">
-                    <image src="bmlocal://assets/icon/tabimg.png" class="content-left order"></image>
-                    <div class="content-right">
-                        <div class="content-right-col">
-                            <text class="gray-color text">物流状态 :&nbsp;</text>
-                            <text class="blue-color text">{{item.Logistics_status}}</text>
-                        </div>
-                        <div class="content-right-col">
-                            <text class="gray-color text">扫描人 :&nbsp;</text>
-                            <text class="text-color text">何文帮&nbsp;&nbsp;</text>
-                            <text class="gray-color text">扫描时间 :&nbsp;</text>
-                            <text class="text-color text">{{item.UpdateDate}}</text>
-                        </div>
-                        <div class="content-right-col">
-                            <text class="gray-color text">是否异常 :&nbsp;</text>
-                            <text class="text-color text">{{item.isAbnormal ? '是' : '否'}}</text>
-                            <text class="gray-color text">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单号 :&nbsp;</text>
-                            <text class="text-color text">{{item.LogisticsNo_Key}}</text>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="top-three-top" style="justify-content:flex-end;">
-                <text class="text-color">合计:&nbsp;</text>
-                <text class="blue-color big">{{listItem.Goods_Qty}}</text>
-            </div>
-        </div>
+        
 
         <div class="center content" style="margin-top:28px;">
             <div class="col-content col-content-top">
@@ -88,12 +66,52 @@
             </div>
         </div>
 
-    </scroller>
+        <div class="content top-three">
+            <div class="top-three-top">
+                <image src="http://yj.kiy.cn/Content/Images/App/assets/icon/orderimg.png" class="top-three-top-img"></image>
+                <text class="text-color">{{listItem.MemberCard}}</text>
+            </div>
+            <div>
+                <image src='http://img.lanrentuku.com/img/allimg/1212/5-121204194026.gif' v-if="showload" style="height:40px;width:300px,align-items:center;background-color:#fff;" resize="contain" quality="original"></image>
+                <div class="top-three-center" v-for="(item , index) in list" :key="index">
+                    <image src="http://yj.kiy.cn/Content/Images/App/assets/icon/tabimg.png" class="content-left order"></image>
+                    <div class="content-right">
+                        <div class="content-right-col">
+                            <text class="gray-color text">物流状态 :&nbsp;</text>
+                            <text class="blue-color text">{{item.strStatus}}</text>
+                        </div>
+                        <div class="content-right-col">
+                            <text class="gray-color text">扫描人 :&nbsp;</text>
+                            <text class="text-color text">{{item.strUserName}}&nbsp;&nbsp;</text>
+                            <text class="gray-color text">扫描时间 :&nbsp;</text>
+                            <text class="text-color text">{{item.InsertTime}}</text>
+                        </div>
+                        <div class="content-right-col">
+                            <!-- <text class="gray-color text">是否异常 :&nbsp;</text>
+                            <text class="text-color text">{{item.isAbnormal ? '是' : '否'}}</text> -->
+                            <text class="gray-color text">物流单号 :&nbsp;</text>
+                            <text class="text-color text">{{item.LogisticsNo_Key}}</text>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="top-three-top" style="">
+                <!-- <text class="text-color">合计:&nbsp;</text>
+                <text class="blue-color big">{{listItem.Goods_Qty}}</text> -->
+                <wxc-simple-flow :list="testData" ></wxc-simple-flow>
+            </div>
+        </div>
+      </cell>
+    </list>
 </template>
 
 <script>
 import API from "Utils/api";
+import { WxcSimpleFlow } from 'weex-ui';
 export default {
+  components: {
+    WxcSimpleFlow
+  },
   data() {
     return {
       tapBackTime: 0,
@@ -101,7 +119,16 @@ export default {
       statusBarStyle: "LightContent",
       listItem: {},
       list: [],
-      showload: true
+      showload: true,
+      themeColor: {
+        lineColor: '#bf280b',
+        pointInnerColor: '#b95048',
+        pointBorderColor: '#bf280b',
+        highlightTitleColor: '#bf280b',
+        highlightPointInnerColor: '#bf280b',
+        highlightPointBorderColor: '#d46262'
+      },
+      testData: []
     };
   },
   eros: {
@@ -111,30 +138,50 @@ export default {
     }
   },
   methods: {
-    async getData(ID) {
-      this.$notice.loading.show("正在加载");
-      var RES = await API.YJ_GETORDER({ "@Id": ID });
+    async getData() {
+      // this.$notice.loading.show("正在加载");
+
+      var RES = await API.YJ_GETORDER({ "@id": this.listItem.Id });
       if (RES.SUCCESS) {
-        var DATA = JSON.parse(RES.DATA)[0];
-        console.log(DATA)
-        this.getChildOrder(DATA.Id)
-        this.listItem = DATA;
+        var DATA = JSON.parse(RES.DATA);
+        this.getChildOrder(DATA.Head[0].Id)
+        this.listItem = DATA.Head[0];
       } else {
         this.$notice.toast({ message: RES.MESSAGE });
         this.$router.back();
       }
-      this.$notice.loading.hide();
+      // this.$notice.loading.hide();
+      this.$refs["list"].refreshEnd()
     },
     async getChildOrder (orderId) {
       const RES = await API.YJ_ORDERLIST({'@LogisticsNO_PKey' : orderId})
       const DATA = JSON.parse(RES.DATA)
+      const Status = await API.YJ_ORDERLISTSTATUS({'$oId': DATA[0].LogisticsNo_Key})
+      
+      this.list = []
       DATA.map(item => {
         this.list.push(item)
+      })
+      this.testData = []
+      var StatusArr = Status.map.dgData
+      StatusArr.map((item , index) => {
+        var data = {
+          'date': item.CreateDate,
+          'desc': item.Remark,
+          'title':  '操作人: ' + item.RealName
+        }
+        if(index === 0) {
+          data = Object.assign(data , {'highlight' : true})
+        }
+        this.testData.push(data)
       })
       this.showload = false
     },
     refresh() {
       this.$router.refresh();
+    },
+    call(number) {
+      this.$coms.call(number)
     }
   },
   mounted() {},
@@ -188,11 +235,11 @@ export default {
   top: 15px;
 }
 .top {
-  height: 144px;
+  height: 245px;
   padding-top: 25px;
 }
 .top-two {
-  height: 225px;
+  height: 250px;
   margin-top: 25px;
   padding-top: 30px;
 }
@@ -221,9 +268,9 @@ export default {
   justify-items: center;
   align-items: center;
   width: 750px;
-  height: 72px;
+  /* height: 72px; */
   padding-left: 40px;
-  padding-right: 40px;
+  /* padding-right: 40px; */
 }
 .top-three-top-img {
   width: 24px;
