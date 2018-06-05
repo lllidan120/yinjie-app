@@ -100,11 +100,6 @@
 			},
 			goMain() {
 				this.$router.setHomePage('/pages/yjapp/index.js')
-				// this.$router.open({
-				// 	name: 'main',
-				// 	type: 'PUSH',
-				// 	canBack: false
-				// })
 			},
 			downLoad () {
 				this.$router.openBrowser('http://yj.kiy.cn/Global/HotUpdate/HttpDownload')

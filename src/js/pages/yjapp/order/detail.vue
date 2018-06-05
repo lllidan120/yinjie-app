@@ -2,7 +2,6 @@
     <list ref="scrollerList" :showRefresh="true" @refresh="onrefresh">
         <cell>
             <scroller>
-                <!-- <category title="订单信息"></category> -->
                 <wxc-cell 
                     label="订单号"
                     :title="listItem.Id"
@@ -31,6 +30,11 @@
                 <wxc-cell 
                     label="货物数量"
                     :title="listItem.Shuliang "
+                    @wxcCellClicked="getParams">
+                </wxc-cell>
+                <wxc-cell 
+                    label="订单总价"
+                    :title="listItem.OrderAmount "
                     @wxcCellClicked="getParams">
                 </wxc-cell>
                 <wxc-cell 
@@ -68,34 +72,38 @@
                     :title="listItem.FileName  "
                     @wxcCellClicked="getParams">
                 </wxc-cell>
+                <div class="top-three-top">
+                    <wxc-simple-flow :list="testData" ></wxc-simple-flow>
+                </div>
             </scroller>
         </cell>
     </list>
 </template>
 <script>
-import { WxcCell } from 'weex-ui'
-import Category from '../_mods/category'
+import { WxcCell , WxcSimpleFlow } from 'weex-ui'
 import API from 'Utils/api'
 export default {
-    components: { WxcCell, Category }, 
+    components: { WxcCell, WxcSimpleFlow }, 
     data () {
         return {
             tapBackTime: 0,
             navShow: true,
             statusBarStyle: 'LightContent',
-            listItem: {}
+            listItem: {},
+            testData: []
         }
     },
     eros: {
         beforeAppear(params, options ) {
-                this.listItem = params
+            this.listItem = params
+            this.onrefresh()
         }
     },
     methods: {
         call(number) {
             this.$coms.call(number)
         },
-        async onrefresh() {
+        async onrefresh(type) {
             var par = {
                 "orderId" : this.listItem.Id,
                 'page_no' : 1,
@@ -105,10 +113,28 @@ export default {
             if(RES.Success) {
                 var RESDATA = JSON.parse(RES.Data)
                 var DGDATA = RESDATA.data.Models
-                console.log(JSON.stringify(DGDATA[0]))
                 this.listItem = DGDATA[0]
+                // this.getChildOrder()
             }
-            this.$refs["scrollerList"].refreshEnd()
+            if(type) {
+                this.$refs["scrollerList"].refreshEnd()
+            }
+        },
+        async getChildOrder () {
+            const Status = await API.YJ_ORDERLISTSTATUS({'@cytId': this.listItem.Id})
+            this.testData = []
+            var StatusArr = Status.map.dgData
+            StatusArr.map((item , index) => {
+                var data = {
+                    'date': item.CreateDate,
+                    'desc': item.Remark,
+                    'title':  '操作人: ' + item.RealName
+                }
+                if(index === 0) {
+                    data = Object.assign(data , {'highlight' : true})
+                }
+                this.testData.push(data)
+            })
         }
     },
     mounted() {
@@ -120,3 +146,15 @@ export default {
 
 }
 </script>
+<style>
+.top-three-top {
+  flex-direction: row;
+  justify-items: center;
+  align-items: center;
+  width: 750px;
+  /* height: 72px; */
+  padding-left: 40px;
+  /* padding-right: 40px; */
+}
+</style>
+

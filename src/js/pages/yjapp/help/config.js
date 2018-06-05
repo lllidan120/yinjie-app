@@ -20,11 +20,11 @@ export default {
             icon: 'https://gw.alicdn.com/tfs/TB1Do3tSXXXXXXMaFXXXXXXXXXX-72-72.png',
             activeIcon: 'https://gw.alicdn.com/tfs/TB1LiNhSpXXXXaWXXXXXXXXXXXX-72-72.png'
         },
-        // {
-        //     title: '关于收货',
-        //     icon: 'https://gw.alicdn.com/tfs/TB1jFsLSXXXXXX_aXXXXXXXXXXX-72-72.png',
-        //     activeIcon: 'https://gw.alicdn.com/tfs/TB1_Kc.SXXXXXa8XpXXXXXXXXXX-72-72.png'
-        // }
+        {
+            title: '关于版本更新',
+            icon: 'https://gw.alicdn.com/tfs/TB1jFsLSXXXXXX_aXXXXXXXXXXX-72-72.png',
+            activeIcon: 'https://gw.alicdn.com/tfs/TB1_Kc.SXXXXXa8XpXXXXXXXXXX-72-72.png'
+        }
     ],
     tabContent: [
         [
@@ -66,14 +66,14 @@ export default {
             style: {width: '543px',height:'925px'}
         }],
         [{
-            title: '主页面点击发货单可以进入发货单列表，查看分配给当前业务员的发货',
+            title: '主页面点击发货单可以进入发货单列表，查看分配给当前业务员的发货单。',
             img: 'http://yj.kiy.cn/Content/Images/App/help/QQ图片20180601160321.jpg',
             style: {
                 width: '543px',
                 height: '925px'
             }
         }, {
-            title: '点击可以进入详情，可以选择点击收货按钮和付款二维码',
+            title: '点击可以进入详情，可以选择点击收货按钮和付款二维码。',
             img: 'http://yj.kiy.cn/Content/Images/App/help/QQ图片20180601160317.jpg',
             style: {
                 width: '543px',
@@ -87,7 +87,7 @@ export default {
                 height: '925px'
             }
         }, {
-            title: '如果发货单有需要代收的订单，并且订单已经配送完成，可以点击二维码按钮选择需要付款进行付款。',
+            title: '如果发货单有需要代收的订单，并且订单已经配送完成，可以点击二维码按钮选择需要付款的单进行付款。',
             img: 'http://yj.kiy.cn/Content/Images/App/help/QQ图片20180601160309.jpg',
             style: {
                 width: '543px',
@@ -123,6 +123,35 @@ export default {
                 height: '925px'
             }
         }],
+        [{
+            title: '印捷物流APP一般每次打开都会默认执行一次APP的版本检测，如需更新则下载更新包（100~200kb的大小），等待下一次打开APP会自动完成所有更新，一切都在后台默默完成，不需要用户手动操作。如果需要手动检测，点击导航栏的个人中心，可以看到APP版本检测按钮和当前APP的版本号，点击进行版本检测。',
+            img: 'http://yj.kiy.cn/Content/Images/App/help/QQ图片20180604144815.png',
+            style: {
+                width: '543px',
+                height: '925px'
+            }
+        }, {
+            title: '如果当前版本不是最新，会弹出提示，点击确定退出APP更新，如果第一次更新没有成功，请再点击一次，一般就成功了。',
+            img: 'http://yj.kiy.cn/Content/Images/App/help/QQ图片20180604144834.jpg',
+            style: {
+                width: '543px',
+                height: '925px'
+            }
+        }, {
+            title: '更新成功后，当前APP版本号会改变。',
+            img: 'http://yj.kiy.cn/Content/Images/App/help/QQ图片20180604144922.png',
+            style: {
+                width: '543px',
+                height: '925px'
+            }
+        }, {
+            title: '再次点击更新，会提示版本已经是最新，不需要更新。',
+            img: 'http://yj.kiy.cn/Content/Images/App/help/QQ图片20180604144930.jpg',
+            style: {
+                width: '543px',
+                height: '925px'
+            }
+        }]
 
 
 

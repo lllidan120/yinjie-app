@@ -20,11 +20,15 @@
     methods: {
       getGeo () {
           var _this = this;
+             _this.$notice.loading.show("正在获取地址");
             amap.initAmap('349219d285861a2745a23276039a0ddb')
             this.$geo.get().then(data => {
                 _this.pos[0] = data.locationLat
                 _this.pos[1] = data.locationLng
+                _this.$notice.loading.hide()
             }, error => {
+                _this.$notice.loading.hide()
+                
                 _this.$notice.toast({
                     message: '获取地址失败'
                 })

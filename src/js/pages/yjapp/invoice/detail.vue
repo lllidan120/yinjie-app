@@ -31,6 +31,10 @@
             @wxcCellClicked="call(listItem.tel)">
         </wxc-cell>
         <wxc-cell 
+            label="地址"
+            :title="listItem.Address">
+        </wxc-cell>
+        <wxc-cell 
             label="合计"
             :title="listItem.CollectionMoney "
             @wxcCellClicked="getParams">
@@ -85,7 +89,7 @@
                 <div class="table-td"><text class="table-text">应收</text></div>
                 <div class="table-td"><text class="table-text">状态</text></div>
             </div>
-            <div class="table-cell" v-for="item in listData">
+            <div class="table-cell" v-for="(item , key) in listData" :key ="key">
                 <div class="table-td"><text class="table-text">{{item.Id}}</text></div>
                 <div class="table-td"><text class="table-text">{{item.CytMallId}}</text></div>
                 <div class="table-td"><text class="table-text">{{item.intCount}}</text></div>
@@ -99,42 +103,6 @@
                     @wxcDialogCancelBtnClicked="wxcDialogCancelBtnClicked"
                     @wxcDialogConfirmBtnClicked="wxcDialogConfirmBtnClicked">
         </wxc-dialog>
-        <wxc-mask height="800"
-              width="702"
-              border-radius="0"
-              duration="200"
-              mask-bg-color="#FFFFFF"
-              :overlay-can-close="true"
-              :has-animation="false"
-              :has-overlay="true"
-              :show-close="true"
-              :show="show"
-              @wxcMaskSetHidden="wxcMaskSetHidden(1)">
-            <div class="content">
-                <div class="demo-title">
-                <text class="title">{{maskTitle}}</text>
-                </div>
-                <scroller class="content-text">
-                    <wxc-checkbox :title="selectTitle" :checked="selectAll" @wxcCheckBoxItemChecked="wxcCheckBoxItemChecked"></wxc-checkbox>
-                    <wxc-checkbox-list  :cellStyle="cellStyle" :list="listData" @wxcCheckBoxListChecked="wxcCheckBoxListChecked"
-                        ></wxc-checkbox-list>
-                    <div class="size" style="margin-bottom: 20px;">
-                        <wxc-button text="确认操作"
-                                    type="blue"
-                                    size="medium"
-                                    @wxcButtonClicked="wxcButtonClicked('ok')"></wxc-button>
-                        <wxc-button text="取消操作"
-                                    type="yellow"
-                                    size="medium"
-                                    @wxcButtonClicked="wxcButtonClicked('cancel')"></wxc-button>
-                        <wxc-button text="返回扫描"
-                                    type="white"
-                                    size="medium"
-                                    @wxcButtonClicked="wxcButtonClicked('scan')"></wxc-button>
-                    </div>
-                </scroller>
-            </div>
-        </wxc-mask>
         <wxc-mask height="800"
               width="702"
               border-radius="0"
@@ -380,6 +348,9 @@ export default {
                 const RES = await API.YJ_enterFahuo({'@intFahuoID' : this.listItem.id , '@intScanner' : this.userInfo.adminId , '@strScanner' : this.userInfo.RealName})
                 this.$notice.loading.hide();
                 if(RES.SUCCESS) {
+                    this.$notice.toast({
+                        message: RES.MESSAGE
+                    });
                     this.enterShow = false;
                     this.load = true
                     this.onrefresh()

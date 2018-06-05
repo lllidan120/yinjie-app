@@ -8,7 +8,7 @@
         </div>
         <div class="content">
           <text class="desc">Google announced a new version of Nearby Connections for fully offline.high bandwidth peer to peer device communications.</text>
-        </div>
+        </div> 
         <div class="footer">
           <text class="action">SHARE</text>
           <text class="action" style="color:#1da1f2">EXPLORE</text>

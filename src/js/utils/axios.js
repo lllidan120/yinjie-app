@@ -68,7 +68,8 @@ axios.postApiData = (param , url , type) => new Promise((resolve , reject) => {
             'SysRoleId': userInfo.RoleId
         })
     }
-    // console.log(JSON.stringify(param))
+    console.log(JSON.stringify(param))
+    console.log(url)
     bmAxios.fetch({
         url: url,
         data:  param,

@@ -53,16 +53,16 @@
                 <text class="col-content-right ">{{listItem.ReceiveName  }}</text>
             </div>
             <div class="col-content ">
-                <text class="col-content-left gray-color">重量</text>
-                <text class="col-content-right ">{{listItem.TotalWeight }}</text>
+                <text class="col-content-left gray-color">已收</text>
+                <text class="col-content-right ">{{ listItem.PayCollectionMoney }}</text>
             </div>
             <div class="col-content ">
-                <text class="col-content-left gray-color">订单金额</text>
+                <text class="col-content-left gray-color">应收</text>
                 <text class="col-content-right ">{{listItem.Price }}</text>
             </div>
             <div class="col-content ">
-                <text class="col-content-left gray-color">仓库</text>
-                <text class="col-content-right ">{{listItem.WarhoursCodeName}}</text>
+                <text class="col-content-left gray-color">总金额</text>
+                <text class="col-content-right ">{{listItem.OrderSumPrice}}</text>
             </div>
         </div>
 
@@ -128,16 +128,22 @@ export default {
         highlightPointInnerColor: '#bf280b',
         highlightPointBorderColor: '#d46262'
       },
-      testData: []
+      testData: [],
+      refreshStatus: false
     };
   },
   eros: {
     beforeAppear(params, options) {
       this.listItem = params;
-      this.getChildOrder (params.Id)
+      // this.getChildOrder (params.Id)
+      this.getData()
     }
   },
   methods: {
+    refresh() {
+      this.refreshStatus = true
+      this.getData()
+    },
     async getData() {
       // this.$notice.loading.show("正在加载");
 
@@ -151,7 +157,11 @@ export default {
         this.$router.back();
       }
       // this.$notice.loading.hide();
-      this.$refs["list"].refreshEnd()
+      if(this.refreshStatus) {
+        this.refreshStatus = false
+        this.$refs["list"].refreshEnd()
+      }
+      
     },
     async getChildOrder (orderId) {
       const RES = await API.YJ_ORDERLIST({'@LogisticsNO_PKey' : orderId})
@@ -308,6 +318,7 @@ export default {
   width: 200px;
 }
 .col-content-right {
+  padding-right: 10px;
   width: 500px;
   text-align: right;
 }

@@ -1,11 +1,5 @@
 <template>
   <div class="container" >
-    <div class="tool-btn" style="background-color:#6A1B9A;bottom:500;right:350" @click="car">
-        <text class="text">拍照</text>
-    </div>
-    <div class="tool-btn" style="background-color:#0277BD;bottom:600;right:450" @click="pick">
-        <text class="text">选择</text>
-    </div>
     <div ref="b1" class="tool-btn" style="background-color:#6A1B9A" @click="clickBtn">
         <text class="text">A</text>
     </div>
@@ -154,25 +148,6 @@
                 this.expand();
             }
             this.isExpanded = !this.isExpanded;
-        },
-        car: function() {
-            this.$image.camera({               
-            })
-            .then(resData => {
-                console.log(resData)   
-            }, error => {
-                console.log(error)
-            })
-        },
-        pick: function() {
-            this.$image.pick({
-                maxCount: 2            
-            })
-            .then(resData => {
-                console.log(resData)   
-            }, error => {
-                console.log(error)
-            })
         }
     }
   }

@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="search-bar">
+    <div class="search-bar" ref="top">
       <search-bar :searchType="searchType" :showScanBtn='true' @onChange="typeChange" @inputChange="inputChange" @scanClick="scanClick" @searchClick="searchClick">
       </search-bar>
       <datepick @selectTime="selectTime" @startDateFinish="startDateFinish" @endDateFinish="endDateFinish"></datepick>
     </div>
     <recycle-list for="(item, cellIndex) in listData" @loadmore="getData">
       <cell-slot>
-        <div class="list">
+        <div class="list" v-if="item.show">
           <div class="list-box">
             <div class="list-box-title" @click="toDetail(item)">
               <div class="list-col" style="width:300px;padding-left:15px;">
@@ -22,7 +22,7 @@
                   <img class="list-title-icon" src="http://yj.kiy.cn/Content/Images/App/assets/icon/user.png">
                   <text class="title">会员号</text>
                 </div>
-                <text class="text center text-color">{{item.ThirdPlatformId}}</text>
+                <text class="text center text-color">{{item.UserId}}</text>
               </div>
               <div class="list-col">
                 <text class="blue">总金额: {{ item.Price }}</text>
@@ -136,14 +136,24 @@ export default {
       this.init(resData);
     });
   },
-  mounted() {},
+  mounted() {
+    this.$event.on("paySuccess", params => {
+      this.onRefresh();
+    });
+  },
   methods: {
     async getData() {
       var _this = this;
       this.param["@rowIndex"]++;
-      this.param = Object.assign(this.param, {
-        "@adminId": this.userInfo.adminId
-      });
+      // if adminId == 1 or adminId = 4 ,is admin
+      if(this.userInfo.RoleId === 1 || this.userInfo.RoleId === 4) {
+
+      } else {
+        this.param = Object.assign(this.param, {
+          "@adminId": this.userInfo.adminId
+        });
+      }
+      
       this.param = Object.assign(this.param, this.listType);
       if (this.searchValue != "") {
         if (this.searchType == this.btns[0].key) {
@@ -180,6 +190,7 @@ export default {
         var DGDATA = JSON.parse(RESDATA.dgData);
         if (DGDATA.length != 0) {
           DGDATA.map(item => {
+            item.show = true
             this.listData.push(item);
           });
         } else {
@@ -208,11 +219,9 @@ export default {
         }
       );
       this.listType = param.type;
-      // this.param = Object.assign(this.param , param.type)
       this.getData();
     },
     typeChange(value) {
-      // this.searchType = value;
       this.$refs["wxc-popover"].wxcPopoverShow();
     },
     inputChange(val) {
@@ -250,7 +259,7 @@ export default {
       var _this = this;
       this.$notice.confirm({
         title: "物流号" + item.Id,
-        message: `会员号${item.UserId}欠款${item.Freight}元，确认收货?`,
+        message: `是否确认收货?`,
         okTitle: "确认收货",
         cancelTitl: "取消",
         okCallback() {
@@ -266,9 +275,14 @@ export default {
       const RES = await API.YJ_ENTER(param);
       this.$notice.loading.hide();
       if (RES.SUCCESS) {
+        var arr = []
         this.listData.map((listItem , index) => {
           if(listItem.Id == item.Id) {
             this.listData[index].logState = 50;
+            // 将已确认收货的元素从列表中删除
+            this.listData[index].oCount = 0
+            this.listData[index].show = false
+            this.listData.splice(index , 1)
           }
         })
         this.$notice.toast({

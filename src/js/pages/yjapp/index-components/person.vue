@@ -40,15 +40,16 @@
         },
         bottomList : [
           {
-            title: '帮助',
-            icon: 'http://yj.kiy.cn/Content/Images/App/assets/main/开始配送.png',
-            name: 'helpindex'
+            title: 'APP操作记录',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/main/4.png',
+            name: 'apprecord'
           },
           {
-            title: 'APP版本检测   6-2',
-            icon: 'http://yj.kiy.cn/Content/Images/App/assets/main/开始配送.png',
-            name: 'update'
+            title: '使用帮助',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/main/拜访记录.png',
+            name: 'helpindex'
           }
+          
         ],
         bottomList2 : [
           {
@@ -63,7 +64,12 @@
 
     },
     created () {
-
+      var item = {
+        title: 'APP版本检测  V ' + API.App_Version,
+        icon: 'http://yj.kiy.cn/Content/Images/App/assets/main/开始配送.png',
+        name: 'update'
+      }
+      this.bottomList.push(item)
     },
     mounted () {
       this.userInfo = API.get_userInfo(this)
@@ -76,11 +82,6 @@
         if(item.name == 'login'){
           this.$storage.deleteSync('userInfo')
           this.$router.setHomePage('/pages/yjapp/login.js')
-          // this.$router.open({
-          //   name: item.name,
-          //   type: 'PUSH',
-          //   canBack: false
-          // })
         } else if (item.name == 'update') {
           this.checkUpdate()
         } else {
@@ -96,8 +97,8 @@
         var _this = this;
         var attr = weex.config.eros
         var data = {
-          jsVersion: attr.jsVersion,
           appName: attr.appName,
+          version: API.App_Version,
           os: attr.os
         }
         this.$notice.toast({

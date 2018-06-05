@@ -14,18 +14,18 @@
         <div class="table-cell">
             <div class="table-td table-head"><text class="table-text">订单号</text></div>
             <div class="table-td table-head"><text class="table-text">会员号</text></div>
-            <div class="table-td table-head"><text class="table-text">日期</text></div>
+            <div class="table-td table-head width-200px"><text class="table-text">日期</text><text class="table-text">是否打印</text></div>
             <div class="table-td table-head"><text class="table-text" style="color:red;">应收款</text><text class="table-text" style="color:green;">已收款</text></div>
-            <div class="table-td table-head"><text class="table-text">发货额</text></div>
+            <div class="table-td table-head width-100px"><text class="table-text">发货额</text></div>
         </div>
         <!-- @loadmore="getData" -->
         <list class="bui-list" ref="list" :show-scrollbar="true" :showRefresh="true" @refresh="onRefresh"   loadmoreoffset="2">
             <cell class="table-cell" v-for="item in listData" @click="toDetail(item)">
                 <div class="table-td"><text class="table-text">{{item.id}}</text></div>
                 <div class="table-td"><text class="table-text">{{item.uid}}</text></div>
-                <div class="table-td"><text class="table-text">{{item.dDate}}</text></div>
+                <div class="table-td width-200px"><text class="table-text">{{item.dDate}}</text><text>{{item.isPrint}}</text></div>
                 <div class="table-td"><text class="table-text" style="color:red;">{{item.intMustPay}}</text><text class="table-text" style="color:green;">{{item.PayCollectionMoney}}</text></div>
-                <div class="table-td"><text class="table-text">{{item.CollectionMoney}}</text></div>
+                <div class="table-td width-100px"><text class="table-text">{{item.CollectionMoney}}</text></div>
             </cell>
             <loading class="loading" @loading="getData" :display="showload ? 'show' : 'hide'">
               <text class="indicator-text">加载更多 ...</text>
@@ -52,7 +52,6 @@
 	</div>
 
 </template>
-<style lang="sass" src="bui-weex/src/css/buiweex.scss"></style>
 <script>
 import searchBar from "../_mods/new-search-bar";
 import { WxcCheckboxList, WxcPopover } from "weex-ui";
@@ -286,6 +285,7 @@ export default {
     },
     searchClick(value) {
       this.searchValue = value
+      this.onrefreshState= false
       this.refresh();
     },
     refresh() {
@@ -310,11 +310,13 @@ export default {
     popoverButtonClicked(obj) {
       this.searchType = this.btns[obj.index].text
       this.param['@Status'] = obj.key
+      this.onrefreshState= false
       this.refresh();
     },
     popoverButtonClickedTwo(obj) {
         this.searchTypeTwo = this.btnsTwo[obj.index].text
         this.param['@bPay'] = obj.key
+        this.onrefreshState= false
         this.refresh();
     },
     onloading () {
@@ -453,8 +455,8 @@ export default {
     display:block;
     float: left;
     width: 150px;
-    height: 75px;
-    line-height: 75px;
+    height: 100px;
+    line-height: 100px;
     align-items: center;
     justify-content: center;
     border-width: 2px;
@@ -463,10 +465,17 @@ export default {
     background-color: #fff;
 }
 .table-text {
-    font-size: 26px;
+    font-size: 32px;
 }
 .table-head {
+    height: 75px;
     background-color: #e9eaec;
+}
+.width-200px {
+  width: 200px;
+}
+.width-100px {
+  width: 100px;
 }
 .loading {
     width: 750;

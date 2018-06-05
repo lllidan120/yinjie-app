@@ -39,7 +39,6 @@
 	</div>
 
 </template>
-// 批量操作列表
 <script>
 import searchBar from "../_mods/search-bar";
 import { WxcCheckboxList, WxcPopover } from "weex-ui";
@@ -113,24 +112,6 @@ export default {
       } else {
           this.selectAllStatu = true
       }
-      // if(e.checkedList.length != 0){
-      //   this.listData.map((item , index) => {
-      //     e.checkedList.map(obj => {
-      //       if(item.Id === obj) {
-      //         this.listData[index].checked = true
-      //       } else {
-      //         if(this.listData[index].checked) {
-
-      //         }else {
-      //           this.listData[index].checked = false
-      //         }
-      //       }
-      //     })
-      //   })
-      // } else {
-      //   this.selectAll({value: false})
-      // }
-      
     },
     selectAll(type) {
       // 全选

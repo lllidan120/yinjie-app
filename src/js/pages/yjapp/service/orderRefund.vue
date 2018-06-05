@@ -1,12 +1,21 @@
 <template>
   <scroller>
-    <category title="签到"></category>
-    <wxc-cell label="点击定位 >"
+    <wxc-cell label="售后类型 >"
                 :title="pos"
                 :has-arrow="false"
                 :has-top-border="true"
                 @wxcCellClicked="location"></wxc-cell>
-    <wxc-cell title="油耗"
+    <wxc-cell label="退款理由 >"
+                :title="pos"
+                :has-arrow="false"
+                :has-top-border="true"
+                @wxcCellClicked="location"></wxc-cell>
+    <wxc-cell label="退款方式 >"
+                :title="pos"
+                :has-arrow="false"
+                :has-top-border="true"
+                @wxcCellClicked="location"></wxc-cell>
+    <wxc-cell title="退款金额"
                 :has-arrow="false"
                 :has-top-border="true">
         <div class="wxc-search-bar" slot="value">
@@ -20,8 +29,29 @@
 				<input class="search-bar-input"/>
         </div>
     </wxc-cell>
-    <div class="tool-btn">
-      <image class="tool-image" ref="main_image" src="https://gw.alicdn.com/tfs/TB1PZ25antYBeNjy1XdXXXXyVXa-128-128.png" />
+    <wxc-cell title="联系人"
+                :has-arrow="false"
+                :has-top-border="true">
+        <div class="wxc-search-bar" slot="value">
+				<input class="search-bar-input"/>
+        </div>
+    </wxc-cell>
+    <wxc-cell title="联系电话"
+                :has-arrow="false"
+                :has-top-border="true">
+        <div class="wxc-search-bar" slot="value">
+				<input class="search-bar-input"/>
+        </div>
+    </wxc-cell>
+    <category title="售后凭证"></category>
+    
+    <div class="image-group" >
+        <div v-for="(item , key) in imageGroup" :key="key">
+            <image class="image" :src="item"></image>
+        </div>
+        <div class="tool-btn" @click="pick">
+            <image class="tool-image" ref="main_image" src="https://gw.alicdn.com/tfs/TB1PZ25antYBeNjy1XdXXXXyVXa-128-128.png" />
+        </div>
     </div>
   </scroller>
 </template>
@@ -71,8 +101,10 @@ export default {
     },
     pick () {
         var _this = this;
+        var len = 3 - this.imageGroup.length
+
         this.$image.pick({
-            maxCount: 2            
+            maxCount: len            
         })
         .then(resData => {
             console.log(resData)   
@@ -87,6 +119,16 @@ export default {
 }
 </script>
 <style>
+.image-group {
+    flex-direction: row;
+    padding-left: 20px;
+}
+.image {
+    width: 150px;
+    height: 150px;
+    margin-right: 20px;
+    margin-top: 20px;
+}
 .tool-image {
   width: 60px;
   height: 60px;
@@ -98,23 +140,22 @@ export default {
 }
 
 .tool-btn {
-  margin-top: 20px;
-  margin-right: 20px;
+  margin-top: 50px;
+  margin-left: 20px;
   width: 100px;
   height: 100px;
   background-color: #2096f2;
   align-items: center;
   justify-content: center;
-  position: absolute;
   border-radius: 50;
 
 }
 .wxc-search-bar {
-		background-color: #ffffff;
-		width: 500px;
-		height: 50px;
-		flex-direction: row;
-	}
+    background-color: #ffffff;
+    width: 500px;
+    height: 50px;
+    flex-direction: row;
+}
 .search-bar-input {
   padding-bottom: 0;
   padding-right: 40px;

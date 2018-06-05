@@ -10,7 +10,7 @@
     padding-left: 24px;
     width: 750px;
     height: 68px;
-    background-color: #1da1f2;
+    background-color: #2096f2;
     justify-content: center;
   }
   .category-text {

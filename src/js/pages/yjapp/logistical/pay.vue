@@ -1,7 +1,7 @@
 <template>
 	<list ref="listTop"  :showRefresh="true" @refresh="onrefresh"  :class="['aliColor' , payInfo.bweixin && 'wxColor' , payInfo.bweixin]">
 		<cell :class="['aliColor' , payInfo.bweixin && 'wxColor' , payInfo.bweixin]">
-			<text class="title">订单详情</text>
+			<text class="title head">订单详情(该页面每10秒自动刷新,现在刷新第{{count}}次)</text>
 		</cell>
 		<cell :class="['aliColor' , payInfo.bweixin && 'wxColor' , payInfo.bweixin]">
 			<div class="list">
@@ -19,7 +19,7 @@
 							<div class="col" >
 								<image src="http://yj.kiy.cn/Content/Images/App/assets/list/4.png" class="col-icon"></image>
 								<text class="text">物流单号：</text>
-								<text class="address text">{{payInfo.key}}</text>
+								<text class="text address">{{payInfo.key}}</text>
 							</div>
 						</div>
 					</div>
@@ -31,7 +31,8 @@
 		</cell>
 		<cell :class="['aliColor' , payInfo.bweixin && 'wxColor' , payInfo.bweixin]">
 			<text class="title" v-if="payInfo.bweixin">打开微信扫一扫(点击二维码打开大图)>></text>	
-			<text class="title" v-if="!payInfo.bweixin">打开支付宝扫一扫(点击二维码打开大图)>></text>	
+			<text class="title" v-if="!payInfo.bweixin">打开支付宝扫一扫(点击二维码打开大图)>></text>
+			<text class="title">流水号:{{payInfo.out_trade_no}}</text>	
 		</cell>
 		<cell :class="['aliColor' , payInfo.bweixin && 'wxColor' , payInfo.bweixin]">
 			<div class="code-content">
@@ -49,11 +50,13 @@
 		data () {
 			return {
 				payInfo: {},
+				count: 0
 			}
 		},
 		methods: {
 			onrefresh () {
 				var _this =this;
+				this.searchOrder()
 				setTimeout(function() {
 					_this.$refs["listTop"].refreshEnd()
 				} , 2000)
@@ -67,25 +70,33 @@
 				})
 			},
 			async searchOrder () {
-				var par = {
-					'@orderId': this.payInfo.key
+				try {
+					var par = {
+						'@orderId': this.payInfo.key
+					}
+					this.count++
+					var RES = await API.YJ_PAYCHECK(par)
+					if(RES.SUCCESS = true) {
+						const data = JSON.parse(RES.DATA)
+						if(data[0].success > 0) {
+							this.payInfo.strUrl = 'http://yj.kiy.cn/Content/Images/App/pays.png'
+							this.$event.emit('paySuccess')
+							this.$notice.toast({
+								message: '支付成功'
+							})
+						} else {
+
+						} 
+					}
+				} catch (error) {
+					
 				}
-				var RES = await API.YJ_PAYCHECK(par)
-				if(RES.SUCCESS = true) {
-					const data = JSON.parse(RES.DATA)
-					if(data[0].success > 0) {
-						this.payInfo.strUrl = 'http://yj.kiy.cn/Content/Images/App/pays.png'
-						this.$event.emit('paySuccess')
-						this.$notice.toast({
-							message: '支付成功'
-						})
-					} 
-				}
+				
 			}
 		},
 		mounted() {
-			setInterval(this.searchOrder , 2000)
-
+			
+			setInterval(this.searchOrder , 10000)
 		},
 		created () {
 
@@ -171,7 +182,8 @@
   }
   .address {
   	width: 300px;
-  	lines: 10;
+	lines: 10;
+	font-size: 32px;
     text-overflow: ellipsis;
   }
   .text {
@@ -216,5 +228,8 @@
   }
   .aliColor {
 	  background-color: #2096f2;
+  }
+  .head {
+	  font-size: 32px;
   }
 </style>

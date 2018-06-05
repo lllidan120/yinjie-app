@@ -56,7 +56,11 @@
 
 		}),
 		created () {
-			
+			this.$navigator.setRightItem({
+				image: 'http://yj.kiy.cn/Content/Images/App/assets/scan.png'
+			}, () => {
+				this.scanClick()
+			})
 		},
 		methods : {
 			typeClick () {

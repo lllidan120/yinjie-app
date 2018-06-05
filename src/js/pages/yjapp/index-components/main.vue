@@ -114,13 +114,12 @@
 					// 		MESSAGE: '该付款单应付XX元，是否前往？',
 					// 		DATA: JSON.stringify({url : 'invoice-detail'})
 					// 	}
-					
 					if(res.DATA) {
 						var DATA = JSON.parse(res.DATA)
 						if(DATA.url) {
 							_this.$notice.confirm({
 								title: '扫描成功',
-								message: res.MESSAGE,
+								message: DATA.msg ? DATA.msg : res.MESSAGE,
 								okTitle: '确认',
 								cancelTitle: '取消',
 								okCallback() {

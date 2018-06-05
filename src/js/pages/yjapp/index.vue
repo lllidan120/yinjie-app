@@ -60,6 +60,12 @@
         pages: []
       }]
     }),
+    eros: {
+      appActive() {
+        // 检测APP版本
+        this.checkUpdate()
+      }
+    },
 		beforeCreate: function () {
 			var domModule = weex.requireModule('dom');
 			domModule.addRule('fontFace', {
@@ -79,14 +85,29 @@
     },
     mounted () {
       this.isLogin()
-      this.getAccessBtn()
+      // this.getAccessBtn()
       // this.getAccess()
     },
     methods: {
       wxcTabBarCurrentTabSelected (e) {
         const index = e.page;
       },
-      
+      async checkUpdate() {
+        var _this = this;
+        var attr = weex.config.eros
+        var data = {
+          appName: attr.appName,
+          version: API.App_Version,
+          os: attr.os
+        }
+        var RES = await API.check_version(data)
+        if(RES.resCode === 0) {
+          this.$notice.toast({
+            message: RES.msg
+          });
+        }
+        
+      },
       androidFinishApp () {
         const globalEvent = weex.requireModule('globalEvent')
         globalEvent.addEventListener('homeBack', options => {
@@ -106,11 +127,7 @@
         }
       },
       toLoginPage() {
-        this.$router.open({
-          name: 'login',
-          type: 'PRESENT',
-          canBack: false
-        })
+        this.$router.setHomePage('/pages/yjapp/login.js')
       },
       async getAccessBtn( index , code) {
         var par = {

@@ -2,6 +2,7 @@ import axios from './axios.js'
 
 
 let api = { 
+	App_Version : '1.3',
 	YJ_GETORDER : (data) => axios.getAjaxData(data , 'search' , 'YJApp_OrderInfo'),
 	YJ_ENTER  : (data) => axios.getAjaxData(data , 'enterIn'),
 	YJ_SEARCH : (data) => axios.getAjaxData(data , 'search'),
@@ -9,6 +10,8 @@ let api = {
 	YJ_LOGIN  : (data) => axios.getAjaxData(data , 'login'),
 	YJ_WARHOURSCODE : (data) => axios.getAjaxData(data , 'search' , 'YJApp_GetWarhours'),
 	YJ_PAY : (data) => axios.getAjaxData(data, 'payMent'),
+	// 查看彩印通订单有没有物流单
+	YJ_GetOrder : (data) => axios.getAjaxData(data , 'search' , 'YJApp_GetOrder'),
 	YJ_PAYCHECK : (data) => axios.getAjaxData(data ,'search' , 'YJApp_IsPay'),
 	// 修i该用户资料
 	YJ_USERMANAGE : (data) => axios.getAjaxData(data, 'userManage' ),
@@ -30,10 +33,12 @@ let api = {
 	get_fahuoInfo : (data) => axios.getAjaxData(data , 'search' , 'getFahuoInfo'),
 	// 发货单确认到货 
 	YJ_enterFahuo: (data) => axios.getAjaxData(data , 'orderGroup' , 'enterOrderGroup'),
+	// 获取APP操作记录
+	Get_AppRecord: (data) => axios.getAjaxData(data , 'search' , 'Get_AppRecord'),
 	// 以下是缓存到store的参数
 	get_warhoursCode : (vm) => {return vm.$storage.getSync('warhoursCode')},
 	get_userInfo : (vm) => {return vm.$storage.getSync('userInfo')},
-	check_version: (data) => axios.postApiData(data,`http://yj.kiy.cn/Global/HotUpdate/CheckUpdate?isDiff=1&jsVersion=${data.jsVersion}&appName=${data.appName}&${data.os}=1.0`),
+	check_version: (data) => axios.postApiData(data,`http://yj.kiy.cn/Global/HotUpdate/CheckUpdate?isDiff=1&appName=${data.appName}&${data.os}=${data.version}`),
 	// 上传头像
 	post_uploadHead: (data) => axios.postApiData(data , `http://yj.kiy.cn/Global/HotUpdate/UpLoadHeadIcon?realName=${data.realName}`),
 
@@ -105,9 +110,23 @@ let api = {
 	    	default:
 	    		return {'@beginDate' : fornow , '@endDate' : fornow}
 	    }
+	},
+	formatTime (date) {
+		const data = date.split('T' , ' ')
+
+		const t1 = [year, month, day].map(formatNumber).join('/')
+		const t2 = [hour, minute, second].map(formatNumber).join(':')
+
+		return `${t1} ${t2}`
+
 	}
 
 }
+function formatNumber(n) {
+    const str = n.toString()
+    return str[1] ? str : `0${str}`
+}
+
 function padLeft (str) { 
 	var len = 2;
 	var char = '0';

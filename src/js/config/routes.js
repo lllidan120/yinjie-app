@@ -86,6 +86,14 @@ export default {
     'helpindex': {
         title: '帮助中心',
         url: '/pages/yjapp/help/index.js'
+    },
+    'apprecord': {
+        title: 'APP操作记录查询',
+        url: '/pages/yjapp/person/apprecord.js'
+    },
+    'orderRefund' : {
+        title: '发起售后',
+        url: '/pages/yjapp/service/orderRefund.js'
     }
 
 

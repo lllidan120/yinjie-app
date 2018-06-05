@@ -11,12 +11,22 @@
 				<text class="bottom-box-center">{{ item.sub }}</text>
 				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
 			</div>
+		</cell>
+		<cell class="bottom" >
 			<!-- <div class="bottom-box" @click="wxPay">
 				<text class="bottom-box-center">微信支付</text>
 				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
 			</div>
 			<div class="bottom-box" @click="toMap">
 				<text class="bottom-box-center">地图</text>
+				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
+			</div> -->
+			<!-- <div class="bottom-box" @click="toSign">
+				<text class="bottom-box-center">签到</text>
+				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
+			</div> -->
+			<!-- <div class="bottom-box" @click="toBindingx">
+				<text class="bottom-box-center">bindingx</text>
 				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
 			</div> -->
 		</cell>
@@ -98,6 +108,23 @@
 			toMap() {
 				this.$router.open({
 	    			name: 'map',
+	    			type: 'PUSH'
+	    		})
+			},
+			toSign () {
+				this.$image.camera({
+					imageWidth: '800',                  
+					allowCrop: false                  
+				})
+				.then(resData => {
+					console.log(resData)   
+				}, error => {
+					console.log(error)
+				})
+			},
+			toBindingx () {
+				this.$router.open({
+	    			name: 'orderRefund',
 	    			type: 'PUSH'
 	    		})
 			}
