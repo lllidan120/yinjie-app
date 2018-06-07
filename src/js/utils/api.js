@@ -2,7 +2,7 @@ import axios from './axios.js'
 
 
 let api = { 
-	App_Version : '1.3',
+	App_Version : '1.6',
 	YJ_GETORDER : (data) => axios.getAjaxData(data , 'search' , 'YJApp_OrderInfo'),
 	YJ_ENTER  : (data) => axios.getAjaxData(data , 'enterIn'),
 	YJ_SEARCH : (data) => axios.getAjaxData(data , 'search'),
@@ -20,6 +20,8 @@ let api = {
 	YJ_GETDRIVINGRECORD: (data) => axios.getAjaxData(data, 'search', 'GetDriving_record'),
 	// 获取子单列表
 	YJ_ORDERLIST: (data) => axios.getAjaxData(data, 'search', 'YJApp_OrderList'),
+	// 收款汇总
+	Get_AdminStatistics: (data) => axios.getAjaxData(data, 'search', 'Get_AdminStatistics'),
 	// 获取子单物流状态
 	YJ_ORDERLISTSTATUS: (data) => axios.getAjaxData(data , undefined , 'QueryOrderRecordsList' , '217141a5-01d0-4696-9500-ae2d82a8cb4c'),
 	// 查彩印通订单
@@ -33,6 +35,8 @@ let api = {
 	get_fahuoInfo : (data) => axios.getAjaxData(data , 'search' , 'getFahuoInfo'),
 	// 发货单确认到货 
 	YJ_enterFahuo: (data) => axios.getAjaxData(data , 'orderGroup' , 'enterOrderGroup'),
+	// 读取业务员
+	get_adminList: (data) => axios.getAjaxData(data , 'search' , 'QueryAdminList' , '217141a5-01d0-4696-9500-ae2d82a8cb4c'),
 	// 获取APP操作记录
 	Get_AppRecord: (data) => axios.getAjaxData(data , 'search' , 'Get_AppRecord'),
 	// 以下是缓存到store的参数

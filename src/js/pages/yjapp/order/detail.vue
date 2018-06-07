@@ -65,7 +65,7 @@
                 <wxc-cell 
                     label="订单状态"
                     :title="listItem.OrderStatusStr  "
-                    @wxcCellClicked="getParams">
+                    @wxcCellClicked="getParams"> 
                 </wxc-cell>
                 <wxc-cell 
                     label="文件名"
@@ -75,15 +75,20 @@
                 <div class="top-three-top">
                     <wxc-simple-flow :list="testData" ></wxc-simple-flow>
                 </div>
+                <div class="bottom-btn" v-if="false">
+                    <wxc-button text="发起售后"
+                        type="blue"
+                        @wxcButtonClicked="wxcButtonClicked"></wxc-button>
+                </div>
             </scroller>
         </cell>
     </list>
 </template>
 <script>
-import { WxcCell , WxcSimpleFlow } from 'weex-ui'
+import { WxcCell , WxcSimpleFlow , WxcButton } from 'weex-ui'
 import API from 'Utils/api'
 export default {
-    components: { WxcCell, WxcSimpleFlow }, 
+    components: { WxcCell, WxcSimpleFlow , WxcButton }, 
     data () {
         return {
             tapBackTime: 0,
@@ -114,7 +119,7 @@ export default {
                 var RESDATA = JSON.parse(RES.Data)
                 var DGDATA = RESDATA.data.Models
                 this.listItem = DGDATA[0]
-                // this.getChildOrder()
+                this.getChildOrder()
             }
             if(type) {
                 this.$refs["scrollerList"].refreshEnd()
@@ -135,6 +140,13 @@ export default {
                 }
                 this.testData.push(data)
             })
+        },
+        wxcButtonClicked () {
+            this.$router.open({
+    			name: 'orderRefund',
+    			type: 'PUSH',
+    			params: this.listItem
+    		})
         }
     },
     mounted() {
@@ -153,8 +165,20 @@ export default {
   align-items: center;
   width: 750px;
   /* height: 72px; */
-  padding-left: 40px;
+  margin-top: 20px;
   /* padding-right: 40px; */
+}
+.bottom-btn {
+    width: 750px;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: #E5E5E5;
+    padding-top: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 </style>
 

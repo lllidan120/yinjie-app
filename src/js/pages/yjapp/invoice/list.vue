@@ -159,7 +159,6 @@ export default {
         try {
             const RES = await API.get_fahuoInfo({'@intFahuoID' : item.id})
             const DATA = JSON.parse(RES.DATA)
-            console.log(DATA)
             this.$notice.loading.hide();
             this.$router.open({
                 name: 'invoice-detail',

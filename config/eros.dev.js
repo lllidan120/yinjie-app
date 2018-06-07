@@ -30,7 +30,9 @@ module.exports = {
         'js/pages/yjapp/echart/list.vue',
         'js/pages/yjapp/help/index.vue',
         'js/pages/yjapp/person/apprecord.vue',
-        'js/pages/yjapp/service/orderRefund.vue'
+        'js/pages/yjapp/service/orderRefund.vue',
+        'js/pages/yjapp/muff/index.vue'
+
     ],
     'alias': {
         'Components': 'js/components',

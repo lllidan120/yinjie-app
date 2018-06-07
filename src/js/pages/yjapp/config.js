@@ -119,26 +119,21 @@ export default {
             icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/公文包.png',
             name: 'collectionlist'
         }, 
-        // {
-
-        //     title: '收款汇总',
-        //     icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/统计.png',
-        //     name: 'echartlist'
-        // }
-
+        {
+            title: '收款汇总',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件.png',
+            name: 'echartlist'
+        },
         {
             title: '签到记录',
             icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/统计.png',
             name: 'signinlist'
         },
-        // {
-        //     title: '未扫单',
-        //     icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/对话.png',
-        //     type: {
-        //         '@orderStatu': '1,5,7,8'
-        //     },
-        //     name: 'dis-list'
-        // },
+        {
+            title: '手工输入',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/对话.png',
+            name: 'manualInput'
+        }
         // {
         //     title: '已扫单',
         //     icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/声音.png',

@@ -144,20 +144,20 @@ export default {
       this.refreshStatus = true
       this.getData()
     },
-    async getData() {
+    async getData(type) {
       // this.$notice.loading.show("正在加载");
 
       var RES = await API.YJ_GETORDER({ "@id": this.listItem.Id });
       if (RES.SUCCESS) {
         var DATA = JSON.parse(RES.DATA);
-        this.getChildOrder(DATA.Head[0].Id)
         this.listItem = DATA.Head[0];
+        this.getChildOrder(DATA.Head[0].Id)
       } else {
         this.$notice.toast({ message: RES.MESSAGE });
         this.$router.back();
       }
       // this.$notice.loading.hide();
-      if(this.refreshStatus) {
+      if(type) {
         this.refreshStatus = false
         this.$refs["list"].refreshEnd()
       }

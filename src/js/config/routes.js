@@ -94,7 +94,12 @@ export default {
     'orderRefund' : {
         title: '发起售后',
         url: '/pages/yjapp/service/orderRefund.js'
+    },
+    'manualInput': {
+        title: '手工输入',
+        url: '/pages/yjapp/muff/index.js'
     }
+
 
 
 }

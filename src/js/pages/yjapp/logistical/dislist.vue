@@ -10,7 +10,7 @@
         <div class="list" v-if="item.show">
           <div class="list-box">
             <div class="list-box-title" @click="toDetail(item)">
-              <div class="list-col" style="width:300px;padding-left:15px;">
+              <div class="list-col width280" style="">
                 <div class="icon-title-content">
                   <img class="list-title-icon" src="http://yj.kiy.cn/Content/Images/App/assets/icon/time.png">
                   <text class="title">入仓时间</text>
@@ -24,9 +24,10 @@
                 </div>
                 <text class="text center text-color">{{item.UserId}}</text>
               </div>
-              <div class="list-col">
-                <text class="blue">总金额: {{ item.Price }}</text>
+              <div class="list-col width170">
+                <text class="blue">总金额:{{ item.Price }}</text>
                 <text class="text">平台单:{{ item.CytMallId }}</text>
+                <text class="text" v-if="item.ThirdPlatformOrderNo">生产号:{{ item.ThirdPlatformOrderNo }}</text>
               </div>
             </div>
             <div class="list-box-content">
@@ -42,8 +43,8 @@
                 <div class="col">
                   <text class="text gray-color">物流编号  </text>
                   <text class="text text-color" style="width:110px;">{{item.Id}}</text>
-                  <text class="text gray-color">生产单号  </text>
-                  <text class="text text-color">{{item.ThirdPlatformOrderNo}} </text>
+                  <text class="text gray-color">产品名  </text>
+                  <text class="text text-color">{{item.Qitems}} </text>
                 </div>
                 <div class="col" style="height: 100px;">
                   <image src="http://yj.kiy.cn/Content/Images/App/assets/icon/company.png" class="col-icon"></image>
@@ -97,7 +98,11 @@ export default {
       listData: [],
       param: {
         "@rowIndex": 0,
-        "@pageSize": 20
+        "@pageSize": 20,
+        '@id': undefined,
+        '@userId':undefined,
+        '@orderId': undefined,
+        '@ThirdPlatformOrderNo': undefined
       },
       type: "range",
       minimumDate: "",
@@ -119,6 +124,10 @@ export default {
         {
           text: "订单号",
           key: "订单号"
+        },
+        {
+          text: '生产号',
+          key: '生产号'
         }
       ],
       popoverPosition: { x: 15, y: 100 },
@@ -158,22 +167,16 @@ export default {
       if (this.searchValue != "") {
         if (this.searchType == this.btns[0].key) {
           // 物流号
-          this.param = Object.assign(this.param, { "@id": this.searchValue });
+          this.param['@id'] = this.searchValue
         } else if (this.searchType == this.btns[1].key) {
-          this.param = Object.assign(this.param, {
             // 会员号
-            "@userId": this.searchValue
-          });
+          this.param['@userId'] = this.searchValue
         } else if (this.searchType == this.btns[2].key) {
           // 订单号
-          this.param = Object.assign(this.param, {
-            "@orderId": this.searchValue
-          });
+          this.param['@orderId'] = this.searchValue
+        } else if (this.searchType == this.btns[3].key) {
+          this.param['@ThirdPlatformOrderNo'] = this.searchValue
         }
-      } else {
-        this.param = Object.assign(this.param, { "@id": undefined });
-        this.param = Object.assign(this.param, {"@userId": undefined});
-        this.param = Object.assign(this.param, {"@orderId": undefined});
       }
 
       if (this.param["@rowIndex"] === 1) {
@@ -238,6 +241,10 @@ export default {
     },
     refresh() {
       this.param['@rowIndex'] = 0
+      this.param['@id'] = undefined
+      this.param['@userId'] = undefined
+      this.param['@orderId'] = undefined
+      this.param['@ThirdPlatformOrderNo'] = undefined
       this.listData = [];
       this.getData();
     },
@@ -415,7 +422,7 @@ export default {
   border-color: #e2e2e2;
 }
 .list-col {
-  width: 152px;
+  width: 130px;
   text-align: center;
 }
 .list-box-content {
@@ -554,5 +561,12 @@ export default {
 }
 .gray-color {
   color:#666666;
+}
+.width280 {
+  width:280px;
+  padding-left:15px;
+}
+.width170 {
+  width: 190px;
 }
 </style>

@@ -41,7 +41,6 @@
 	import API from 'Utils/api'
 	const animation = weex.requireModule('animation')
 	const picker = weex.requireModule('picker')
-	
 
 	export default {
 		props: {
@@ -62,8 +61,10 @@
 				},
 				count: 0,
 				bottomList : Config.mainList,
-			  centerList : Config.distribution,
-			  isLeftShow: false
+				centerList : Config.distribution,
+				isLeftShow: false,
+				isScan : false,
+				scanData: undefined
 			}
 		},
 		created () {
@@ -73,10 +74,8 @@
 			});
 	    },
 	    mounted () {
-	    	var _this = this
-	    	_this.init()
-			_this.getWarhoursCode()
-			
+	    	this.init()
+			this.getWarhoursCode()
 	    },
 	    computed :  {
 	    	value () {
@@ -90,58 +89,58 @@
 			async scanLogisticalOrder () {
 	        	var _this =this;
 				var userInfo = await API.get_userInfo(this);
-	        	this.$tools.scan().then((resData) => {
-					_this.$storage.setSync('QR_Code', resData)
-	        		var par = {
-	        			roleId: userInfo.RoleId,
-	        			qr_code: resData ,
-	        			warhoursCode: _this.selectWarhours.Id,
-	        			adminId: userInfo.adminId
-					}
-					_this.scanSuccess(par)
-					// _this.scanLogisticalOrder()
+				this.$tools.scan().then(function(resData){
+						_this.$storage.setSync('QR_Code', resData)
+						var par = {
+							roleId: userInfo.RoleId,
+							qr_code: resData ,
+							warhoursCode: _this.selectWarhours.Id,
+							adminId: userInfo.adminId
+						}
+						_this.scanSuccess(par , resData)
 					
-				}).catch (ex => {
-				}) 
+				})
 	        },
-			async scanSuccess (par) {
+			async scanSuccess (par , scanData) {
 				var _this = this;
 				try {
-					this.$notice.loading.show();
-					var res = await API.YJ_SCAN(par)
-					this.$notice.loading.hide();
-				    // var res = {
-					// 		MESSAGE: '该付款单应付XX元，是否前往？',
-					// 		DATA: JSON.stringify({url : 'invoice-detail'})
-					// 	}
-					if(res.DATA) {
-						var DATA = JSON.parse(res.DATA)
-						if(DATA.url) {
-							_this.$notice.confirm({
-								title: '扫描成功',
-								message: DATA.msg ? DATA.msg : res.MESSAGE,
-								okTitle: '确认',
-								cancelTitle: '取消',
-								okCallback() {
-									_this.$router.open({
-										name: DATA.url,
-										type: 'PUSH',
-										params: DATA
-									})	
-								},
-								cancelCallback() {
-									_this.scanLogisticalOrder(par)
-								}
-							})
-						}else {
+					if(this.scanData != scanData){
+						this.scanData = scanData
+						this.isScan = false
+						this.$notice.loading.show();
+						var res = await API.YJ_SCAN(par)
+						this.$notice.loading.hide();
+						if(res.DATA) {
+							var DATA = JSON.parse(res.DATA)
+							if(DATA.url) {
+								_this.$notice.confirm({
+									title: '扫描成功',
+									message: DATA.msg ? DATA.msg : res.MESSAGE,
+									okTitle: '确认',
+									cancelTitle: '取消',
+									okCallback() {
+										_this.$router.open({
+											name: DATA.url,
+											type: 'PUSH',
+											params: DATA
+										})	
+									},
+									cancelCallback() {
+										_this.scanLogisticalOrder(par)
+									}
+								})
+							}else {
+								this.$notice.toast({message: res.MESSAGE})
+								_this.scanLogisticalOrder(par)
+							}
+						} else {
 							this.$notice.toast({message: res.MESSAGE})
 							_this.scanLogisticalOrder(par)
 						}
-					} else {
-						this.$notice.toast({message: res.MESSAGE})
-						_this.scanLogisticalOrder(par)
+						this.scanData = undefined
 					}
 				} catch (error) {
+					this.scanData = undefined
 					this.$notice.loading.hide();
 					_this.scanLogisticalOrder(par)
 				}
