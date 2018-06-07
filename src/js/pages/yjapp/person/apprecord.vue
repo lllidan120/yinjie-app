@@ -1,17 +1,15 @@
 <template>
 	<div class="page">
         <div class="table-cell">
-            <div class="table-td table-head width-100px"><text class="table-text">ID</text></div>
             <div class="table-td table-head"><text class="table-text">操作人</text></div>
-            <div class="table-td table-head width-200px"><text class="table-text">日期</text></div>
+            <div class="table-td table-head"><text class="table-text">日期</text></div>
             <div class="table-td table-head width-300px"><text class="table-text">备注</text></div>
         </div>
         <!-- @loadmore="getData" -->
         <list class="bui-list" ref="list" :show-scrollbar="true" :showRefresh="true" @refresh="onRefresh"   loadmoreoffset="2">
-            <cell class="table-cell" v-for="(item , key) in listData" @click="toDetail(item)" :key="key">
-                <div class="table-td  width-100px"><text class="table-text">{{item.id}}</text></div>
+            <cell class="table-cell" v-for="(item , key) in listData" :key="key">
                 <div class="table-td"><text class="table-text">{{item.RealName}}</text></div>
-                <div class="table-td width-200px"><text class="table-text">{{item.dCreateDate}}</text></div>
+                <div class="table-td"><text class="table-text">{{item.dCreateDate}}</text></div>
                 <div class="table-td width-300px"><text class="table-text">{{item.strRemark}}</text></div>
             </cell>
             <loading class="loading" @loading="getData" :display="showload ? 'show' : 'hide'">
@@ -293,7 +291,7 @@ export default {
     background-color: #fff;
 }
 .table-text {
-    font-size: 32px;
+    font-size: 26px;
 }
 .table-head {
     height: 75px;
@@ -306,7 +304,7 @@ export default {
   width: 100px;
 }
 .width-300px {
-    width: 300px;
+    width: 450px;
 }
 .loading {
     width: 750;

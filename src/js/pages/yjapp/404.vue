@@ -1,203 +1,404 @@
 <template>
-  <div class="container" >
-    <div class="tool-btn" style="background-color:#6A1B9A;bottom:500;right:350" @click="car">
-        <text class="text">拍照</text>
-    </div>
-    <div class="tool-btn" style="background-color:#0277BD;bottom:600;right:450" @click="pick">
-        <text class="text">选择</text>
-    </div>
-    <div ref="b1" class="tool-btn" style="background-color:#6A1B9A" @click="clickBtn">
-        <text class="text">A</text>
-    </div>
-    <div ref="b2" class="tool-btn" style="background-color:#0277BD" @click="clickBtn">
-        <text class="text">B</text>
-    </div>
-    <div ref="b3" class="tool-btn" style="background-color:#FF9800" @click="clickBtn">
-        <text class="text">C</text>
-    </div>
+    <div class="container">
 
-    <div ref="main_btn" class="tool-btn" @click="clickBtn">
-        <image class="tool-image" ref="main_image" src="https://gw.alicdn.com/tfs/TB1PZ25antYBeNjy1XdXXXXyVXa-128-128.png" />
+        <div class="menu">
+            <div class="item_container"
+                 style="opacity:0"
+                 ref="menu1">
+                <text class="item">Menu1</text>
+            </div>
+            <div class="item_container"
+                 style="opacity:0"
+                 ref="menu2">
+                <text class="item">Menu2</text>
+            </div>
+            <div class="item_container"
+                 style="opacity:0"
+                 ref="menu3">
+                <text class="item">Menu3</text>
+            </div>
+            <div class="item_container"
+                 style="opacity:0"
+                 ref="menu4">
+                <text class="item">Menu4</text>
+            </div>
+            <div class="item_container"
+                 style="opacity:0"
+                 ref="menu5">
+                <text class="item">Menu5</text>
+            </div>
+        </div>
+
+        <div class="main"
+             ref="main"
+             @touchstart="onTouchStart">
+            <div class="block" />
+            <div class="block"
+                 style="margin-top:15" />
+            <div class="block"
+                 style="margin-top:15" />
+            <div class="block"
+                 style="margin-top:15" />
+        </div>
+
     </div>
-  </div>
 </template>
 
 
 
 <script>
-  export default {
-    data () {
-      return {
-        isExpanded: false
+export default {
+  data() {
+    return {
+      _is_expanded: false,
+      _menu_animation_flag: false,
+      _opacity: 0
+    };
+  },
+  methods: {
+    getEl: function(e) {
+      return e.ref;
+    },
+
+    onTouchStart: function() {
+      if (!this._is_expanded) {
+        this.expandWithDrag();
+      } else {
+        this.collapseWithDrag();
       }
     },
-    methods: {
-        collapse: function() {
-            let main_btn = this.$refs.main_btn.ref
-            let main_image = this.$refs.main_image.ref
-            let b1 = this.$refs.b1.ref
-            let b2 = this.$refs.b2.ref
-            let b3 = this.$refs.b3.ref
-            let result1 = this.$bindingx.bind({
-                eventType: 'timing',
-                exitExpression: {
-                origin: 't>800'
-                },
-                props: [{
-                    element: main_image,
-                    property: 'transform.rotateZ',
-                    expression: {
-                    origin: 'easeOutQuint(t,45,0-45,800)'
-                    }
-                },
-                {
-                    element: main_btn,
-                    property: 'background-color',
-                    expression: {
-                    origin: "evaluateColor('#607D8B','#ff0000',min(t,800)/800)"
-                    }
-                }
-                ]
-
-            });
-
-            let result2 = this.$bindingx.bind({
-                eventType: 'timing',
-                exitExpression: {
-                origin: 't>800'
-                },
-                props: [{
-                    element: b1,
-                    property: 'transform.translateY',
-                    expression: {
-                    origin: "easeOutQuint(t,-150,150,800)"
-                    }
-                },
-                {
-                    element: b2,
-                    property: 'transform.translateY',
-                    expression: {
-                    origin: "t<=100?0:easeOutQuint(t-100,-300,300,700)"
-                    }
-                },
-                {
-                    element: b3,
-                    property: 'transform.translateY',
-                    expression: {
-                    origin: "t<=200?0:easeOutQuint(t-200,-450,450,600)"
-                    }
-                }
-                ]
-            })
-        },
-        expand: function() {
-            let main_btn = this.$refs.main_btn.ref
-            let main_image = this.$refs.main_image.ref
-            let b1 = this.$refs.b1.ref
-            let b2 = this.$refs.b2.ref
-            let b3 = this.$refs.b3.ref
-            let result1 = this.$bindingx.bind({
-                eventType: 'timing',
-                exitExpression: {
-                origin: 't>100'
-                },
-                props: [{
-                    element: main_image,
-                    property: 'transform.rotateZ',
-                    expression: {
-                    origin: 'linear(t,0,45,100)'
-                    }
-                },
-                {
-                    element: main_btn,
-                    property: 'background-color',
-                    expression: {
-                    origin: "evaluateColor('#ff0000','#607D8B',min(t,100)/100)"
-                    }
-                }
-                ]
-            });
-
-            let result2 = this.$bindingx.bind({
-                eventType: 'timing',
-                exitExpression: {
-                origin: 't>800'
-                },
-                props: [{
-                    element: b1,
-                    property: 'transform.translateY',
-                    expression: {
-                    origin: "easeOutBounce(t,0,0-150,800)"
-                    }
-                },
-                {
-                    element: b2,
-                    property: 'transform.translateY',
-                    expression: {
-                    origin: "t<=100?0:easeOutBounce(t-100,0,0-300,700)"
-                    }
-                },
-                {
-                    element: b3,
-                    property: 'transform.translateY',
-                    expression: {
-                    origin: "t<=200?0:easeOutBounce(t-200,0,0-450,600)"
-                    }
-                }
-                ]
-            })
-        },
-        clickBtn: function(e) {
-            if (this.isExpanded) {
-                this.collapse();
-            } else {
-                this.expand();
+    expandWithDrag: function() {
+      var self = this;
+      let page = this.getEl(this.$refs.main);
+      let result = this.$bindingx.bind(
+        {
+          eventType: "pan",
+          anchor: page,
+          props: [
+            {
+              element: page,
+              property: "transform.translateX",
+              expression: {
+                origin: "min(375,max(0,x))"
+              }
+            },
+            {
+              element: page,
+              property: "transform.scaleX",
+              expression: {
+                origin: "1-min(375,max(0,x))/375*0.2" //1-->0.8
+              }
+            },
+            {
+              element: page,
+              property: "transform.scaleY",
+              expression: {
+                origin: "1-min(375,max(0,x))/375*0.2"
+              }
             }
-            this.isExpanded = !this.isExpanded;
+          ]
         },
-        car: function() {
-            this.$image.camera({               
-            })
-            .then(resData => {
-                console.log(resData)   
-            }, error => {
-                console.log(error)
-            })
-        },
-        pick: function() {
-            this.$image.pick({
-                maxCount: 2            
-            })
-            .then(resData => {
-                console.log(resData)   
-            }, error => {
-                console.log(error)
-            })
+        function(e) {
+          if (e.state === "end" && !self._is_expanded) {
+            let offset = e.deltaX;
+            if (offset < 375 / 2 && offset > 0) {
+              self.collapseWithAnimation();
+            } else if (offset >= 375 / 2) {
+              self.expandWithAnimation();
+            }
+
+            if (result) {
+              self.$bindingx.unbind({
+                token: result.token,
+                eventType: "pan"
+              });
+            }
+          }
         }
+      );
+    },
+
+    collapseWithDrag: function() {
+      var self = this;
+      let page = this.getEl(this.$refs.main);
+      let result = this.$bindingx.bind(
+        {
+          eventType: "pan",
+          anchor: page,
+          props: [
+            {
+              element: page,
+              property: "transform.translateX",
+              expression: {
+                origin: "375+min(0,max(0-375,x))"
+              }
+            },
+            {
+              element: page,
+              property: "transform.scaleX",
+              expression: {
+                origin: "0.8-min(0,max(0-375,x))/375*0.2"
+              }
+            },
+            {
+              element: page,
+              property: "transform.scaleY",
+              expression: {
+                origin: "0.8-min(0,max(0-375,x))/375*0.2"
+              }
+            }
+          ]
+        },
+        function(e) {
+          if (e.state === "end" && self._is_expanded) {
+            let offset = Math.abs(e.deltaX);
+            if (offset < 375 / 2 && offset > 0) {
+              self.expandWithAnimation();
+            } else if (offset >= 375 / 2 && offset <= 375) {
+              self.collapseWithAnimation();
+            }
+
+            if (result) {
+              self.$bindingx.unbind({
+                token: result.token,
+                eventType: "pan"
+              });
+            }
+          }
+        }
+      );
+    },
+    collapseWithAnimation: function() {
+      this._is_expanded = false;
+      this._menu_animation_flag = false;
+      let page = this.getEl(this.$refs.main);
+
+      let offset = this.$bindingx.getComputedStyle(page).translateX;
+      let duration = 200; //ms
+      let scale = this.$bindingx.getComputedStyle(page).scaleX;
+      let self = this;
+
+      this.$bindingx.bind(
+        {
+          eventType: "timing",
+          exitExpression: {
+            origin: `t>${duration}`
+          },
+          props: [
+            {
+              element: page,
+              property: "transform.translateX",
+              expression: {
+                origin: `easeOutCubic(t,${offset},${0 - offset},${duration})`
+              }
+            },
+            {
+              element: page,
+              property: "transform.scaleX",
+              expression: {
+                origin: `easeOutCubic(t,${scale},${1 - scale},${duration})`
+              }
+            },
+            {
+              element: page,
+              property: "transform.scaleY",
+              expression: {
+                origin: `easeOutCubic(t,${scale},${1 - scale},${duration})`
+              }
+            }
+          ]
+        },
+        function(e) {}
+      );
+    },
+    expandWithAnimation: function() {
+      let self = this;
+      this._is_expanded = true;
+      let page = this.getEl(this.$refs.main);
+      let offset = this.$bindingx.getComputedStyle(page).translateX;
+      let duration = 200; //ms
+      let scale = this.$bindingx.getComputedStyle(page).scaleX;
+
+      this.$bindingx.bind(
+        {
+          eventType: "timing",
+          exitExpression: {
+            origin: `t>${duration}`
+          },
+          props: [
+            {
+              element: page,
+              property: "transform.translateX",
+              expression: {
+                origin: `easeOutCubic(t,${offset},${375 - offset},${duration})`
+              }
+            },
+            {
+              element: page,
+              property: "transform.scaleX",
+              expression: {
+                origin: `easeOutCubic(t,${scale},${0.8 - scale},${duration})` //scale-->1
+              }
+            },
+            {
+              element: page,
+              property: "transform.scaleY",
+              expression: {
+                origin: `easeOutCubic(t,${scale},${0.8 - scale},${duration})` //scale-->1
+              }
+            }
+          ]
+        },
+        function(e) {
+          if (e.state === "exit" && !self._menu_animation_flag) {
+            self.showMenu();
+            self._menu_animation_flag = true;
+          }
+        }
+      );
+    },
+    showMenu: function() {
+      let menu1 = this.getEl(this.$refs.menu1);
+      let menu2 = this.getEl(this.$refs.menu2);
+      let menu3 = this.getEl(this.$refs.menu3);
+      let menu4 = this.getEl(this.$refs.menu4);
+      let menu5 = this.getEl(this.$refs.menu5);
+
+      let duration = 1000; //ms
+      let parallax = 50;
+
+      this.$bindingx.bind({
+        eventType: "timing",
+        exitExpression: {
+          origin: `t>${duration * 5}`
+        },
+        props: [
+          {
+            element: menu1,
+            property: "transform.translateY",
+            expression: {
+              origin: `easeOutElastic(t,0,0-100,${duration})`
+            }
+          },
+          {
+            element: menu2,
+            property: "transform.translateY",
+            expression: {
+              origin: `t<${parallax}?0:easeOutElastic(t,0,0-100,${duration -
+                parallax})`
+            }
+          },
+          {
+            element: menu3,
+            property: "transform.translateY",
+            expression: {
+              origin: `t<${parallax * 2}?0:easeOutElastic(t,0,0-100,${duration -
+                parallax * 2})`
+            }
+          },
+          {
+            element: menu4,
+            property: "transform.translateY",
+            expression: {
+              origin: `t<${parallax * 3}?0:easeOutElastic(t,0,0-100,${duration -
+                parallax * 3})`
+            }
+          },
+          {
+            element: menu5,
+            property: "transform.translateY",
+            expression: {
+              origin: `t<${parallax * 4}?0:easeOutElastic(t,0,0-100,${duration -
+                parallax * 4})`
+            }
+          },
+          // opacity
+          {
+            element: menu1,
+            property: "opacity",
+            expression: {
+              origin: `easeOutElastic(t,0,1,${duration})`
+            }
+          },
+          {
+            element: menu2,
+            property: "opacity",
+            expression: {
+              origin: `t<${parallax}?0:easeOutElastic(t,0,1,${duration -
+                parallax})`
+            }
+          },
+          {
+            element: menu3,
+            property: "opacity",
+            expression: {
+              origin: `t<${parallax * 2}?0:easeOutElastic(t,0,1,${duration -
+                parallax * 2})`
+            }
+          },
+          {
+            element: menu4,
+            property: "opacity",
+            expression: {
+              origin: `t<${parallax * 3}?0:easeOutElastic(t,0,1,${duration -
+                parallax * 3})`
+            }
+          },
+          {
+            element: menu5,
+            property: "opacity",
+            expression: {
+              origin: `t<${parallax * 4}?0:easeOutElastic(t,0,1,${duration -
+                parallax * 4})`
+            }
+          }
+        ]
+      });
     }
   }
+};
 </script>
 <style scoped>
-.tool-image {
-  width: 60;
-  height: 60;
+.container {
+  flex: 1;
+  background-color: #03a9f4;
 }
 
-.tool-text {
-  color: #ffffff;
-  font-size: 30;
+.main {
+  flex: 1;
+  background-color: #ffffff;
 }
 
-.tool-btn {
-  width: 100;
-  height: 100;
-  background-color: #ff0000;
-  align-items: center;
-  justify-content: center;
+.menu {
+  width: 375;
   position: absolute;
-  border-radius: 50;
-  bottom: 25;
-  right: 25;
-  margin-left: 315;
+  top: 0;
+  bottom: 0;
+  justify-content: center;
+  align-items: center;
+  margin-left: 35;
+  margin-top: 100;
+}
+
+.item {
+  color: #ffffff;
+  font-size: 40;
+}
+
+.item_container {
+  height: 60;
+  width: 375;
+  justify-content: center;
+  align-items: center;
+  margin-top: 35;
+  color: #000;
+}
+
+.block {
+  width: 720;
+  height: 350;
+  background-color: #ff9800;
+  margin: 15;
+  border-radius: 15;
 }
 </style>

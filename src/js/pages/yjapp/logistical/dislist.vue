@@ -13,7 +13,7 @@
               <div class="list-col width280" style="">
                 <div class="icon-title-content">
                   <img class="list-title-icon" src="http://yj.kiy.cn/Content/Images/App/assets/icon/time.png">
-                  <text class="title">入仓时间</text>
+                  <text class="title">操作时间</text>
                 </div>
                 <text class="text center text-color">{{ item.DistributorDate ? item.DistributorDate : '暂无' }}</text>
               </div>
@@ -61,7 +61,7 @@
       </cell-slot>
     </recycle-list>
     <image src='http://img.lanrentuku.com/img/allimg/1212/5-121204194026.gif' v-if="showload" style="height:40px;width:300px,align-items:center;background-color:#fff;" resize="contain" quality="original"></image>
-
+  <!-- 支付弹窗 -->
     <bmmask class="mask" animation="transition" position="top" :duration="300" ref="payType">
       <bmpop class="modal-top">
         <div class="pay-content">
@@ -75,9 +75,28 @@
         </div>
       </bmpop>
     </bmmask>
-
+    <!-- 下拉选择 -->
     <wxc-popover ref="wxc-popover" :buttons="btns" :position="popoverPosition" :arrowPosition="popoverArrowPosition" @wxcPopoverButtonClicked="popoverButtonClicked"></wxc-popover>
+    <!-- 列表选择 -->
+    <div ref="b1" class="tool-btn" style="background-color:#6A1B9A" @click="clickBtn({'@orderStatu': '1,2,5,10,6,7,8'} , '未收货')">
+        <text class="tool-text">未收</text>
+    </div>
+    <div ref="b2" class="tool-btn" style="background-color:#0277BD" @click="clickBtn({'@orderStatu': '50,51,48,33'} , '已收货')">
+        <text class="tool-text">已收</text>
+    </div>
+    <div ref="b3" class="tool-btn" style="background-color:#FF9800" @click="clickBtn({'@isPay': 0} , '未付款')">
+        <text class="tool-text">未付</text>
+    </div>
+    <div ref="b4" class="tool-btn" style="background-color:#4caf50" @click="clickBtn({'@isPay': 1} , '已付款')">
+        <text class="tool-text">已付</text>
+    </div>
+    <div ref="b5" class="tool-btn" style="background-color:#404040" @click="clickBtn({} , '全部订单')">
+        <text class="tool-text">全部</text>
+    </div>
 
+    <div ref="main_btn" class="tool-btn" style="background-color: #ff0000" @click="clickBtn">
+        <image class="tool-image" ref="main_image" src="https://gw.alicdn.com/tfs/TB1PZ25antYBeNjy1XdXXXXyVXa-128-128.png" />
+    </div>
   </div>
 
 </template>
@@ -131,7 +150,8 @@ export default {
         }
       ],
       popoverPosition: { x: 15, y: 100 },
-      popoverArrowPosition: { pos: "top", x: 50 }
+      popoverArrowPosition: { pos: "top", x: 50 },
+      isExpanded: false
     };
   },
   computed: {
@@ -210,9 +230,14 @@ export default {
     },
     init(param) {
       var par = param.params;
+      this.setNav(par.title)
+      this.listType = param.type;
+      this.getData();
+    },
+    setNav(title) {
       this.$navigator.setCenterItem(
         {
-          text: par.title,
+          text: title,
           textColor: "",
           fontSize: "32",
           fontWeight: "normal"
@@ -221,8 +246,6 @@ export default {
           this.refresh();
         }
       );
-      this.listType = param.type;
-      this.getData();
     },
     typeChange(value) {
       this.$refs["wxc-popover"].wxcPopoverShow();
@@ -288,8 +311,14 @@ export default {
             this.listData[index].logState = 50;
             // 将已确认收货的元素从列表中删除
             this.listData[index].oCount = 0
-            this.listData[index].show = false
-            this.listData.splice(index , 1)
+            this.$notice.toast({
+              message: "已经到底部"
+            });
+            if(JSON.stringify(this.listType) != '{}') {
+              this.listData[index].show = false
+              this.listData.splice(index , 1)
+            }
+            
           }
         })
         this.$notice.toast({
@@ -364,209 +393,177 @@ export default {
     },
     popoverButtonClicked(obj) {
       this.searchType = obj.key;
+    },
+    collapse: function() {
+        let main_btn = this.$refs.main_btn.ref
+        let main_image = this.$refs.main_image.ref
+        let b1 = this.$refs.b1.ref
+        let b2 = this.$refs.b2.ref
+        let b3 = this.$refs.b3.ref
+        let b4 = this.$refs.b4.ref
+        let b5 = this.$refs.b5.ref
+        let result1 = this.$bindingx.bind({
+            eventType: 'timing',
+            exitExpression: {
+            origin: 't>800'
+            },
+            props: [{
+                element: main_image,
+                property: 'transform.rotateZ',
+                expression: {
+                origin: 'easeOutQuint(t,45,0-45,800)'
+                }
+            },
+            {
+                element: main_btn,
+                property: 'background-color',
+                expression: {
+                origin: "evaluateColor('#607D8B','#ff0000',min(t,800)/800)"
+                }
+            }
+            ]
+
+        });
+
+        let result2 = this.$bindingx.bind({
+            eventType: 'timing',
+            exitExpression: {
+            origin: 't>800'
+            },
+            props: [{
+                element: b1,
+                property: 'transform.translateY',
+                expression: {
+                origin: "easeOutQuint(t,-150,150,800)"
+                }
+            },
+            {
+                element: b2,
+                property: 'transform.translateY',
+                expression: {
+                origin: "t<=100?0:easeOutQuint(t-100,-300,300,700)"
+                }
+            },
+            {
+                element: b3,
+                property: 'transform.translateY',
+                expression: {
+                origin: "t<=200?0:easeOutQuint(t-200,-450,450,600)"
+                }
+            },
+            {
+                element: b4,
+                property: 'transform.translateY',
+                expression: {
+                origin: "t<=300?0:easeOutQuint(t-300,-600,600,500)"
+                }
+            },
+            {
+                element: b5,
+                property: 'transform.translateY',
+                expression: {
+                origin: "t<=400?0:easeOutQuint(t-400,-750,750,400)"
+                }
+            }
+            ]
+        })
+    },
+    expand: function() {
+        let main_btn = this.$refs.main_btn.ref
+        let main_image = this.$refs.main_image.ref
+        let b1 = this.$refs.b1.ref
+        let b2 = this.$refs.b2.ref
+        let b3 = this.$refs.b3.ref
+        let b4 = this.$refs.b4.ref
+        let b5 = this.$refs.b5.ref
+        let result1 = this.$bindingx.bind({
+            eventType: 'timing',
+            exitExpression: {
+            origin: 't>100'
+            },
+            props: [{
+                element: main_image,
+                property: 'transform.rotateZ',
+                expression: {
+                origin: 'linear(t,0,45,100)'
+                }
+            },
+            {
+                element: main_btn,
+                property: 'background-color',
+                expression: {
+                origin: "evaluateColor('#ff0000','#607D8B',min(t,100)/100)"
+                }
+            }
+            ]
+        });
+
+        let result2 = this.$bindingx.bind({
+            eventType: 'timing',
+            exitExpression: {
+            origin: 't>800'
+            },
+            props: [{
+                element: b1,
+                property: 'transform.translateY',
+                expression: {
+                origin: "easeOutBounce(t,0,0-150,800)"
+                }
+            },
+            {
+                element: b2,
+                property: 'transform.translateY',
+                expression: {
+                origin: "t<=100?0:easeOutBounce(t-100,0,0-300,700)"
+                }
+            },
+            {
+                element: b3,
+                property: 'transform.translateY',
+                expression: {
+                origin: "t<=200?0:easeOutBounce(t-200,0,0-450,600)"
+                }
+            },
+            {
+                element: b4,
+                property: 'transform.translateY',
+                expression: {
+                origin: "t<=300?0:easeOutBounce(t-300,0,0-600,500)"
+                }
+            },
+            {
+                element: b5,
+                property: 'transform.translateY',
+                expression: {
+                origin: "t<=400?0:easeOutBounce(t-400,0,0-750,400)"
+                }
+            }
+            ]
+        })
+    },
+    clickBtn: function(e , title) {
+        if (this.isExpanded) {
+            this.collapse();
+        } else {
+            this.expand();
+        }
+        this.isExpanded = !this.isExpanded;
+        if(!e.position) {
+          this.param = {
+            "@rowIndex": 0,
+            "@pageSize": 20,
+            '@id': undefined,
+            '@userId':undefined,
+            '@orderId': undefined,
+            '@ThirdPlatformOrderNo': undefined
+          }
+          this.listType = e
+          this.setNav(title)
+          this.refresh()
+        }
     }
   }
 };
 </script>
 
-<style scoped>
-.search-bar {
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: #dddddd;
-}
-.mask {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal-top {
-  align-items: flex-start;
-}
-
-.calendar {
-  height: 800px;
-  background-color: #ffffff;
-  select-color: #1da1f2;
-}
-.list {
-  width: 750px;
-  padding-left: 29px;
-  background-color: #f3f6f7;
-  padding-top: 13px;
-  padding-bottom: 13px;
-}
-.list-box {
-  width: 692px;
-  height: 335px;
-  background-color: #fff;
-  border-radius: 12px;
-  color: #666666;
-}
-.list-box-title {
-  flex-direction: row;
-  align-items: center;
-  width: 644px;
-  height: 102px;
-  line-height: 102px;
-  margin-left: 24px;
-  font-size: 39px;
-  justify-content: center;
-  align-items: center;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  border-color: #e2e2e2;
-}
-.list-col {
-  width: 130px;
-  text-align: center;
-}
-.list-box-content {
-  
-}
-.list-box-content-left {
-  position: relative;
-  width: 644px;
-  height: 146px;
-}
-.list-box-content-right {
-  display: felx;
-  flex-direction: row;
-  justify-content:flex-end;
-  width: 644px;
-  height: 88px;
-  padding-top: 17px;
-  padding-right: 8px;
-  border-top-width: 1px;
-  border-top-style: solid;
-  border-color: #e2e2e2;
-}
-.enter-btn {
-  width: 140px;
-  height: 55px;
-  line-height: 55px;
-  text-align: center;
-  background-color: #ffffff;
-  color: #1da1f2;
-  border-radius: 4px;
-  margin-left: 42px;
-  border-width: 1px;
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.1);
-  box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.1);
-}
-
-.col {
-  flex-direction: row;
-  height: 46px;
-  padding-left: 165px;
-  padding-top: 16px;
-}
-.col-icon {
-  width: 26px;
-  height: 26px;
-  margin-right: 15px;
-}
-.address {
-  width: 450px;
-  lines: 3;
-  text-overflow: ellipsis;
-}
-.text {
-  font-size: 25px;
-}
-.map {
-  background-color: #42b983;
-}
-
-.loading {
-  display: block;
-  align-items: center;
-}
-.pay-content {
-  margin-left: 84px;
-  margin-top: 312px;
-  width: 580px;
-  height: 300px;
-  background-color: #fff;
-  border-radius: 4px;
-}
-.pay-title {
-  height: 105px;
-  justify-content: center;
-  padding-left: 48px;
-  border-bottom-width: 1px;
-  border-bottom-style: dotted;
-  border-bottom-color: #cccccc;
-}
-.pay-group {
-  flex-direction: row;
-  padding-top: 52px;
-  justify-content: center;
-}
-.pay-type {
-  width: 215px;
-  height: 66px;
-}
-.search-date {
-  flex-direction: row;
-  justify-content: center;
-  height: 100px;
-  background-color: rgba(31, 181, 252, 0.4);
-  border-top-width: 1px;
-  border-top-style: solid;
-  border-top-color: #eee;
-}
-.search-date-text {
-  text-align: center;
-  width: 375px;
-  height: 100px;
-  line-height: 100px;
-  color: #000;
-}
-.icon-title-content {
-  flex-direction: row;
-  align-items: center;
-}
-.list-title-icon {
-  width: 21px;
-  height: 21px;
-  margin-right: 6px;
-  margin-bottom: 5px;
-}
-.list-box-content-left-icon {
-  position: absolute;
-  width: 102px;
-  height: 116px;
-  left: 38px;
-  top: 18px;
-}
-.blue {
-  color: #2096f2;
-  font-size: 25px;
-}
-.title {
-  font-size: 25px;
-  color: #666666;
-}
-.text-color {
-  color: #333333;
-}
-.num-color {
-  color: #deae07;
-}
-.gray-color {
-  color:#666666;
-}
-.width280 {
-  width:280px;
-  padding-left:15px;
-}
-.width170 {
-  width: 190px;
-}
-</style>
+<style lang="sass" src='./dislist.scss'></style>

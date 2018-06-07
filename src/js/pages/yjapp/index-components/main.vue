@@ -25,14 +25,6 @@
 					</div>
 				</div>
 			</cell>
-			<!-- <cell class="center"> 
-				<div v-for="(item , index) in bottomList"  class="center-item" :key="index">
-					<div  @click="goTo(item)" >
-						<image :src="item.icon" class="center-icon"></image>
-						<text class="center-text">{{ item.title }}</text>
-					</div>
-				</div>
-			</cell> -->
 		</waterfall>     
 </template>
 <script>
