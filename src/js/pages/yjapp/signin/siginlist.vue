@@ -57,13 +57,17 @@ export default {
       },
       () => {}
     );
-  },
+  }, 
   methods: {
     async getData(loadmore) {
       this.param["@rowIndex"]++;
-      this.param = Object.assign(this.param, {
-        "@myName": this.userInfo.RealName
-      });
+      if(this.userInfo.RoleId === 1 || this.userInfo.RoleId === 4) {
+
+      } else {
+        this.param = Object.assign(this.param, {
+          "@myName": this.userInfo.RealName
+        });
+      }
 
       try {
         if(this.refresh) {

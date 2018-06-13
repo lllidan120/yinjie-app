@@ -158,9 +158,7 @@ export default {
         var DGDATA = JSON.parse(RESDATA.dgData);
         if (DGDATA.length != 0) {
           DGDATA.map(item => {
-            item.title = `订单号:${item.Id} | 会员号：${item.UserId} | 代收：${
-              item.Price
-            }元`;
+            item.title = `订单号: ${item.Id} | 代收：${item.Price}元                                             收件人：${item.ReceiveName} | 会员号：${item.UserId}`;
             item.value = item.Id
             item.checked = false
             this.listData.push(item);

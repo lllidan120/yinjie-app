@@ -32,7 +32,7 @@ export default {
             const userInfo =  API.get_userInfo(this)
             var par = {
                 roleId: userInfo.RoleId,
-                qr_code: this.orderId ,
+                qr_code: API.trim(this.orderId) ,
                 adminId: userInfo.adminId
             }
             this.$notice.loading.show();

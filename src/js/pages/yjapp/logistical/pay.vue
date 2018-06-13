@@ -40,6 +40,9 @@
 				<image :src="payInfo.strUrl" class="code-img" @click="preview"></image>
 			</div>
 		</cell>
+		<cell :class="['aliColor' , payInfo.bweixin && 'wxColor' , payInfo.bweixin]">
+			<text class="title">注意：请直接在当前页面下扫描支付，如果有截图支付或装有多个APP的业务员请注意，每次扫描二维码支付都以最新生成的二维码为准，如果该订单重新生成二维码，旧的二维码就会失效，请选择最新生成的二维码进行支付。</text>	
+		</cell>
 		
 	</list>
 </template>
@@ -206,7 +209,7 @@
   .code-content {
   	margin-top: 30px;
 	  height: 400px;
-	  margin-bottom: 200px;
+	  /* margin-bottom: 200px; */
   	width: 750px;
 	align-items: center;
 	justify-content: center;

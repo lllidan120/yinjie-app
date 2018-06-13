@@ -1,5 +1,6 @@
 <template>
 	<div class="page">
+        <datepick @selectTime="selectTime" @startDateFinish="startDateFinish" @endDateFinish="endDateFinish"></datepick>
         <div class="table-cell">
             <div class="table-td table-head"><text class="table-text">操作人</text></div>
             <div class="table-td table-head"><text class="table-text">日期</text></div>
@@ -8,9 +9,9 @@
         <!-- @loadmore="getData" -->
         <list class="bui-list" ref="list" :show-scrollbar="true" :showRefresh="true" @refresh="onRefresh"   loadmoreoffset="2">
             <cell class="table-cell" v-for="(item , key) in listData" :key="key">
-                <div class="table-td"><text class="table-text">{{item.RealName}}</text></div>
-                <div class="table-td"><text class="table-text">{{item.dCreateDate}}</text></div>
-                <div class="table-td width-300px"><text class="table-text">{{item.strRemark}}</text></div>
+                <div class="table-td"  style="padding-top:20px;"><text class="table-text">{{item.RealName}}</text></div>
+                <div class="table-td" style="padding-top:20px;"><text class="table-text">{{item.dCreateDate}}</text></div>
+                <div class="table-td width-300px" style="padding-top:20px;"><text class="table-text">{{item.strRemark}}</text></div>
             </cell>
             <loading class="loading" @loading="getData" :display="showload ? 'show' : 'hide'">
               <text class="indicator-text">加载更多 ...</text>
@@ -22,12 +23,15 @@
 </template>
 <script>
 import { WxcCheckboxList, WxcPopover } from "weex-ui";
+import datepick from "../_mods/datepick";
 import API from "Utils/api";
+const picker = weex.requireModule('picker')
 
 export default {
   components: {
     WxcCheckboxList,
-    WxcPopover
+    WxcPopover,
+    datepick
   },
   data() {
     return {
@@ -37,7 +41,12 @@ export default {
         "@pageSize": 20
       },
       showload: false,
-      onrefreshState: false
+      onrefreshState: false,
+      deliverList: [],
+      index: -1,
+      selectDeliverData: {
+         RealName: '全部'
+      }
     };
   },
   computed: {
@@ -76,12 +85,15 @@ export default {
       } else {
         this.showload = true;
       }
-        param =  Object.assign(param , {'@adminId' : this.userInfo.adminId})
-      
-    //   if(this.userInfo.RoleId== 1 || this.userInfo.RoleId== 4) {
+      if(this.userInfo.RoleId === 1 || this.userInfo.RoleId === 4) {
 
-    //   } else {
-    //   }
+      } else {
+        param =  Object.assign(param , {'@adminId' : this.userInfo.adminId})
+      }
+
+      if(this.selectDeliverData.RealName != '全部'){
+        param =  Object.assign(param , {'@adminId' : this.selectDeliverData.Id})
+      }
         let par = {}
         for(let key in param) {
             if(param[key] != undefined && param[key] != 'undefined') {
@@ -127,26 +139,68 @@ export default {
       }
     },
     init(param) {
-    //   this.sub = par.sub;
-      this.$navigator.setCenterItem(
-        {
-          text: param.title,
-          textColor: "",
-          fontSize: "32",
-          fontWeight: "normal"
-        },
-        () => {
-          this.refresh();
-        }
-      );
+      this.QueryAdminList()
+      this.setNav()
       this.getData();
     },
     refresh() {
       this.param['@rowIndex'] = 0
       this.getData();
     },
-    onloading () {
-
+    startDateFinish(startDate) {
+			this.param["@startDate"] = startDate + " 00:00:00";
+			if (this.param["@endDate"] == undefined) {
+				this.param["@endDate"] = startDate + " 23:59:59";
+      }
+      this.refresh()
+		},
+		endDateFinish(endDate) {
+			this.param["@endDate"] = endDate + " 23:59:59";
+			if (this.param["@startDate"] == undefined) {
+				this.param["@startDate"] = endDate + " 00:00:00";
+      }
+      this.refresh()
+    },
+    setNav() {
+      if(this.userInfo.RoleId === 1 || this.userInfo.RoleId === 4) {
+        this.$navigator.setRightItem({
+            text: this.selectDeliverData.RealName,                               // 展示的文字 (和图片 二选一)    
+            textColor: '',                          // 文字颜色 (默认为白色)
+            fontSize: '40',                         // 字号（默认32px）
+            fontWeight: 'normal'                   // 是否加粗（默认不加粗）
+        }, () => {
+            // 点击回调
+            this.selectDeliver()
+        })
+      }
+    },
+    selectDeliver () {
+      var items = []
+      if(items.length === 0){
+        this.deliverList.map(item => {
+          items.push(item.RealName)
+        })
+      }
+      
+      picker.pick({
+            index: this.index,
+            items
+          }, event => {
+            if (event.result === 'success') {
+              this.selectDeliverData = this.deliverList[event.data]
+              this.index = event.data
+              this.setNav()
+              this.refresh()
+            }
+      })
+    },
+    async QueryAdminList() {
+      var par = {
+        '$RoleId': '8,13'
+      }
+      const RES = await API.get_adminList(par)
+      const DATA = RES.map.dgData;
+      this.deliverList = DATA
     }
   }
 };
@@ -281,8 +335,7 @@ export default {
     display:block;
     float: left;
     width: 150px;
-    height: 100px;
-    line-height: 100px;
+    min-height: 100px;
     align-items: center;
     justify-content: center;
     border-width: 2px;

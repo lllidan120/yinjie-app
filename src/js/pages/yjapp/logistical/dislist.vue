@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="search-bar" ref="top">
-      <search-bar :searchType="searchType" :showScanBtn='true' @onChange="typeChange" @inputChange="inputChange" @scanClick="scanClick" @searchClick="searchClick">
+      <search-bar :searchTypeTwo="searchTypeTwo" :searchType="searchType" :showScanBtn='true' @onChange="typeChange" @inputChange="inputChange" @scanClick="scanClick" @searchClick="searchClick">
       </search-bar>
       <datepick @selectTime="selectTime" @startDateFinish="startDateFinish" @endDateFinish="endDateFinish"></datepick>
     </div>
@@ -36,9 +36,9 @@
                 <div class="col">
                   <text class="text gray-color">货物数量  </text>
                   <text class="text num-color" style="width:110px;">X{{item.Goods_Qty}}</text>
-                  <text class="text gray-color"  v-if="item.oCount != 0">未收货  </text>
+                  <!-- <text class="text gray-color"  v-if="item.oCount != 0">未收货  </text>
                   <text class="text num-color"  v-if="item.oCount != 0">X{{item.oCount}} </text>
-                  <text class="text num-color"  v-if="item.oCount == 0">(已经全部收货)</text>
+                  <text class="text num-color"  v-if="item.oCount == 0">(已经全部收货)</text> -->
                 </div>
                 <div class="col">
                   <text class="text gray-color">物流编号  </text>
@@ -48,7 +48,7 @@
                 </div>
                 <div class="col" style="height: 100px;">
                   <image src="http://yj.kiy.cn/Content/Images/App/assets/icon/company.png" class="col-icon"></image>
-                  <text class="address text text-color">{{ item.ReceiveName }}</text>
+                  <text class="address text text-color text-overflow">{{ item.ReceiveName }}</text>
                 </div>
               </div>
               <div class="list-box-content-right">
@@ -77,6 +77,7 @@
     </bmmask>
     <!-- 下拉选择 -->
     <wxc-popover ref="wxc-popover" :buttons="btns" :position="popoverPosition" :arrowPosition="popoverArrowPosition" @wxcPopoverButtonClicked="popoverButtonClicked"></wxc-popover>
+    <wxc-popover ref="wxc-popover-two" :buttons="btnsTwo" :position="popoverPositionTwo" :arrowPosition="popoverArrowPositionTwo" @wxcPopoverButtonClicked="popoverButtonClickedTwo"></wxc-popover>
     <!-- 列表选择 -->
     <div ref="b1" class="tool-btn" style="background-color:#6A1B9A" @click="clickBtn({'@orderStatu': '1,2,5,10,6,7,8'} , '未收货')">
         <text class="tool-text">未收</text>
@@ -93,7 +94,6 @@
     <div ref="b5" class="tool-btn" style="background-color:#404040" @click="clickBtn({} , '全部订单')">
         <text class="tool-text">全部</text>
     </div>
-
     <div ref="main_btn" class="tool-btn" style="background-color: #ff0000" @click="clickBtn">
         <image class="tool-image" ref="main_image" src="https://gw.alicdn.com/tfs/TB1PZ25antYBeNjy1XdXXXXyVXa-128-128.png" />
     </div>
@@ -103,7 +103,7 @@
 
 <script>
 import { WxcPopover } from "weex-ui";
-import searchBar from "../_mods/search-bar";
+import searchBar from "../_mods/new-search-bar";
 import datepick from "../_mods/datepick";
 import API from "Utils/api";
 export default {
@@ -130,6 +130,7 @@ export default {
       payGroup: [],
       searchValue: "",
       searchType: "物流号",
+      searchTypeTwo: '全部',
       listType: "",
       btns: [
         {
@@ -149,9 +150,26 @@ export default {
           key: '生产号'
         }
       ],
+      btnsTwo: [
+        {
+          text: '全部',
+          key: undefined
+        },
+        {
+          text: '已付',
+          key: 1
+        },
+        {
+          text: '未付',
+          key: 0
+        }
+      ],
       popoverPosition: { x: 15, y: 100 },
       popoverArrowPosition: { pos: "top", x: 50 },
-      isExpanded: false
+      popoverPositionTwo: { x: 200, y: 100 },
+      popoverArrowPositionTwo: { pos: "top", x: 50 },
+      isExpanded: false,
+      navTitle: ''
     };
   },
   computed: {
@@ -187,7 +205,8 @@ export default {
       if (this.searchValue != "") {
         if (this.searchType == this.btns[0].key) {
           // 物流号
-          this.param['@id'] = this.searchValue
+          var searchValue = this.searchValue.split('-')
+          this.param['@id'] = searchValue[0]
         } else if (this.searchType == this.btns[1].key) {
             // 会员号
           this.param['@userId'] = this.searchValue
@@ -195,10 +214,10 @@ export default {
           // 订单号
           this.param['@orderId'] = this.searchValue
         } else if (this.searchType == this.btns[3].key) {
+          
           this.param['@ThirdPlatformOrderNo'] = this.searchValue
         }
       }
-
       if (this.param["@rowIndex"] === 1) {
         _this.$notice.loading.show("正在加载");
       } else {
@@ -235,6 +254,7 @@ export default {
       this.getData();
     },
     setNav(title) {
+      this.navTitle = title
       this.$navigator.setCenterItem(
         {
           text: title,
@@ -248,7 +268,13 @@ export default {
       );
     },
     typeChange(value) {
-      this.$refs["wxc-popover"].wxcPopoverShow();
+      if(value === 1) {
+          this.$refs["wxc-popover"].wxcPopoverShow();
+      }
+      if(value === 2) {
+          this.$refs["wxc-popover-two"].wxcPopoverShow();
+      }
+      
     },
     inputChange(val) {
       this.searchValue = val;
@@ -276,14 +302,12 @@ export default {
       if (this.param["@endDate"] == undefined) {
         this.param["@endDate"] = startDate + " 23:59:59";
       }
-      console.log(this.param)
     },
     endDateFinish(endDate) {
       this.param["@endDate"] = endDate + " 23:59:59";
       if (this.param["@beginDate"] == undefined) {
         this.param["@beginDate"] = endDate + " 00:00:00";
       }
-      console.log(this.param)
     },
     ok(item) {
       var _this = this;
@@ -314,7 +338,10 @@ export default {
             this.$notice.toast({
               message: "已经到底部"
             });
-            if(JSON.stringify(this.listType) != '{}') {
+            // 如果listType不是全部或者ispay是未付，则隐藏其中一个card
+            if(JSON.stringify(this.listType) == '{}' || this.param['@isPay'] === 0) {
+              
+            } else {
               this.listData[index].show = false
               this.listData.splice(index , 1)
             }
@@ -366,6 +393,7 @@ export default {
       try {
         var bweixin = type ? "微信支付" : "支付宝支付";
         this.$notice.loading.show(`你选择了${bweixin}`);
+        
         const RES = await API.YJ_PAY(param);
         if (RES.SUCCESS) {
           this.$refs["payType"].hide();
@@ -561,6 +589,12 @@ export default {
           this.setNav(title)
           this.refresh()
         }
+    },
+    popoverButtonClickedTwo(obj) {
+      
+        this.searchTypeTwo = this.btnsTwo[obj.index].text
+        this.param['@isPay'] = obj.key
+        this.refresh();
     }
   }
 };

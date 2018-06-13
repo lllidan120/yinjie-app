@@ -71,7 +71,7 @@
   .col-content {
     flex-direction: row;
     align-items: center;
-    height: 80px;
+    min-height: 80px;
     padding-top: 30px;
   }
   .col-content-top {

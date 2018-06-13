@@ -1,47 +1,43 @@
 <template>
-    <div class="container">
-
-        <div class="menu">
-            <div class="item_container"
-                 style="opacity:0"
-                 ref="menu1">
-                <text class="item">Menu1</text>
-            </div>
-            <div class="item_container"
-                 style="opacity:0"
-                 ref="menu2">
-                <text class="item">Menu2</text>
-            </div>
-            <div class="item_container"
-                 style="opacity:0"
-                 ref="menu3">
-                <text class="item">Menu3</text>
-            </div>
-            <div class="item_container"
-                 style="opacity:0"
-                 ref="menu4">
-                <text class="item">Menu4</text>
-            </div>
-            <div class="item_container"
-                 style="opacity:0"
-                 ref="menu5">
-                <text class="item">Menu5</text>
-            </div>
+<div class="app">
+  <list class="list" ref="list">
+    <cell>
+      <div class="header">
+        <div class="header_bg_wrapper">
+          <image class="header_bg" src="https://gw.alicdn.com/tfs/TB1PDWiXSBYBeNjy0FeXXbnmFXa-1024-576.jpg" />
         </div>
-
-        <div class="main"
-             ref="main"
-             @touchstart="onTouchStart">
-            <div class="block" />
-            <div class="block"
-                 style="margin-top:15" />
-            <div class="block"
-                 style="margin-top:15" />
-            <div class="block"
-                 style="margin-top:15" />
+        <div class="header_card">
+          <div class="card_wrapper">
+            <div class="card_content" style="background-color:#ffffff">
+            </div>
+          </div>
         </div>
+      </div>
+    </cell>
 
+    <cell v-for="c in cells">
+      <div class="card_wrapper">
+        <div class="card_content" />
+      </div>
+    </cell>
+  </list>
+
+  <div class="app_bar" ref="app_bar">
+    <div class="app_bar_bg" ref="app_bar_bg" />
+
+    <div class="nav_wrapper">
+      <image class="nav_back" src="https://gw.alicdn.com/tfs/TB1ufOrXTtYBeNjy1XdXXXXyVXa-128-128.png" />
+      <text class="nav_title">Title</text>
     </div>
+
+    <div class="tab_wrapper_container">
+      <div class="tab_wrapper" v-for="tab in fake_tabs">
+        <text class="tab">{{tab}}</text>
+      </div>
+    </div>
+  </div>
+
+</div>
 </template>
 
 
@@ -50,355 +46,162 @@
 export default {
   data() {
     return {
-      _is_expanded: false,
-      _menu_animation_flag: false,
-      _opacity: 0
+      fake_tabs: [
+        'Tab1',
+        'Tab2',
+        'Tab3',
+        'Tab4',
+        'Tab5',
+        'Tab6'
+      ],
+      cells: [1, 2, 3, 4, 5, 6, 7, 8, 9]
     };
   },
   methods: {
     getEl: function(e) {
       return e.ref;
-    },
-
-    onTouchStart: function() {
-      if (!this._is_expanded) {
-        this.expandWithDrag();
-      } else {
-        this.collapseWithDrag();
-      }
-    },
-    expandWithDrag: function() {
-      var self = this;
-      let page = this.getEl(this.$refs.main);
-      let result = this.$bindingx.bind(
-        {
-          eventType: "pan",
-          anchor: page,
-          props: [
-            {
-              element: page,
-              property: "transform.translateX",
-              expression: {
-                origin: "min(375,max(0,x))"
-              }
-            },
-            {
-              element: page,
-              property: "transform.scaleX",
-              expression: {
-                origin: "1-min(375,max(0,x))/375*0.2" //1-->0.8
-              }
-            },
-            {
-              element: page,
-              property: "transform.scaleY",
-              expression: {
-                origin: "1-min(375,max(0,x))/375*0.2"
-              }
-            }
-          ]
-        },
-        function(e) {
-          if (e.state === "end" && !self._is_expanded) {
-            let offset = e.deltaX;
-            if (offset < 375 / 2 && offset > 0) {
-              self.collapseWithAnimation();
-            } else if (offset >= 375 / 2) {
-              self.expandWithAnimation();
-            }
-
-            if (result) {
-              self.$bindingx.unbind({
-                token: result.token,
-                eventType: "pan"
-              });
-            }
-          }
-        }
-      );
-    },
-
-    collapseWithDrag: function() {
-      var self = this;
-      let page = this.getEl(this.$refs.main);
-      let result = this.$bindingx.bind(
-        {
-          eventType: "pan",
-          anchor: page,
-          props: [
-            {
-              element: page,
-              property: "transform.translateX",
-              expression: {
-                origin: "375+min(0,max(0-375,x))"
-              }
-            },
-            {
-              element: page,
-              property: "transform.scaleX",
-              expression: {
-                origin: "0.8-min(0,max(0-375,x))/375*0.2"
-              }
-            },
-            {
-              element: page,
-              property: "transform.scaleY",
-              expression: {
-                origin: "0.8-min(0,max(0-375,x))/375*0.2"
-              }
-            }
-          ]
-        },
-        function(e) {
-          if (e.state === "end" && self._is_expanded) {
-            let offset = Math.abs(e.deltaX);
-            if (offset < 375 / 2 && offset > 0) {
-              self.expandWithAnimation();
-            } else if (offset >= 375 / 2 && offset <= 375) {
-              self.collapseWithAnimation();
-            }
-
-            if (result) {
-              self.$bindingx.unbind({
-                token: result.token,
-                eventType: "pan"
-              });
-            }
-          }
-        }
-      );
-    },
-    collapseWithAnimation: function() {
-      this._is_expanded = false;
-      this._menu_animation_flag = false;
-      let page = this.getEl(this.$refs.main);
-
-      let offset = this.$bindingx.getComputedStyle(page).translateX;
-      let duration = 200; //ms
-      let scale = this.$bindingx.getComputedStyle(page).scaleX;
-      let self = this;
-
-      this.$bindingx.bind(
-        {
-          eventType: "timing",
-          exitExpression: {
-            origin: `t>${duration}`
-          },
-          props: [
-            {
-              element: page,
-              property: "transform.translateX",
-              expression: {
-                origin: `easeOutCubic(t,${offset},${0 - offset},${duration})`
-              }
-            },
-            {
-              element: page,
-              property: "transform.scaleX",
-              expression: {
-                origin: `easeOutCubic(t,${scale},${1 - scale},${duration})`
-              }
-            },
-            {
-              element: page,
-              property: "transform.scaleY",
-              expression: {
-                origin: `easeOutCubic(t,${scale},${1 - scale},${duration})`
-              }
-            }
-          ]
-        },
-        function(e) {}
-      );
-    },
-    expandWithAnimation: function() {
-      let self = this;
-      this._is_expanded = true;
-      let page = this.getEl(this.$refs.main);
-      let offset = this.$bindingx.getComputedStyle(page).translateX;
-      let duration = 200; //ms
-      let scale = this.$bindingx.getComputedStyle(page).scaleX;
-
-      this.$bindingx.bind(
-        {
-          eventType: "timing",
-          exitExpression: {
-            origin: `t>${duration}`
-          },
-          props: [
-            {
-              element: page,
-              property: "transform.translateX",
-              expression: {
-                origin: `easeOutCubic(t,${offset},${375 - offset},${duration})`
-              }
-            },
-            {
-              element: page,
-              property: "transform.scaleX",
-              expression: {
-                origin: `easeOutCubic(t,${scale},${0.8 - scale},${duration})` //scale-->1
-              }
-            },
-            {
-              element: page,
-              property: "transform.scaleY",
-              expression: {
-                origin: `easeOutCubic(t,${scale},${0.8 - scale},${duration})` //scale-->1
-              }
-            }
-          ]
-        },
-        function(e) {
-          if (e.state === "exit" && !self._menu_animation_flag) {
-            self.showMenu();
-            self._menu_animation_flag = true;
-          }
-        }
-      );
-    },
-    showMenu: function() {
-      let menu1 = this.getEl(this.$refs.menu1);
-      let menu2 = this.getEl(this.$refs.menu2);
-      let menu3 = this.getEl(this.$refs.menu3);
-      let menu4 = this.getEl(this.$refs.menu4);
-      let menu5 = this.getEl(this.$refs.menu5);
-
-      let duration = 1000; //ms
-      let parallax = 50;
-
-      this.$bindingx.bind({
-        eventType: "timing",
-        exitExpression: {
-          origin: `t>${duration * 5}`
-        },
-        props: [
-          {
-            element: menu1,
-            property: "transform.translateY",
-            expression: {
-              origin: `easeOutElastic(t,0,0-100,${duration})`
-            }
-          },
-          {
-            element: menu2,
-            property: "transform.translateY",
-            expression: {
-              origin: `t<${parallax}?0:easeOutElastic(t,0,0-100,${duration -
-                parallax})`
-            }
-          },
-          {
-            element: menu3,
-            property: "transform.translateY",
-            expression: {
-              origin: `t<${parallax * 2}?0:easeOutElastic(t,0,0-100,${duration -
-                parallax * 2})`
-            }
-          },
-          {
-            element: menu4,
-            property: "transform.translateY",
-            expression: {
-              origin: `t<${parallax * 3}?0:easeOutElastic(t,0,0-100,${duration -
-                parallax * 3})`
-            }
-          },
-          {
-            element: menu5,
-            property: "transform.translateY",
-            expression: {
-              origin: `t<${parallax * 4}?0:easeOutElastic(t,0,0-100,${duration -
-                parallax * 4})`
-            }
-          },
-          // opacity
-          {
-            element: menu1,
-            property: "opacity",
-            expression: {
-              origin: `easeOutElastic(t,0,1,${duration})`
-            }
-          },
-          {
-            element: menu2,
-            property: "opacity",
-            expression: {
-              origin: `t<${parallax}?0:easeOutElastic(t,0,1,${duration -
-                parallax})`
-            }
-          },
-          {
-            element: menu3,
-            property: "opacity",
-            expression: {
-              origin: `t<${parallax * 2}?0:easeOutElastic(t,0,1,${duration -
-                parallax * 2})`
-            }
-          },
-          {
-            element: menu4,
-            property: "opacity",
-            expression: {
-              origin: `t<${parallax * 3}?0:easeOutElastic(t,0,1,${duration -
-                parallax * 3})`
-            }
-          },
-          {
-            element: menu5,
-            property: "opacity",
-            expression: {
-              origin: `t<${parallax * 4}?0:easeOutElastic(t,0,1,${duration -
-                parallax * 4})`
-            }
-          }
-        ]
-      });
     }
+  },
+  mounted() {
+    let self = this;
+    let list = this.getEl(self.$refs.list);
+    let target_app_bar = this.getEl(self.$refs.app_bar);
+    let target_bg = this.getEl(self.$refs.app_bar_bg);
+
+    this.$bindingx.bind({
+      eventType: 'scroll',
+      anchor: list,
+      props: [{
+          element: target_bg,
+          property: 'opacity',
+          expression: {
+            origin: 'min(100,y)/100'
+          }
+        },
+        {
+          element: target_app_bar,
+          property: 'transform.translateY',
+          expression: {
+            origin: 'y<100?0:(0-min(y-100,100))'
+          }
+        }
+      ]
+    });
   }
 };
 </script>
 <style scoped>
-.container {
+.app {
   flex: 1;
-  background-color: #03a9f4;
+  justify-content: center;
+  align-items: center;
+  background-color: #E0E0E0;
 }
 
-.main {
-  flex: 1;
-  background-color: #ffffff;
+.list {
+  flex-direction: column;
+  overflow: hidden;
+  width: 750;
+  background-color: #f2f3f4;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
 }
 
-.menu {
-  width: 375;
+.header_bg {
+  width: 750;
+  height: 500;
+}
+
+.header_bg_wrapper {
+  width: 750;
+  height: 600;
   position: absolute;
   top: 0;
-  bottom: 0;
-  justify-content: center;
-  align-items: center;
-  margin-left: 35;
-  margin-top: 100;
 }
 
-.item {
+.header {
+  width: 750;
+  height: 600;
+}
+
+.header_card {
+  margin-top: 330;
+}
+
+.app_bar {
+  width: 750;
+  height: 250;
+  position: absolute;
+  top: 0;
+}
+
+.app_bar_bg {
+  width: 750;
+  height: 200;
+  background-color: #03A9F4;
+  position: absolute;
+  top: 0;
+  opacity: 0;
+}
+
+.card_wrapper {
+  width: 750;
+  height: 250;
+  margin-top: 20;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+.card_content {
+  border-radius: 25;
+  width: 710;
+  height: 250;
+  background-color: #ffffff;
+
+}
+
+.nav_wrapper {
+  width: 750;
+  height: 100;
+  align-items: center;
+  background-color: transparent;
+  flex-direction: row;
+}
+
+.nav_title {
+  font-size: 35;
+  font-weight: bold;
+  margin-left: 250;
   color: #ffffff;
-  font-size: 40;
 }
 
-.item_container {
-  height: 60;
-  width: 375;
-  justify-content: center;
+.nav_back {
+  width: 40;
+  margin-left: 20;
+  height: 40;
+}
+
+.tab_wrapper_container {
+  width: 750;
+  height: 100;
   align-items: center;
-  margin-top: 35;
-  color: #000;
+  background-color: transparent;
+  flex-direction: row;
 }
 
-.block {
-  width: 720;
-  height: 350;
-  background-color: #ff9800;
-  margin: 15;
-  border-radius: 15;
+.tab_wrapper {
+  width: 125;
+  height: 100;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab {
+  font-size: 25;
+  color: #ffffff;
 }
 </style>

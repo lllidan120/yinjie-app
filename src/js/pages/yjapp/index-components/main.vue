@@ -101,9 +101,14 @@
 						this.isScan = false
 						this.$notice.loading.show();
 						var res = await API.YJ_SCAN(par)
+						console.log(res)
 						this.$notice.loading.hide();
 						if(res.DATA) {
-							var DATA = JSON.parse(res.DATA)
+							if(typeof res.DATA === 'string') {
+								var DATA = JSON.parse(res.DATA)
+							} else {
+								var DATA = res.DATA
+							}
 							if(DATA.url) {
 								_this.$notice.confirm({
 									title: '扫描成功',

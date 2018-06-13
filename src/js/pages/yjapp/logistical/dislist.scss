@@ -114,6 +114,10 @@
   lines: 3;
   text-overflow: ellipsis;
 }
+.text-overflow {
+  overflow: hidden;
+  height: 46px;
+}
 
 .text {
   font-size: 25px;
@@ -233,6 +237,10 @@
 .tool-text {
   color: #fff;
   font-size: 30;
+  width: 100px;
+  text-align: center;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .tool-btn {

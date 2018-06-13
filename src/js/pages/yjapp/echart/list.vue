@@ -182,13 +182,11 @@ export default {
           }, event => {
             if (event.result === 'success') {
               this.selectDeliverData = this.deliverList[event.data]
+              this.index = event.data
               this.setNav()
               this.getData()
             }
       })
-    },
-    getDeliver () {
-      
     },
     setNav() {
       if(this.userInfo.RoleId === 1 || this.userInfo.RoleId === 4) {
@@ -205,9 +203,7 @@ export default {
     },
     async QueryAdminList() {
       var par = {
-        '$RoleId': 13,
-        '$pageRecord': 500,
-        '$rowIndex': 1
+        '$RoleId': '8,13'
       }
       const RES = await API.get_adminList(par)
       const DATA = RES.map.dgData;

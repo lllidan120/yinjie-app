@@ -2,7 +2,7 @@ import axios from './axios.js'
 
 
 let api = { 
-	App_Version : '1.7',
+	App_Version : '1.9',
 	YJ_GETORDER : (data) => axios.getAjaxData(data , 'search' , 'YJApp_OrderInfo'),
 	YJ_ENTER  : (data) => axios.getAjaxData(data , 'enterIn'),
 	YJ_SEARCH : (data) => axios.getAjaxData(data , 'search'),
@@ -36,7 +36,7 @@ let api = {
 	// 发货单确认到货 
 	YJ_enterFahuo: (data) => axios.getAjaxData(data , 'orderGroup' , 'enterOrderGroup'),
 	// 读取业务员
-	get_adminList: (data) => axios.getAjaxData(data , 'search' , 'QueryAdminList' , '217141a5-01d0-4696-9500-ae2d82a8cb4c'),
+	get_adminList: (data) => axios.getAjaxData(data, 'search', 'GetDeliveryList', '217141a5-01d0-4696-9500-ae2d82a8cb4c'),
 	// 获取APP操作记录
 	Get_AppRecord: (data) => axios.getAjaxData(data , 'search' , 'Get_AppRecord'),
 	// 以下是缓存到store的参数
@@ -116,13 +116,11 @@ let api = {
 	    }
 	},
 	formatTime (date) {
-		const data = date.split('T' , ' ')
-
-		const t1 = [year, month, day].map(formatNumber).join('/')
-		const t2 = [hour, minute, second].map(formatNumber).join(':')
-
-		return `${t1} ${t2}`
-
+		const data = date.split('T')
+		return `${data[0]} ${data[1]}`
+	},
+	trim (str) {
+		return str.replace(/^\s+|\s+$/g, "")
 	}
 
 }

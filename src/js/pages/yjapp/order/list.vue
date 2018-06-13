@@ -124,7 +124,7 @@
 				if(this.searchType == this.btns[1].key && this.searchValue != '') {
 					this.param = Object.assign(this.param , {'userId' : this.searchValue})
 				}
-				if(this.RoleId === 1 || this.RoleId === 4) {
+				if(this.userInfo.RoleId === 1 || this.userInfo.RoleId === 4) {
 
 				} else {
 					this.param = Object.assign(this.param , {'DeliverPhone' : this.userInfo.Mobile})
