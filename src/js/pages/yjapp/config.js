@@ -75,19 +75,20 @@ export default {
     {
       title: '主菜单',
       pages: [
-        
+        {
+
+            title: '发货单',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/链接.png',
+            name: 'invoice-list'
+        },
+
         {
             title: '物流订单',
             icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/打印.png',
             type: {},
             name: 'dis-list'
         }, 
-        {
-
-            title: '发货单',
-            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/链接.png',
-            name: 'invoice-list'
-        }, {
+         {
 
             title: '平台订单',
             icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/插座.png',
@@ -123,44 +124,45 @@ export default {
 
 
       ]
-    },
-    {
-      title: '物流订单',
-      pages: [
-        {
-            title: '未收货',
-            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文档.png',
-            sub: '批量收货',
-            type: {
-                '@orderStatu': '1,2,5,10,6,7,8'
-            },
-            name: 'dis-list'
-        }, {
-            title: '未收款',
-            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件记录.png',
-            sub: '批量收款',
-            type: {
-                '@isPay': 0
-            },
-            name: 'dis-list'
-        }, {
-            title: '已收款',
-            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件整理.png',
-            type: {
-                '@isPay': 1
-            },
-            name: 'dis-list'
-        }, {
-            title: '已收货',
-            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件夹.png',
-            type: {
-                '@orderStatu': '50,51,48,33'
-            },
-            name: 'dis-list'
-        }
-
-      ]
     }
+    // ,
+    // {
+    //   title: '物流订单',
+    //   pages: [
+    //     {
+    //         title: '未收货',
+    //         icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文档.png',
+    //         sub: '批量收货',
+    //         type: {
+    //             '@orderStatu': '1,2,5,10,6,7,8'
+    //         },
+    //         name: 'dis-list'
+    //     }, {
+    //         title: '未收款',
+    //         icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件记录.png',
+    //         sub: '批量收款',
+    //         type: {
+    //             '@isPay': 0
+    //         },
+    //         name: 'dis-list'
+    //     }, {
+    //         title: '已收款',
+    //         icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件整理.png',
+    //         type: {
+    //             '@isPay': 1
+    //         },
+    //         name: 'dis-list'
+    //     }, {
+    //         title: '已收货',
+    //         icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件夹.png',
+    //         type: {
+    //             '@orderStatu': '50,51,48,33'
+    //         },
+    //         name: 'dis-list'
+    //     }
+
+    //   ]
+    // }
 
     ],
     mainList : [

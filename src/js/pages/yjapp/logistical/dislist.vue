@@ -60,7 +60,7 @@
         </div>
       </cell-slot>
     </recycle-list>
-    <image src='http://img.lanrentuku.com/img/allimg/1212/5-121204194026.gif' v-if="showload" style="height:40px;width:300px,align-items:center;background-color:#fff;" resize="contain" quality="original"></image>
+    <image src='http://yj.kiy.cn/Content/Images/App/assets/5-121204194026.gif' v-if="showload" style="height:40px;width:300px,align-items:center;background-color:#fff;" resize="contain" quality="original"></image>
   <!-- 支付弹窗 -->
     <bmmask class="mask" animation="transition" position="top" :duration="300" ref="payType">
       <bmpop class="modal-top">
@@ -190,11 +190,10 @@ export default {
   },
   methods: {
     async getData() {
-      var _this = this;
+      const _this = this;
       this.param["@rowIndex"]++;
       // if adminId == 1 or adminId = 4 ,is admin
       if(this.userInfo.RoleId === 1 || this.userInfo.RoleId === 4) {
-
       } else {
         this.param = Object.assign(this.param, {
           "@adminId": this.userInfo.adminId
@@ -205,7 +204,7 @@ export default {
       if (this.searchValue != "") {
         if (this.searchType == this.btns[0].key) {
           // 物流号
-          var searchValue = this.searchValue.split('-')
+          let searchValue = this.searchValue.split('-')
           this.param['@id'] = searchValue[0]
         } else if (this.searchType == this.btns[1].key) {
             // 会员号
@@ -325,7 +324,6 @@ export default {
     async enterIn(item) {
       const param = { orderId: item.Id, adminId: this.userInfo.adminId };
       this.$notice.loading.show("正在加载");
-
       const RES = await API.YJ_ENTER(param);
       this.$notice.loading.hide();
       if (RES.SUCCESS) {
@@ -365,7 +363,6 @@ export default {
         params: item
       });
     },
-
     async pay(type) {
       const userInfo = this.userInfo;
       const payGroup = this.payGroup;
@@ -391,7 +388,7 @@ export default {
         bweixin: type
       };
       try {
-        var bweixin = type ? "微信支付" : "支付宝支付";
+        const bweixin = type ? "微信支付" : "支付宝支付";
         this.$notice.loading.show(`你选择了${bweixin}`);
         
         const RES = await API.YJ_PAY(param);
@@ -400,7 +397,6 @@ export default {
           this.$notice.loading.hide();
           var par = Object.assign(param, RES.DATA);
           this.$notice.loading.hide();
-
           this.$router.open({
             name: "pay",
             type: "PRESENT",
@@ -450,9 +446,7 @@ export default {
                 }
             }
             ]
-
         });
-
         let result2 = this.$bindingx.bind({
             eventType: 'timing',
             exitExpression: {
@@ -525,7 +519,6 @@ export default {
             }
             ]
         });
-
         let result2 = this.$bindingx.bind({
             eventType: 'timing',
             exitExpression: {
@@ -591,7 +584,6 @@ export default {
         }
     },
     popoverButtonClickedTwo(obj) {
-      
         this.searchTypeTwo = this.btnsTwo[obj.index].text
         this.param['@isPay'] = obj.key
         this.refresh();

@@ -29,8 +29,6 @@
 
 <script>
 	import API from 'Utils/api'
-	const modal = weex.requireModule('modal');
-	const picker = weex.requireModule('picker');
 	
 	export default {
 		components: {   },

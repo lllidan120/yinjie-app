@@ -40,7 +40,7 @@
 				</cell-slot>
 			</recycle-list>
 		</scroller>
-		<image src='http://img.lanrentuku.com/img/allimg/1212/5-121204194026.gif'
+		<image src='http://yj.kiy.cn/Content/Images/App/assets/5-121204194026.gif'
 		v-if="showload"
 		style="height:40px;width:300px,align-items:center;background-color:#fff;"
 		resize="contain"

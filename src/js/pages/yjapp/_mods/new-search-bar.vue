@@ -34,8 +34,6 @@
 
 <script>
 	import API from 'Utils/api'
-	const modal = weex.requireModule('modal');
-	const picker = weex.requireModule('picker');
 	
 	export default {
 		components: {   },
@@ -61,6 +59,8 @@
         mounted () {
             if(this.showScanBtn) {
                 this.$navigator.setRightItem({
+					text: '扫一扫查单',
+					fontSize:'26',
                 image: 'http://yj.kiy.cn/Content/Images/App/assets/scan.png'
                 }, () => {
                     this.scanClick()
@@ -72,7 +72,7 @@
 				this.$emit('onChange' , type)
 			},
 			inputChange (val) {
-				this.$emit('inputChange' , val)
+				this.$emit('inputChange' , this.value)
 			},
 			scanClick() {
 				this.$tools.scan().then((resData) => {

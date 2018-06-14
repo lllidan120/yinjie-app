@@ -4,12 +4,12 @@
 					<img src="http://yj.kiy.cn/Content/Images/App/assets/main/main-bg1.png" class="top-bg" alt="">
 					<image 
 					ref="inner" 
-					src="http://www.easybui.com/scenes/source/common/images/round/round-inner.png" 
+					src="http://yj.kiy.cn/Content/Images/App/assets/round-inner.png" 
 					class="round-inner" 
 					@click="scanLogisticalOrder"></image>
 					<image
 					ref="scan"
-					src="http://www.easybui.com/scenes/source/common/images/round/round-scan.png"
+					src="http://yj.kiy.cn/Content/Images/App/assets/round-scan.png"
 					class="round-scan" 
 					></image>
 					<text class="select-btn" @click="selectWarhoursCode">{{selectWarhours.WarhoursName}}</text>

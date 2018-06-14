@@ -25,10 +25,10 @@
 				<text class="bottom-box-center">签到</text>
 				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
 			</div> -->
-			<div class="bottom-box" @click="toBindingx">
+			<!-- <div class="bottom-box" @click="toBindingx">
 				<text class="bottom-box-center">bindingx</text>
 				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
-			</div>
+			</div> -->
 		</cell>
 	</waterfall>      
 </template>
