@@ -1,7 +1,7 @@
 <template>
 		<waterfall :show-scrollbar="false">
 			<header class="top"> 
-					<img src="http://yj.kiy.cn/Content/Images/App/assets/main/main-bg1.png" class="top-bg" alt="">
+					<img src="http://yj.kiy.cn/Content/Images/App/assets/main/main-bg1.png" class="top-bg" ref="headbg" alt="">
 					<image 
 					ref="inner" 
 					src="http://yj.kiy.cn/Content/Images/App/assets/round-inner.png" 
@@ -151,10 +151,13 @@
 		          styles: {
 		            transform: 'rotate(360deg)'
 		          },
-		          duration: 10000, //ms
+		          duration: 3000, //ms
 		          timingFunction: 'ease',
 		          delay: 0 //ms
 		        })
+				setTimeout(() => {
+					this.deviceorientaion()
+				}, 3200);
 	    	},
 	    	async getWarhoursCode () {
 				var warhoursCode = API.get_warhoursCode(this)
@@ -224,6 +227,20 @@
 			},
 			popupOverlayLeftClick () {
 				this.isLeftShow = false;
+			},
+			deviceorientaion () {
+				let main_btn = this.$refs.inner.ref
+				let scan = this.$refs.scan.ref
+				this.$bindingx.bind({
+					eventType:'orientation',
+					props: [
+						{
+							element:main_btn,
+							property:'transform.rotateZ',
+							expression:'x + 2'
+						}
+					]
+				})
 			}
 			
 	    }

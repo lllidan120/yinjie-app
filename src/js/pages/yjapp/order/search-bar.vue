@@ -104,7 +104,7 @@
 				}, event => {
 					if (event.result === 'success') {
 						this.proper = items[event.data]
-						this.this.properGroupIndex = event.data
+						this.properGroupIndex = event.data
 						this.$emit('changeProper' , this.proper)
 					}
 				})

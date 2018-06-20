@@ -59,10 +59,7 @@
 		methods: {
 			onrefresh () {
 				var _this =this;
-				this.searchOrder()
-				setTimeout(function() {
-					_this.$refs["listTop"].refreshEnd()
-				} , 2000)
+				this.searchOrder('onrefresh')
 			},
 			preview () {
 				var imgArr = []
@@ -72,7 +69,7 @@
 				    images: imgArr,        // 图片的网络地址
 				})
 			},
-			async searchOrder () {
+			async searchOrder (onrefresh) {
 				try {
 					var par = {
 						'@orderId': this.payInfo.key
@@ -94,7 +91,9 @@
 				} catch (error) {
 					
 				}
-				
+				if(onrefresh === 'onrefresh') {
+					this.$refs["listTop"].refreshEnd()
+				}
 			}
 		},
 		mounted() {
@@ -106,10 +105,10 @@
 			var _this = this
 			this.$router.getParams().then(resData => {
 				_this.payInfo = resData
-				_this.$notice.loading.show("正在加载二维码")
-				setTimeout(function() {
-					_this.$notice.loading.hide()
-				} , 1000)
+				// _this.$notice.loading.show("正在加载二维码")
+				// setTimeout(function() {
+				// 	_this.$notice.loading.hide()
+				// } , 1000)
 			})
 		}
 

@@ -196,7 +196,7 @@ export default {
     },
     async QueryAdminList() {
       var par = {
-        '$RoleId': '8,13'
+        '$RoleId': '1,4,11,10,8,13'
       }
       const RES = await API.get_adminList(par)
       const DATA = RES.map.dgData;

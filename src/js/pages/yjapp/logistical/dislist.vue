@@ -36,9 +36,23 @@
                 <div class="col">
                   <text class="text gray-color">货物数量  </text>
                   <text class="text num-color" style="width:110px;">X{{item.Goods_Qty}}</text>
-                  <!-- <text class="text gray-color"  v-if="item.oCount != 0">未收货  </text>
-                  <text class="text num-color"  v-if="item.oCount != 0">X{{item.oCount}} </text>
-                  <text class="text num-color"  v-if="item.oCount == 0">(已经全部收货)</text> -->
+                  <text class="text red-color"  v-if="item.logState == 1">已下单</text>
+                  <text class="text red-color"  v-if="item.logState == 2">回程中转中</text>
+                  <text class="text red-color"  v-if="item.logState == 5">已入仓</text>
+                  <text class="text red-color"  v-if="item.logState == 10">待配送</text>
+                  <text class="text red-color"  v-if="item.logState == 11">异常</text>
+                  <text class="text red-color"  v-if="item.logState == 6">已装箱</text>
+                  <text class="text red-color"  v-if="item.logState == 7">中转中</text>
+                  <text class="text red-color"  v-if="item.logState == 8">已卸车</text>
+                  <text class="text red-color"  v-if="item.logState == 50">配送完成</text>
+                  <text class="text red-color"  v-if="item.logState == 51">退货完成</text>
+                  <text class="text red-color"  v-if="item.logState == 17">已回仓</text>
+                  <text class="text red-color"  v-if="item.logState == 48">确认退货</text>
+                  <text class="text red-color"  v-if="item.logState == 49">退货中</text>
+                  <text class="text red-color"  v-if="item.logState == 100">作废</text>
+                  <text class="text red-color"  v-if="item.logState == 9">分仓扫描入仓</text>
+                  <text class="text red-color"  v-if="item.logState == 33">已评价</text>
+                  <text class="text red-color"  v-if="item.logState == 101">取消订单</text>
                 </div>
                 <div class="col">
                   <text class="text gray-color">物流编号  </text>
@@ -79,19 +93,21 @@
     <wxc-popover ref="wxc-popover" :buttons="btns" :position="popoverPosition" :arrowPosition="popoverArrowPosition" @wxcPopoverButtonClicked="popoverButtonClicked"></wxc-popover>
     <wxc-popover ref="wxc-popover-two" :buttons="btnsTwo" :position="popoverPositionTwo" :arrowPosition="popoverArrowPositionTwo" @wxcPopoverButtonClicked="popoverButtonClickedTwo"></wxc-popover>
     <!-- 列表选择 -->
-    <div ref="b1" class="tool-btn" style="background-color:#6A1B9A" @click="clickBtn({'@orderStatu': '1,2,5,10,6,7,8'} , '未收货')">
-        <text class="tool-text">未收</text>
+    <div ref="b1" class="tool-btn" style="background-color:#FF9800" @click="clickBtn({'@orderStatu': '1,2,5,10,6,7,8'} , '未收货')">
+        <text class="tool-text">未收货</text>
     </div>
-    <div ref="b2" class="tool-btn" style="background-color:#0277BD" @click="clickBtn({'@orderStatu': '50,51,48,33'} , '已收货')">
-        <text class="tool-text">已收</text>
+    <div ref="b2" class="tool-btn" style="background-color:#4caf50" @click="clickBtn({'@orderStatu': '50,51,48,33'} , '已收货')">
+        <text class="tool-text">已收货</text>
     </div>
-    <div ref="b3" class="tool-btn" style="background-color:#FF9800" @click="clickBtn({'@isPay': 0} , '未付款')">
-        <text class="tool-text">未付</text>
+    <!-- 9,10,11,33,50 -->
+    <div ref="b3" class="tool-btn" style="background-color:#36648B" @click="clickBtn({'@orderStatu': '1,5,7,8'} , '未扫描')">
+        <text class="tool-text">未扫描</text>
     </div>
-    <div ref="b4" class="tool-btn" style="background-color:#4caf50" @click="clickBtn({'@isPay': 1} , '已付款')">
-        <text class="tool-text">已付</text>
+    <div ref="b4" class="tool-btn" style="background-color:#6A5ACD" @click="clickBtn({'@orderStatu': '10'} , '待配送')">
+        <text class="tool-text">待配送</text>
     </div>
-    <div ref="b5" class="tool-btn" style="background-color:#404040" @click="clickBtn({} , '全部订单')">
+    
+    <div ref="b5" class="tool-btn" style="background-color:#303030" @click="clickBtn({} , '全部订单')">
         <text class="tool-text">全部</text>
     </div>
     <div ref="main_btn" class="tool-btn" style="background-color: #ff0000" @click="clickBtn">
@@ -484,13 +500,14 @@ export default {
                 element: b5,
                 property: 'transform.translateY',
                 expression: {
-                origin: "t<=400?0:easeOutQuint(t-400,-750,750,400)"
+                origin: "t<=200?0:easeOutQuint(t-400,-750,750,400)"
                 }
             }
             ]
         })
     },
     expand: function() {
+        const _this = this;
         let main_btn = this.$refs.main_btn.ref
         let main_image = this.$refs.main_image.ref
         let b1 = this.$refs.b1.ref
@@ -556,7 +573,7 @@ export default {
                 element: b5,
                 property: 'transform.translateY',
                 expression: {
-                origin: "t<=400?0:easeOutBounce(t-400,0,0-750,400)"
+                origin: "t<=200?0:easeOutBounce(t-400,0,0-750,400)"
                 }
             }
             ]
