@@ -80,8 +80,12 @@ export default {
         url: '/pages/yjapp/invoice/detail.js'
     },
     'echartlist' : {
-        title: '收款汇总',
+        title: '业务员配送率',
         url: '/pages/yjapp/echart/list.js'
+    },
+    'echartdetail': {
+        title: '业务员配送率详情',
+        url: '/pages/yjapp/echart/detail.js'
     },
     'helpindex': {
         title: '帮助中心',

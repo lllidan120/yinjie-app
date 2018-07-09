@@ -2,12 +2,13 @@ import axios from './axios.js'
 
 
 let api = { 
-	App_Version : '2.0',
+	App_Version : '2.3',
 	YJ_GETORDER : (data) => axios.getAjaxData(data , 'search' , 'YJApp_OrderInfo'),
 	YJ_ENTER  : (data) => axios.getAjaxData(data , 'enterIn'),
 	YJ_SEARCH : (data) => axios.getAjaxData(data , 'search'),
 	YJ_SCAN   : (data) => axios.getAjaxData(data , 'scanIn'),
 	YJ_LOGIN  : (data) => axios.getAjaxData(data , 'login'),
+	YJ_errOrder: (data) => axios.getAjaxData(data, 'errOrder'),
 	YJ_WARHOURSCODE : (data) => axios.getAjaxData(data , 'search' , 'YJApp_GetWarhours'),
 	YJ_PAY : (data) => axios.getAjaxData(data, 'payMent'),
 	// 查看彩印通订单有没有物流单
@@ -25,7 +26,7 @@ let api = {
 	// 获取子单物流状态
 	YJ_ORDERLISTSTATUS: (data) => axios.getAjaxData(data , undefined , 'QueryOrderRecordsList' , '217141a5-01d0-4696-9500-ae2d82a8cb4c'),
 	// 查彩印通订单
-	KIY_SEARCHORDER : (data) => axios.postApiData(data , 'http://www.kiy.cn/webapi/Himall.NewShop.GetOrderInfo'),
+	KIY_SEARCHORDER: (data) => axios.postApiData(data, `${axios.kiyDomain}/webapi/Himall.NewShop.GetOrderInfo`),
 	//权限 
 	get_access: (data) => axios.getAjaxData(data , 'search' , 'AppMenuAuthor' ),
 	get_accessBtn: (data) => axios.getAjaxData(data , 'search' , 'AppButtonBizAuthor' ),
@@ -39,16 +40,36 @@ let api = {
 	get_adminList: (data) => axios.getAjaxData(data, 'search', 'GetDeliveryList', '217141a5-01d0-4696-9500-ae2d82a8cb4c'),
 	// 获取APP操作记录
 	Get_AppRecord: (data) => axios.getAjaxData(data , 'search' , 'Get_AppRecord'),
+	// getUncollectedOrder , getPaycollectOrder , getAllOrder 根据业务员Id获取已收款， 未收款 ， 所有订单
+	get_CollectedOrder: (data, methodName) => axios.getAjaxData(data, 'search', methodName),
+	// 物流后台业务员配送率
+	get_QueryDistributionRateList: (data) => axios.getAjaxData(data, 'search', 'QueryDistributionRateList', '217141a5-01d0-4696-9500-ae2d82a8cb4c'),
+	// 物流后台业务员配送率详情
+	get_QueryDistributionRateDetail: (data) => axios.getAjaxData(data, 'search', 'QueryBusinessDistributionSummaryDetailsList', '217141a5-01d0-4696-9500-ae2d82a8cb4c'),
+	// 首页数据统计
+	get_GetHomeData: (data) => axios.getAjaxData(data, 'search', 'GetHomeData'),
+	// 检查订单是否可以售后接口
+	get_IsOrderRefunds: (data) => axios.postApiData(data, `${axios.kiyDomain}/webapi/Himall.OrderRefund.IsOrderRefunds`),
+	// 申请售后接口
+	get_OrderRefundRefundApply: (data) => axios.postApiData(data, `${axios.kiyDomain}/webapi/Himall.OrderRefund.OrderRefundRefundApply`),
+	// 上传图片接口
+	get_kiyImageUrl: (data) => {return `${axios.kiyDomain}/common/PublicOperation/UploadPic`},
 	// 以下是缓存到store的参数
 	get_warhoursCode : (vm) => {return vm.$storage.getSync('warhoursCode')},
 	get_userInfo : (vm) => {return vm.$storage.getSync('userInfo')},
-	check_version: (data) => axios.postApiData(data,`http://yj.kiy.cn/Global/HotUpdate/CheckUpdate?isDiff=1&appName=${data.appName}&${data.os}=${data.version}`),
+	check_version: (data) => axios.postApiData(data, `${axios.YJdomain}/Global/HotUpdate/CheckUpdate?isDiff=1&appName=${data.appName}&${data.os}=${data.version}`),
 	// 上传头像
-	post_uploadHead: (data) => axios.postApiData(data , `http://yj.kiy.cn/Global/HotUpdate/UpLoadHeadIcon?realName=${data.realName}`),
-
+	post_uploadHead: (data) => axios.postApiData(data, `${axios.YJdomain}/Global/HotUpdate/UpLoadHeadIcon?realName=${data.realName}`),
 	// 请求其他
 	post: (options) => axios.postApiData(options.data, options.url , options.type ),
-	
+	// 检测是不是数字
+	checkNumber : (theObj) => {
+	    var reg = /^[0-9]+.?[0-9]*$/;
+	    if (reg.test(theObj)) {
+	        return true;
+	    }
+	    return false;
+	},
 
 	// 获取日期
 	get_date : (type , isOrder) => {

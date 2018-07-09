@@ -1,13 +1,16 @@
 import encode from './encode'
 const bmAxios = weex.requireModule('bmAxios') 
 const storage = weex.requireModule('bmStorage')
-var modal = weex.requireModule('modal')
+const event = weex.requireModule('bmEvents')
+const modal = weex.requireModule('modal')
 const userInfoStorage = storage.getDataSync('userInfo')
 
 let axios = {}
-let domain = 'http://yj.kiy.cn'
-// domain = 'http://192.168.30.37:22669'
-// TYPE : m:
+axios.YJdomain = 'http://yj.kiy.cn/'
+axios.kiyDomain = 'http://kiy.cn/'
+// 91
+// axios.YJdomain = 'http://192.168.0.91:9152/'
+// axios.kiyDomain = 'http://192.168.0.91:8008/'
 axios.getAjaxData = (param , TYPE , strMethod , uid) => new Promise((resolve , reject) => {
     var paramData = param;
     if (userInfoStorage.status === 0){
@@ -29,9 +32,10 @@ axios.getAjaxData = (param , TYPE , strMethod , uid) => new Promise((resolve , r
         {param : paramData}
     )
     console.log(JSON.stringify(data))
-	const en = encode(JSON.stringify(data))
+    const en = encode(JSON.stringify(data))
+    
 	bmAxios.fetch({
-        url: domain + '/Admins/GetData/GetAjaxData',
+        url: axios.YJdomain + '/Admins/GetData/GetAjaxData',
         data:  {data : en},
         method: 'POST',
         header: {},
@@ -57,6 +61,8 @@ axios.getAjaxData = (param , TYPE , strMethod , uid) => new Promise((resolve , r
             })
         }
     })
+    
+    
 })
 
 axios.postApiData = (param , url , type) => new Promise((resolve , reject) => {

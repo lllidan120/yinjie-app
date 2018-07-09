@@ -1,98 +1,228 @@
-export default {
+export const cycleChartInfo = {
+    backgroundColor: '#1da1f2',
 
-    tabTitles: [{
-            title: '热门跟团',
-            icon: 'https://gw.alicdn.com/tfs/TB1MWXdSpXXXXcmXXXXXXXXXXXX-72-72.png',
-            activeIcon: 'https://gw.alicdn.com/tfs/TB1kCk2SXXXXXXFXFXXXXXXXXXX-72-72.png',
-        },
-        {
-            title: '云南跟团',
-            icon: 'https://gw.alicdn.com/tfs/TB1ARoKSXXXXXc9XVXXXXXXXXXX-72-72.png',
-            activeIcon: 'https://gw.alicdn.com/tfs/TB19Z72SXXXXXamXFXXXXXXXXXX-72-72.png'
-        },
-        {
-            title: '四川跟团',
-            icon: 'https://gw.alicdn.com/tfs/TB1VKMISXXXXXbyaXXXXXXXXXXX-72-72.png',
-            activeIcon: 'https://gw.alicdn.com/tfs/TB1aTgZSXXXXXazXFXXXXXXXXXX-72-72.png'
-        },
-        {
-            title: '海南跟团',
-            icon: 'https://gw.alicdn.com/tfs/TB1Do3tSXXXXXXMaFXXXXXXXXXX-72-72.png',
-            activeIcon: 'https://gw.alicdn.com/tfs/TB1LiNhSpXXXXaWXXXXXXXXXXXX-72-72.png'
-        },
-        {
-            title: '北京跟团',
-            icon: 'https://gw.alicdn.com/tfs/TB1jFsLSXXXXXX_aXXXXXXXXXXX-72-72.png',
-            activeIcon: 'https://gw.alicdn.com/tfs/TB1_Kc.SXXXXXa8XpXXXXXXXXXX-72-72.png'
-        },
-        {
-            title: '出境跟团',
-            icon: 'https://gw.alicdn.com/tfs/TB199sPSXXXXXb4XVXXXXXXXXXX-72-72.png',
-            activeIcon: 'https://gw.alicdn.com/tfs/TB1DR.3SXXXXXc2XpXXXXXXXXXX-72-72.png'
-        }, {
-            title: '出境日游',
-            icon: 'https://gw.alicdn.com/tfs/TB1hedfSpXXXXchXXXXXXXXXXXX-72-72.png',
-            activeIcon: 'https://gw.alicdn.com/tfs/TB1mrXaSpXXXXaqXpXXXXXXXXXX-72-72.png'
-        },
-        {
-            title: '邮轮',
-            icon: 'https://gw.alicdn.com/tfs/TB1twhkSpXXXXXLXXXXXXXXXXXX-72-72.png',
-            activeIcon: 'https://gw.alicdn.com/tfs/TB1dhlhSpXXXXa8XXXXXXXXXXXX-72-72.png'
+    title: {
+        text: '业务员收款汇总',
+        left: 'center',
+        top: 20,
+        textStyle: {
+            color: '#ccc'
         }
-    ],
-    tabStyles: {
-        bgColor: '#FFFFFF',
-        titleColor: '#666666',
-        activeTitleColor: '#3D3D3D',
-        activeBgColor: '#FFFFFF',
-        isActiveTitleBold: true,
-        iconWidth: 70,
-        iconHeight: 70,
-        width: 160,
-        height: 120,
-        fontSize: 24,
-        hasActiveBottom: true,
-        activeBottomColor: '#FFC900',
-        activeBottomHeight: 6,
-        activeBottomWidth: 120,
-        textPaddingLeft: 10,
-        textPaddingRight: 10
     },
-    // 使用 iconfont 模式的tab title配置
-    tabIconFontTitles: [{
-            title: '首页',
-            codePoint: '\ue623'
-        },
-        {
-            title: '特别推荐',
-            codePoint: '\ue608'
-        },
-        {
-            title: '消息中心',
-            codePoint: '\ue752',
-            badge: 5
-        },
-        {
-            title: '我的主页',
-            codePoint: '\ue601',
-            dot: true
+
+    tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c} ({d}%)'
+    },
+
+    visualMap: {
+        show: false,
+        min: 80,
+        max: 600,
+        inRange: {
+            colorLightness: [0, 1]
         }
-    ],
-    tabIconFontStyles: {
-        bgColor: '#FFFFFF',
-        titleColor: '#666666',
-        activeTitleColor: '#3D3D3D',
-        activeBgColor: '#FFFFFF',
-        isActiveTitleBold: true,
-        width: 160,
-        height: 120,
-        fontSize: 24,
-        textPaddingLeft: 10,
-        textPaddingRight: 10,
-        iconFontSize: 50,
-        iconFontColor: '#333333',
-        iconFontMarginBottom: 8,
-        activeIconFontColor: 'red',
-        iconFontUrl: '//at.alicdn.com/t/font_501019_mauqv15evc1pp66r.ttf'
-    }
+    },
+    series: [{
+        name: '访问来源',
+        type: 'pie',
+        radius: '55%',
+        center: ['50%', '50%'],
+        data: [],
+        roseType: 'radius',
+        label: {
+            normal: {
+                textStyle: {
+                    color: 'rgba(255, 255, 255, 0.8)'
+                }
+            }
+        },
+        labelLine: {
+            normal: {
+                lineStyle: {
+                    color: 'rgba(255, 255, 255, 0.8)'
+                },
+                smooth: 0.2,
+                length: 10,
+                length2: 20
+            }
+        },
+        itemStyle: {
+            normal: {
+                color: '#c23531',
+                shadowBlur: 200,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+        },
+
+        animationType: 'scale',
+        animationEasing: 'elasticOut',
+        animationDelay: function (idx) {
+            return 200;
+        }
+    }]
+}
+
+var base = +new Date(1968, 9, 3);
+var oneDay = 24 * 3600 * 1000;
+var date = [];
+
+var data = [Math.random() * 300];
+
+for (var i = 1; i < 20000; i++) {
+    var now = new Date(base += oneDay);
+    date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'));
+    data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
+}
+
+export const lineChartInfo = {
+    backgroundColor: '#ffffff',
+    title: {
+        text: '大数据量面积图',
+        left: 'center',
+        top: 20,
+        textStyle: {
+            color: '#ccc'
+        }
+    },
+    tooltip: {
+        trigger: 'axis',
+        position: function (pt) {
+            return [pt[0], '10%'];
+        }
+    },
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: date
+    },
+    yAxis: {
+        type: 'value',
+        boundaryGap: [0, '100%']
+    },
+    dataZoom: [{
+        type: 'inside',
+        start: 0,
+        end: 10
+    }, {
+        start: 0,
+        end: 10,
+        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+        handleSize: '80%',
+        handleStyle: {
+            color: '#fff',
+            shadowBlur: 3,
+            shadowColor: 'rgba(0, 0, 0, 0.6)',
+            shadowOffsetX: 2,
+            shadowOffsetY: 2
+        }
+    }],
+    series: [{
+        name: '模拟数据',
+        type: 'line',
+        smooth: true,
+        symbol: 'none',
+        sampling: 'average',
+        itemStyle: {
+            normal: {
+                color: 'rgb(255, 70, 131)'
+            }
+        },
+        data: data
+    }]
+};
+
+export const barChartInfo = {
+    color: ['#3398DB'],
+    backgroundColor: '#ffffff',
+    title: {
+        text: 'A Week',
+        left: 'center',
+        top: 20,
+        textStyle: {
+            color: '#ccc'
+        }
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: { // 坐标轴指示器，坐标轴触发有效
+            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+        }
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis: [{
+        type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        axisTick: {
+            alignWithLabel: true
+        }
+    }],
+    yAxis: [{
+        type: 'value'
+    }],
+    series: [{
+        name: '直接访问',
+        type: 'bar',
+        barWidth: '60%',
+        data: [10, 52, 200, 334, 390, 330, 220]
+    }]
+};
+
+export const radarChartInfo = {
+    backgroundColor: '#ffffff',
+    radar: {
+        // shape: 'circle',
+        name: {
+            textStyle: {
+                color: '#fff',
+                backgroundColor: '#999',
+                borderRadius: 3,
+                padding: [3, 5]
+            }
+        },
+        indicator: [{
+                name: 'sales',
+                max: 6500
+            },
+            {
+                name: 'Administration',
+                max: 16000
+            },
+            {
+                name: 'Information Techology',
+                max: 30000
+            },
+            {
+                name: 'Customer Support',
+                max: 38000
+            },
+            {
+                name: 'Development',
+                max: 52000
+            },
+            {
+                name: 'Marketing',
+                max: 25000
+            }
+        ]
+    },
+    series: [{
+        name: '预算 vs 开销（Budget vs spending）',
+        type: 'radar',
+        // areaStyle: {normal: {}},
+        data: [{
+                value: [4300, 10000, 28000, 35000, 50000, 19000],
+                name: '预算分配（Allocated Budget）'
+            },
+            {
+                value: [5000, 14000, 28000, 31000, 42000, 21000],
+                name: '实际开销（Actual Spending）'
+            }
+        ]
+    }]
 }

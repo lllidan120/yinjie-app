@@ -1,6 +1,10 @@
 export default {
 
     tabTitles: [{
+            title: '问题件反馈',
+            icon: 'https://gw.alicdn.com/tfs/TB1MWXdSpXXXXcmXXXXXXXXXXXX-72-72.png',
+            activeIcon: 'https://gw.alicdn.com/tfs/TB1kCk2SXXXXXXFXFXXXXXXXXXX-72-72.png',
+        }, {
             title: '关于扫一扫',
             icon: 'https://gw.alicdn.com/tfs/TB1MWXdSpXXXXcmXXXXXXXXXXXX-72-72.png',
             activeIcon: 'https://gw.alicdn.com/tfs/TB1kCk2SXXXXXXFXFXXXXXXXXXX-72-72.png',
@@ -27,11 +31,35 @@ export default {
         }
     ],
     tabContent: [
-        [
-            {
+        [{
+            title: '货物有问题需要其他总部处理，可以发起问题件反馈，目前APP上问题件反馈的入口有两个，一个是在物流订单详情（如图一），一个在平台订单详情（图二）',
+            img: 'http://yj.kiy.cn/Content/Images/App/help/QQ图片20180704163718.jpg',
+            style: {
+                width: '543px',
+                height: '925px'
+            }
+        }, {
+            title: '平台订单详情的入口，点击发起售后按钮进入售后申请页面',
+            img: 'http://yj.kiy.cn/Content/Images/App/help/QQ图片20180704163714.jpg',
+            style: {
+                width: '543px',
+                height: '925px'
+            }
+        }, {
+            title: '售后申请页面,按提示和实际情况填写好售后的申请表单，点击提交即可反馈到平台客服',
+            img: 'http://yj.kiy.cn/Content/Images/App/help/QQ图片20180704163709.jpg',
+            style: {
+                width: '543px',
+                height: '925px'
+            }
+        }],
+        [{
                 title: '主页面红色箭头指向的是扫一扫功能，可以扫发货单，物流单，还可以扫一扫登陆印捷物流后台。',
                 img: 'http://yj.kiy.cn/Content/Images/App/help/QQ截图20180601160534.jpg',
-                style: {width: '543px',height:'925px'}
+                style: {
+                    width: '543px',
+                    height: '925px'
+                }
             },
             {
                 title: '点击后开始扫描。',
@@ -55,15 +83,24 @@ export default {
         [{
             title: '当前业务员扫过的物流单会在物流单列表页面显示',
             img: 'http://yj.kiy.cn/Content/Images/App/help/QQ图片20180601160333.jpg',
-            style: {width: '543px',height:'925px'}
+            style: {
+                width: '543px',
+                height: '925px'
+            }
         }, {
             title: '如果还没确认收到货物，点击确认收货按钮确认业务员收到货.',
             img: 'http://yj.kiy.cn/Content/Images/App/help/QQ截图20180601160622.jpg',
-            style: {width: '543px',height:'925px'}
+            style: {
+                width: '543px',
+                height: '925px'
+            }
         }, {
             title: '如果货物需要代收货款，会出现代收货款按钮，点击按钮确认业务员可以选择微信或者支付宝二维码支付。',
             img: 'http://yj.kiy.cn/Content/Images/App/help/QQ截图20180601160632.jpg',
-            style: {width: '543px',height:'925px'}
+            style: {
+                width: '543px',
+                height: '925px'
+            }
         }],
         [{
             title: '主页面点击发货单可以进入发货单列表，查看分配给当前业务员的发货单。',
@@ -215,4 +252,3 @@ export default {
         iconFontUrl: '//at.alicdn.com/t/font_501019_mauqv15evc1pp66r.ttf'
     }
 }
-

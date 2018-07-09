@@ -28,6 +28,7 @@ module.exports = {
         'js/pages/yjapp/invoice/list.vue',
         'js/pages/yjapp/invoice/detail.vue',
         'js/pages/yjapp/echart/list.vue',
+        'js/pages/yjapp/echart/detail.vue',
         'js/pages/yjapp/help/index.vue',
         'js/pages/yjapp/person/apprecord.vue',
         'js/pages/yjapp/service/orderRefund.vue',

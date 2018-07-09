@@ -53,7 +53,6 @@
 				},
 				count: 0,
 				bottomList : Config.mainList,
-				centerList : Config.distribution,
 				isLeftShow: false,
 				isScan : false,
 				scanData: undefined
@@ -75,7 +74,11 @@
 		          return items[this.index]
 		        }
 		        return ''
-		    }
+			},
+			centerList () {
+
+				return Config.distribution
+			}
 	    },	
 	    methods : {
 			async scanLogisticalOrder () {

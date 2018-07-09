@@ -100,15 +100,19 @@
         <text class="tool-text">已收货</text>
     </div>
     <!-- 9,10,11,33,50 -->
-    <div ref="b3" class="tool-btn" style="background-color:#36648B" @click="clickBtn({'@orderStatu': '1,5,7,8'} , '未扫描')">
+    <div ref="b3" class="tool-btn" style="background-color:#36648B" @click="clickBtn({'@orderStatu': '1,5,6,7,8'} , '未扫描')">
         <text class="tool-text">未扫描</text>
-    </div>
-    <div ref="b4" class="tool-btn" style="background-color:#6A5ACD" @click="clickBtn({'@orderStatu': '10'} , '待配送')">
-        <text class="tool-text">待配送</text>
     </div>
     
     <div ref="b5" class="tool-btn" style="background-color:#303030" @click="clickBtn({} , '全部订单')">
         <text class="tool-text">全部</text>
+    </div>
+    
+    <div ref="a1" class="tool-btn" style="background-color:#00868B" @click="clickBtn({'@orderStatu': '6,7,8'} , '已装箱')">
+        <text class="tool-text">已装箱</text>
+    </div>
+    <div ref="a2" class="tool-btn" style="background-color:#6A5ACD" @click="clickBtn({'@orderStatu': '10'} , '待配送')">
+        <text class="tool-text">待配送</text>
     </div>
     <div ref="main_btn" class="tool-btn" style="background-color: #ff0000" @click="clickBtn">
         <image class="tool-image" ref="main_image" src="https://gw.alicdn.com/tfs/TB1PZ25antYBeNjy1XdXXXXyVXa-128-128.png" />
@@ -440,8 +444,10 @@ export default {
         let b1 = this.$refs.b1.ref
         let b2 = this.$refs.b2.ref
         let b3 = this.$refs.b3.ref
-        let b4 = this.$refs.b4.ref
+        // let b4 = this.$refs.b4.ref
         let b5 = this.$refs.b5.ref
+        let a1 = this.$refs.a1.ref
+        let a2 = this.$refs.a2.ref
         let result1 = this.$bindingx.bind({
             eventType: 'timing',
             exitExpression: {
@@ -490,17 +496,24 @@ export default {
                 }
             },
             {
-                element: b4,
+                element: b5,
                 property: 'transform.translateY',
                 expression: {
                 origin: "t<=300?0:easeOutQuint(t-300,-600,600,500)"
                 }
             },
             {
-                element: b5,
-                property: 'transform.translateY',
+                element: a1,
+                property: 'transform.translateX',
                 expression: {
-                origin: "t<=200?0:easeOutQuint(t-400,-750,750,400)"
+                origin: "t<=200?0:easeOutQuint(t,-150,150,800)"
+                }
+            },
+            {
+                element: a2,
+                property: 'transform.translateX',
+                expression: {
+                origin: "t<=200?0:easeOutQuint(t-100,-300,300,700)"
                 }
             }
             ]
@@ -513,8 +526,10 @@ export default {
         let b1 = this.$refs.b1.ref
         let b2 = this.$refs.b2.ref
         let b3 = this.$refs.b3.ref
-        let b4 = this.$refs.b4.ref
+        // let b4 = this.$refs.b4.ref
         let b5 = this.$refs.b5.ref
+        let a1 = this.$refs.a1.ref
+        let a2 = this.$refs.a2.ref
         let result1 = this.$bindingx.bind({
             eventType: 'timing',
             exitExpression: {
@@ -563,17 +578,24 @@ export default {
                 }
             },
             {
-                element: b4,
+                element: b5,
                 property: 'transform.translateY',
                 expression: {
                 origin: "t<=300?0:easeOutBounce(t-300,0,0-600,500)"
                 }
             },
             {
-                element: b5,
-                property: 'transform.translateY',
+                element: a1,
+                property: 'transform.translateX',
                 expression: {
-                origin: "t<=200?0:easeOutBounce(t-400,0,0-750,400)"
+                origin: "t<=200?0:easeOutBounce(t,0,0-150,800)"
+                }
+            },
+            {
+                element: a2,
+                property: 'transform.translateX',
+                expression: {
+                origin: "t<=200?0:easeOutBounce(t-100,0,0-300,700)"
                 }
             }
             ]

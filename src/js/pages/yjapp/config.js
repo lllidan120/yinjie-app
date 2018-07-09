@@ -8,7 +8,7 @@ export default {
     activeIcon: 'http://yj.kiy.cn/Content/Images/App/assets/main/main-active.png'
   },
   {
-    title: '批量操作',
+    title: '统计',
     icon: 'http://yj.kiy.cn/Content/Images/App/assets/main/list.png',
     activeIcon: 'http://yj.kiy.cn/Content/Images/App/assets/main/list-active.png'
   },
@@ -89,7 +89,6 @@ export default {
             name: 'dis-list'
         }, 
          {
-
             title: '平台订单',
             icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/插座.png',
             name: 'order-list'
@@ -99,8 +98,16 @@ export default {
             name: 'collectionlist'
         }, 
         {
-            title: '收款汇总',
+            title: '配送率',
             icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件.png',
+            name: 'echartlist'
+        },
+        {
+            title: '应收款率',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件整理.png',
+            type: {
+              '@bPay': 0
+            },
             name: 'echartlist'
         },
         {
@@ -112,7 +119,16 @@ export default {
             title: '手工输入',
             icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/对话.png',
             name: 'manualInput'
-        }
+        },
+        {
+						title: '批量收款',
+            icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件记录.png',
+            sub: '批量收款',
+						type: {
+							'@isPay': 0
+						},
+						name: 'batch-list'
+					}
         // {
         //     title: '已扫单',
         //     icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/声音.png',

@@ -6,29 +6,38 @@
     <scroller scroll-direction="horizontal" class="table">
         <div class="table-cell">
             <div class="table-td table-head"><text class="table-text">合计</text></div>
+            <div class="table-td table-head"><text class="table-text">{{dispatched}}</text></div>
+            <div class="table-td table-head"><text class="table-text">{{dispatching}}</text></div>
             <div class="table-td table-head"><text class="table-text">{{PayCollectionMoneySum}}</text></div>
             <div class="table-td table-head"><text class="table-text">{{UnPayCollectionMoneySum}}</text></div>
             <div class="table-td table-head"><text class="table-text">{{orderSumPriceSum}}</text></div>
-            <div class="table-td table-head"><text class="table-text">{{orderCountSum}}</text></div>
-            <div class="table-td table-head"><text class="table-text">{{UnSyncSum}}</text></div>
+            
+            <!-- <div class="table-td table-head"><text class="table-text">{{sumMoney}}</text></div> -->
+            <div class="table-td table-head"><text class="table-text">{{percentage}}</text></div>
         </div>
         <div class="table-cell">
             <div class="table-td table-head"><text class="table-text">姓名</text></div>
-            <div class="table-td table-head"><text class="table-text">已收</text></div>
-            <div class="table-td table-head"><text class="table-text">未收</text></div>
-            <div class="table-td table-head"><text class="table-text">订单总额</text></div>
-            <div class="table-td table-head"><text class="table-text">订单数</text></div>
-            <div class="table-td table-head"><text class="table-text">未同步</text></div>
+            <div class="table-td table-head"><text class="table-text">已配送数</text></div>
+            <div class="table-td table-head"><text class="table-text">未配送数</text></div>
+            <div class="table-td table-head"><text class="table-text">已收款</text></div>
+            <div class="table-td table-head"><text class="table-text">应收款</text></div>
+            <div class="table-td table-head"><text class="table-text">订单总数</text></div>
+            
+            <!-- <div class="table-td table-head"><text class="table-text">代收金额</text></div> -->
+            <div class="table-td table-head"><text class="table-text">完成比率</text></div>
         </div>
         <!-- @loadmore="getData" -->
         <list class="bui-list" ref="list" :show-scrollbar="true" :showRefresh="true" @refresh="getData"   loadmoreoffset="2">
-            <cell class="table-cell" v-for="(item , key) in listData"  :key="key">
+            <cell class="table-cell" v-for="(item , key) in listData"  :key="key" >
                 <div class="table-td"><text class="table-text">{{item.RealName}}</text></div>
-                <div class="table-td"><text class="table-text">{{item.PayCollectionMoney}}</text></div>
-                <div class="table-td"><text class="table-text">{{item.UnPayCollectionMoney}}</text></div>
-                <div class="table-td"><text class="table-text">{{item.orderSumPrice}}</text></div>
-                <div class="table-td"><text class="table-text">{{item.orderCount}}</text></div>
-                <div class="table-td"><text class="table-text">{{item.UnSync}}</text></div>
+                <div class="table-td" @click="toDetail(item , {'@fStatus': 50})"><text class="table-text select">{{item.已配送数}}</text></div>
+                <div class="table-td" @click="toDetail(item , {'@nStatus': 50})"><text class="table-text select select-two">{{item.未配送数}}</text></div>
+                <div class="table-td"><text class="table-text ">{{item.已收款}}</text></div>
+                <div class="table-td"><text class="table-text">{{item.应收款}}</text></div>
+                <div class="table-td"><text class="table-text" >{{item.订单总数}}</text></div>
+                
+                <!-- <div class="table-td"><text class="table-text">{{item.代收金额}}</text></div> -->
+                <div class="table-td"><text class="table-text">{{item.完成比率}}</text></div>
             </cell>
         </list>
       </scroller>
@@ -87,7 +96,7 @@ export default {
     var _this =this;
     this.$event.on("paySuccess", params => {
       _this.selectAllStatu = false;
-      _this.onRefresh();
+      _this.getData();
     });
   },
   methods: {
@@ -98,41 +107,45 @@ export default {
       if(this.userInfo.RoleId == 1 || this.userInfo.RoleId== 4) {
 
       } else {
-          param =  Object.assign(param , {'@adminId' : this.userInfo.adminId})
+          param =  Object.assign(param , {'@DistributorId' : this.userInfo.adminId})
       }
       if(this.selectDeliverData.RealName != '全部'){
-        param =  Object.assign(param , {'@adminId' : this.selectDeliverData.Id})
-      }
-
-      let par = {}
-      for(let key in param) {
-          if(param[key] != undefined && param[key] != 'undefined') {
-              par = Object.assign(param , param[key])
-          }
+        param =  Object.assign(param , {'@DistributorId' : this.selectDeliverData.Id})
       }
       if(onrefreshState) {
         
       } else {
         this.$notice.loading.show("正在加载");
       }
-     
-      var RES = await API.Get_AdminStatistics(par);
-      if (RES.SUCCESS) {
-        this.listData = []
-        this.PayCollectionMoneySum = 0
+    //  Get_AdminStatistics
+      var RES = await API.get_QueryDistributionRateList(param);
+      // console.log(RES)
+
+      if (RES.map.result === 'ok') {
+          this.listData = []
+          this.PayCollectionMoneySum = 0
           this.UnPayCollectionMoneySum = 0
           this.orderSumPriceSum = 0
-          this.orderCountSum= 0
-          this.UnSyncSum = 0
-        var DGDATA = JSON.parse(RES.DATA);
+          this.dispatched = 0
+          this.dispatching= 0
+          this.sumMoney = 0
+          this.percentage = 0
+        var DGDATA = RES.map.dgData;
         if (DGDATA.length != 0) {
           var newData = []
           DGDATA.map(item => {
-            this.PayCollectionMoneySum += item.PayCollectionMoney
-            this.UnPayCollectionMoneySum += item.UnPayCollectionMoney
-            this.orderSumPriceSum += item.orderSumPrice
-            this.orderCountSum += item.orderCount
-           this.UnSyncSum += item.UnSync
+          //   this.PayCollectionMoneySum += item.PayCollectionMoney
+          //   this.UnPayCollectionMoneySum += item.UnPayCollectionMoney
+          //   this.orderSumPriceSum += item.orderSumPrice
+          //   this.orderCountSum += item.orderCount
+          //  this.UnSyncSum += item.UnSync
+           this.PayCollectionMoneySum += item.已收款
+            this.UnPayCollectionMoneySum += item.应收款
+            this.orderSumPriceSum += item.订单总数
+            this.dispatched += item.已配送数
+           this.dispatching += item.未配送数
+           this.sumMoney += item.代收金额
+           this.percentage += item.完成比率
             newData.push(item)
           });
           this.listData = this.listData.concat(newData)
@@ -150,21 +163,32 @@ export default {
       }
     },
     init(param) {
+      this.$navigator.setCenterItem({
+          text: param.params.title,                               // 展示的文字 (和图片 二选一)    
+          textColor: '',                          // 文字颜色 (默认为白色)
+          fontSize: '32',                         // 字号（默认32px）
+          fontWeight: 'normal',                   // 是否加粗（默认不加粗）
+          image: ''                               // 展示的图片url (和文字 二选一，文字优先级更高)
+      }, () => {
+          // 点击回调
+      })
+      
+      this.param  = Object.assign(this.param , param.type)
       this.QueryAdminList()
       this.setNav()
       this.getData();
     },
     startDateFinish(startDate) {
-      this.param["@beginDate"] = startDate + ' 00:00:00';
-      if (this.param["@endDate"] == undefined) {
-        this.param["@endDate"] = startDate  + " 23:59:59"
+      this.param["@StartDate"] = startDate 
+      if (this.param["@EndDate"] == undefined) {
+        this.param["@EndDate"] = startDate  
       }
       this.getData()
     },
     endDateFinish(endDate) {
-      this.param["@endDate"] = endDate + " 23:59:59"
-      if (this.param["@beginDate"] == undefined) {
-        this.param["@beginDate"] = endDate + ' 00:00:00'
+      this.param["@EndDate"] = endDate
+      if (this.param["@StartDate"] == undefined) {
+        this.param["@StartDate"] = endDate 
       }
       this.getData()
     },
@@ -208,6 +232,19 @@ export default {
       const RES = await API.get_adminList(par)
       const DATA = RES.map.dgData;
       this.deliverList = DATA
+    },
+    toDetail(item , type) {
+      var par = {}
+      par = Object.assign(par , this.param )
+      if(type) {
+        par = Object.assign(par , type )
+      }
+      par = Object.assign(par , {'@DistributorId': item.Id} )
+      this.$router.open({
+          name: 'echartdetail',
+          type: 'PUSH',
+          params: par
+      })	
     }
   }
 };
@@ -330,12 +367,12 @@ export default {
   margin-left: 10px;
 }
 .table {
-    width: 1200px;
+    width: 1400px;
     min-height:750px;
 }
 .table-cell {
     position:relative;
-    width: 1200px;
+    width: 1400px;
     flex-direction: row;
 }
 .table-td {
@@ -384,5 +421,17 @@ export default {
     height: 40px;
     width: 40px;
     color: blue;
+  }
+  .select {
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(25, 190, 107);
+    border-radius: 4px;
+    padding: 5px;
+    color: rgb(25, 190, 107);
+  }
+  .select-two {
+    border-color: rgb(237, 63, 20);
+    color: rgb(237, 63, 20);
   }
 </style>

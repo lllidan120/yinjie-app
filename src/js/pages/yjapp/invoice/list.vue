@@ -20,7 +20,7 @@
         </div>
         <!-- @loadmore="getData" -->
         <list class="bui-list" ref="list" :show-scrollbar="true" :showRefresh="true" @refresh="onRefresh"   loadmoreoffset="2">
-            <cell class="table-cell" v-for="item in listData" @click="toDetail(item)">
+            <cell class="table-cell" v-for="(item , key) in listData" @click="toDetail(item)" :key="key">
                 <div class="table-td"><text class="table-text">{{item.id}}</text></div>
                 <div class="table-td"><text class="table-text">{{item.uid}}</text></div>
                 <div class="table-td width-200px"><text class="table-text">{{item.dDate}}</text><text>{{item.isPrint}}</text></div>

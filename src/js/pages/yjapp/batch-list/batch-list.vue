@@ -129,6 +129,8 @@ export default {
         "@adminId": this.userInfo.adminId
       });
       this.param = Object.assign(this.param, this.listType);
+       this.param= Object.assign( this.param , {'@orderStatu' : '50,51,48,33'})
+      
       if (this.searchValue != "") {
         if (this.searchType == "物流号") {
           this.param = Object.assign(this.param, { "@id": this.searchValue });
@@ -158,7 +160,7 @@ export default {
         var DGDATA = JSON.parse(RESDATA.dgData);
         if (DGDATA.length != 0) {
           DGDATA.map(item => {
-            item.title = `订单号: ${item.Id} | 代收：${item.Price}元                                             收件人：${item.ReceiveName} | 会员号：${item.UserId}`;
+            item.title = `订单号: ${item.Id} | 代收：${item.Price}元                                             收件人：${item.ReceiveName} | 会员号：${item.UserId}                                                                                        收货时间:${item.DistributorDate}`;
             item.value = item.Id
             item.checked = false
             this.listData.push(item);

@@ -36,7 +36,6 @@ export default {
     };
   },
   mounted() {
-    // this.searchDate = API.get_date("今天");
   },
   methods: {
     selectTime(timeName) {

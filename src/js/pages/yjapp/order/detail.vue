@@ -32,6 +32,14 @@
                     :title="listItem.Shuliang "
                     @wxcCellClicked="getParams">
                 </wxc-cell>
+                <wxc-cell label="已付款"
+                        :title="listItem.ReceivedAmount "
+                        @wxcCellClicked="getParams">
+                </wxc-cell>
+                <wxc-cell label="未付款"
+                        :title="listItem.OrderAmount - listItem.ReceivedAmount "
+                        @wxcCellClicked="getParams">
+                </wxc-cell>
                 <wxc-cell 
                     label="订单总价"
                     :title="listItem.OrderAmount "
@@ -75,9 +83,9 @@
                 <div class="top-three-top">
                     <wxc-simple-flow :list="testData" ></wxc-simple-flow>
                 </div>
-                <div class="bottom-btn" v-if="false">
+                <div class="bottom-btn" v-if="true">
                     <wxc-button text="发起售后"
-                        type="blue"
+                        type="red"
                         @wxcButtonClicked="wxcButtonClicked"></wxc-button>
                 </div>
             </scroller>
@@ -141,12 +149,23 @@ export default {
                 this.testData.push(data)
             })
         },
-        wxcButtonClicked () {
-            this.$router.open({
-    			name: 'orderRefund',
-    			type: 'PUSH',
-    			params: this.listItem
-    		})
+        async wxcButtonClicked () {
+            this.$notice.loading.show()
+            const status = await API.get_IsOrderRefunds({'orderId': this.listItem.Id})
+            this.$notice.loading.hide()
+            if(status.Success) {
+                this.$router.open({
+                	name: 'orderRefund',
+                	type: 'PUSH',
+                	params: this.listItem
+                })
+            } else {
+                this.$notice.toast({
+                    message: status.Message
+                });
+            }
+            console.log(status)
+            
         }
     },
     mounted() {
@@ -160,7 +179,7 @@ export default {
 </script>
 <style>
 .top-three-top {
-  flex-direction: row;
+  flex-direction: row; 
   justify-items: center;
   align-items: center;
   width: 750px;

@@ -1,4 +1,5 @@
 const globalEvent = weex.requireModule('globalEvent')
+const router = weex.requireModule('bmRouter')
 const bmPush = weex.requireModule('bmPush')
 const modal = weex.requireModule('modal')
 bmPush.initPush({
@@ -12,11 +13,4 @@ bmPush.initPush({
  */
 globalEvent.addEventListener('pushMessage', function (options) {
     console.log(options)
-    modal.alert({
-        message: 'hello 推送消息',
-        duration: 0.3
-    }, function (value) {
-        console.log('alert callback', value)
-    })
-
 })

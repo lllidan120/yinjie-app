@@ -5,80 +5,83 @@
 				src="http://yj.kiy.cn/Content/Images/App/assets/distribution/bg.png" 
 				class="top-img" ></image>
 		</header>
-		<cell class="bottom" >
-			<div class="bottom-box" v-for="item in bottomList" @click="goPage(item)" >
-				<image class="bottom-box-left" :src="item.icon"></image>
-				<text class="bottom-box-center">{{ item.sub }}</text>
-				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
-			</div>
+		<cell style="background-color: #fff;">
+				<text class="center-title">{{today}}的各项数据汇总</text>
 		</cell>
-		<cell class="bottom" >
-			<!-- <div class="bottom-box" @click="wxPay">
-				<text class="bottom-box-center">微信支付</text>
-				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
+		<cell>
+			<div class="center">
+				<card style="background-color: rgb(251,228,228);"
+				class="center-left"
+				title="已付款总金额"
+				:text='homeData.payMoney'
+				image="http://yj.kiy.cn/Content/Images/App/assets/icon/充值流量.png"
+				></card>
+				<card style="background-color: rgb(222,247,243);"
+				class="center-right"
+				title="未付款总金额"
+				:text='homeData.unPayMoney'
+				image="http://yj.kiy.cn/Content/Images/App/assets/icon/设备统计.png"
+				></card>
+				<card style="background-color: rgb(232,247,224);"
+				class="center-left"
+				title="已收货数量"
+				:text='homeData.distribution'
+				image="http://yj.kiy.cn/Content/Images/App/assets/icon/文件.png"
+				></card>
+				<card style="background-color: rgb(231,214,246);"
+				class="center-right"
+				title="待配送数量"
+				:text='homeData.unDistribution'
+				image="http://yj.kiy.cn/Content/Images/App/assets/icon/分账系统.png"
+				></card>
 			</div>
-			 -->
-			<!-- <div class="bottom-box" @click="toSign">
-				<text class="bottom-box-center">签到</text>
-				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
-			</div> -->
-			<!-- <div class="bottom-box" @click="toMap">
-				<text class="bottom-box-center">地图</text>
-				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
-			</div>
-			<div class="bottom-box" @click="toBindingx">
-				<text class="bottom-box-center">bindingx</text>
-				<wxc-icon name="more" class="bottom-box-right"></wxc-icon>
-			</div> -->
+			
 		</cell>
-	</waterfall>      
+	</waterfall>
 </template>
 <script>
-	import { Utils , wxcIcon } from 'weex-ui'
-	import Config from '../config.js'
 	import API from 'Utils/api'
+	import card from '../_mods/card'
+	var bmWebSocket = weex.requireModule('bmWebSocket')
 	export default {
 		components : {
-			wxcIcon
+			card
 		},
 		data () {
 			return {
-				bottomList : [
-					// {
-					// 	title: '未收货',
-					// 	icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文档.png',
-					// 	sub: '批量收货',
-					// 	type: {
-					// 		'@orderStatu': '1,2,5,10,6,7,8'
-					// 	},
-					// 	name: 'dis-list'
-					// }, 
-					{
-						title: '未收款',
-						icon: 'http://yj.kiy.cn/Content/Images/App/assets/icon/文件记录.png',
-						sub: '批量收款',
-						type: {
-							'@isPay': 0
-						},
-						name: 'dis-list'
-					}
-				]
+				homeData: {},
+				data: ''
 			}
 		},
-		beforeCreate: function () {
-
-		},
 		created () {
-
 	    },
 	    mounted () {
-
+			var _this = this;
+			_this.getHomeData()
+			setInterval(function() {
+				_this.getHomeData()
+			} , 60000)
 	    	
 	    },
 	    computed :  {
-
+			today () {
+				return API.get_date('today')
+			}
 	    },	
 	    methods : {
+			async getHomeData () {
+				let userInfo = API.get_userInfo(this);
+				let param = { }
+				if(userInfo.RoleId == 1 || userInfo.RoleId== 4) {
+
+				} else {
+					param =  Object.assign(param , {'@adminId' : userInfo.adminId})
+				}
+				
+				const RES = await API.get_GetHomeData(param)
+				const DATA = JSON.parse(RES.DATA)
+				this.homeData = DATA[0]
+			},
 	    	goPage (item) {
 	    		this.$router.open({
 	    			name: 'batch-list',
@@ -89,87 +92,44 @@
 	    			}
 	    		})
 	    	},
-			wxPay() {
-				var _this = this;
-				var bmWXPay = weex.requireModule('bmPay')
-				var result = bmWXPay.isInstallWXApp(function(res){
-					
-					if(res.data) {
-						// 已安装微信
-						_this.$notice.toast({
-							message: '已经安装微信'
-						})
-					} else {
-						 _this.$notice.toast({
-							message: '请先安装微信'
-						})
-					}
-				})
-			},
-			toMap() {
-				this.$router.open({
-	    			name: 'map',
-	    			type: 'PUSH'
-	    		})
-			},
-			toSign () {
-				this.$image.camera({
-					imageWidth: '800',                  
-					allowCrop: false                  
-				})
-				.then(resData => {
-					console.log(resData)   
-				}, error => {
-					console.log(error)
-				})
-			},
-			toBindingx () {
-				this.$router.open({
-	    			name: '404',
-	    			type: 'PUSH'
-	    		})
-			}
 	    }
 	}
 </script>
 <style scoped>
-	.top {
-	  width: 750px;
-	  height: 500px;
-	}
-	.top-img {
-		width: 750px;
-		height: 500px;
-	}
-	 .bottom-box {
-	  flex-direction:row;
-	  align-items:center;
-	  width: 750px;
-	  height: 130px;
-	  background-color: #fff;
-	  border-bottom-width: 1px;
-	  border-bottom-style: solid;
-	  border-bottom-color: #f3f2f2;
-	  box-shadow: 0px 0px 10px rgba(0,0,0,0.8) inset;
-	  margin-bottom: 1px;
-	}
-	.bottom-box-left {
-	  width: 74px;
-	  height: 74px;
-	  margin-left: 56px;
-	}
-	.bottom-box-center {
-	  margin-left: 36px;
-	  width: 200px;
-	  height: 95px;
-	  line-height: 95px;
-	  font-size: 26px;
-	  color: #000;
-	}
-	.bottom-box-right {
-	  position: absolute;
-	  right: 56px;
-	  top: 50%;
-	  transform: translateY(-50%);
-	}
+.top {
+  width: 750px;
+  height: 500px;
+}
+.top-img {
+  width: 750px;
+  height: 500px;
+}
+.center {
+	width: 750px;
+	background-color: #fff;
+	padding-top: 25px;
+	padding-bottom: 45px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap:wrap;
+}
+.center-left {
+	margin-left: 15px;
+	margin-right: 10px;
+	margin-top: 10px;
+}
+.center-right {
+	margin-right: 15px;
+	margin-left: 10px;
+	margin-top: 10px;
+	
+}
+.center-title {
+	color: #888888;
+  font-size: 36px;
+  font-weight: 700;
+  margin-top: 20px;
+  text-align: center;
+}
+
 </style>

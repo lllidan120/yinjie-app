@@ -65,7 +65,11 @@
                 <text class="col-content-right ">{{listItem.OrderSumPrice}}</text>
             </div>
         </div>
-
+        <div class="bottom-btn" v-if="true">
+            <wxc-button text="发起售后"
+                type="blue"
+                @wxcButtonClicked="wxcButtonClicked"></wxc-button>
+        </div>
         <div class="content top-three">
             <div class="top-three-top">
                 <image src="http://yj.kiy.cn/Content/Images/App/assets/icon/orderimg.png" class="top-three-top-img"></image>
@@ -95,6 +99,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="top-three-top" style="">
                 <!-- <text class="text-color">合计:&nbsp;</text>
                 <text class="blue-color big">{{listItem.Goods_Qty}}</text> -->
@@ -107,10 +112,10 @@
 
 <script>
 import API from "Utils/api";
-import { WxcSimpleFlow } from 'weex-ui';
+import { WxcSimpleFlow , WxcButton } from 'weex-ui';
 export default {
   components: {
-    WxcSimpleFlow
+    WxcSimpleFlow , WxcButton
   },
   data() {
     return {
@@ -192,7 +197,32 @@ export default {
     },
     call(number) {
       this.$coms.call(number)
-    }
+    },
+    async wxcButtonClicked () {
+            this.$notice.loading.show();
+            const status = await API.get_IsOrderRefunds({'orderId': this.listItem.CytMallId})
+            this.$notice.loading.hide();
+            let par = {
+              Id : this.listItem.CytMallId,
+              OrderDate : this.listItem.CreateDate,
+              Shuliang: this.listItem.Goods_Qty,
+              OrderAmount: this.listItem.OrderSumPrice,
+              RealName: this.listItem.ReceiveName,
+              OrderStatusStr: this.listItem.logState,
+              ReceivedAmount: this.listItem.OrderSumPrice - this.listItem.Price
+            }
+            if(status.Success) {
+                this.$router.open({
+                	name: 'orderRefund',
+                	type: 'PUSH',
+                	params: par
+                })
+            } else {
+                this.$notice.toast({
+                    message: status.Message
+                });
+            }
+        }
   },
   mounted() {},
   created() {}
@@ -330,5 +360,17 @@ export default {
   width: 500px;
   lines: 3;
   text-overflow: ellipsis;
+}
+.bottom-btn {
+    width: 750px;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: #E5E5E5;
+    padding-top: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 </style>
