@@ -202,21 +202,30 @@ export default {
             this.$notice.loading.show();
             const status = await API.get_IsOrderRefunds({'orderId': this.listItem.CytMallId})
             this.$notice.loading.hide();
-            let par = {
-              Id : this.listItem.CytMallId,
-              OrderDate : this.listItem.CreateDate,
-              Shuliang: this.listItem.Goods_Qty,
-              OrderAmount: this.listItem.OrderSumPrice,
-              RealName: this.listItem.ReceiveName,
-              OrderStatusStr: this.listItem.logState,
-              ReceivedAmount: this.listItem.OrderSumPrice - this.listItem.Price
-            }
+            // let par = {
+            //   Id : this.listItem.CytMallId,
+            //   OrderDate : this.listItem.CreateDate,
+            //   Shuliang: this.listItem.Goods_Qty,
+            //   OrderAmount: this.listItem.OrderSumPrice,
+            //   RealName: this.listItem.ReceiveName,
+            //   OrderStatusStr: this.listItem.logState,
+            //   ReceivedAmount: this.listItem.OrderSumPrice - this.listItem.Price
+            // }
             if(status.Success) {
-                this.$router.open({
-                	name: 'orderRefund',
-                	type: 'PUSH',
-                	params: par
-                })
+              var par = {
+                  "orderId" : this.listItem.CytMallId,
+                  'page_no' : 1,
+                  'page_size' : 1
+              }
+              var RES = await API.KIY_SEARCHORDER(par)
+              var RESDATA = JSON.parse(RES.Data)
+              var DGDATA = RESDATA.data.Models
+              var item = DGDATA[0]
+              this.$router.open({
+                name: 'orderRefund',
+                type: 'PUSH',
+                params: item
+              })
             } else {
                 this.$notice.toast({
                     message: status.Message

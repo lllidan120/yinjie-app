@@ -1,41 +1,40 @@
 <template>
 	<div class="page">
 		<div class="search-bar">
-			<datepick @selectTime="selectTime" @startDateFinish="startDateFinish" @endDateFinish="endDateFinish"></datepick>
-		</div>
+			<datepick ref="datePick" :beginDate="param['@StartDate']" :endDate="param['@EndDate']" init @selectTime="selectTime" @startDateFinish="startDateFinish" @endDateFinish="endDateFinish"></datepick>
+		</div> 
     <scroller scroll-direction="horizontal" class="table">
         <div class="table-cell">
             <div class="table-td table-head"><text class="table-text">合计</text></div>
+            <div class="table-td table-head"><text class="table-text">{{orderSumPriceSum}}</text></div>
             <div class="table-td table-head"><text class="table-text">{{dispatched}}</text></div>
             <div class="table-td table-head"><text class="table-text">{{dispatching}}</text></div>
             <div class="table-td table-head"><text class="table-text">{{PayCollectionMoneySum}}</text></div>
             <div class="table-td table-head"><text class="table-text">{{UnPayCollectionMoneySum}}</text></div>
-            <div class="table-td table-head"><text class="table-text">{{orderSumPriceSum}}</text></div>
+            
             
             <!-- <div class="table-td table-head"><text class="table-text">{{sumMoney}}</text></div> -->
             <div class="table-td table-head"><text class="table-text">{{percentage}}</text></div>
         </div>
         <div class="table-cell">
             <div class="table-td table-head"><text class="table-text">姓名</text></div>
+            <div class="table-td table-head"><text class="table-text">订单总数</text></div>
             <div class="table-td table-head"><text class="table-text">已配送数</text></div>
             <div class="table-td table-head"><text class="table-text">未配送数</text></div>
             <div class="table-td table-head"><text class="table-text">已收款</text></div>
             <div class="table-td table-head"><text class="table-text">应收款</text></div>
-            <div class="table-td table-head"><text class="table-text">订单总数</text></div>
-            
             <!-- <div class="table-td table-head"><text class="table-text">代收金额</text></div> -->
             <div class="table-td table-head"><text class="table-text">完成比率</text></div>
         </div>
         <!-- @loadmore="getData" -->
         <list class="bui-list" ref="list" :show-scrollbar="true" :showRefresh="true" @refresh="getData"   loadmoreoffset="2">
             <cell class="table-cell" v-for="(item , key) in listData"  :key="key" >
-                <div class="table-td"><text class="table-text">{{item.RealName}}</text></div>
+                <div class="table-td"><text class="table-text" >{{item.RealName}}</text></div>
+                <div class="table-td" @click="toDetail(item)"><text class="table-text select select-three">{{item.订单总数}}</text></div>
                 <div class="table-td" @click="toDetail(item , {'@fStatus': 50})"><text class="table-text select">{{item.已配送数}}</text></div>
                 <div class="table-td" @click="toDetail(item , {'@nStatus': 50})"><text class="table-text select select-two">{{item.未配送数}}</text></div>
                 <div class="table-td"><text class="table-text ">{{item.已收款}}</text></div>
                 <div class="table-td"><text class="table-text">{{item.应收款}}</text></div>
-                <div class="table-td"><text class="table-text" >{{item.订单总数}}</text></div>
-                
                 <!-- <div class="table-td"><text class="table-text">{{item.代收金额}}</text></div> -->
                 <div class="table-td"><text class="table-text">{{item.完成比率}}</text></div>
             </cell>
@@ -155,7 +154,6 @@ export default {
           });
         }
       }
-      
       if(onrefreshState) {
           this.$refs["list"].refreshEnd()
       } else {
@@ -172,7 +170,17 @@ export default {
       }, () => {
           // 点击回调
       })
-      
+      // 获取月头
+      const dateFormate = {
+        startDate : API.get_date('beginMonth').split(' ')[0],
+        endDate : API.get_date('today')
+      }
+      this.$refs['datePick'].searchDate['@beginDate'] = dateFormate.startDate
+      this.$refs['datePick'].searchDate['@endDate'] = dateFormate.endDate
+      this.param = Object.assign(this.param , {
+        '@StartDate': dateFormate.startDate,
+        '@EndDate': dateFormate.endDate
+      })
       this.param  = Object.assign(this.param , param.type)
       this.QueryAdminList()
       this.setNav()
@@ -240,6 +248,7 @@ export default {
         par = Object.assign(par , type )
       }
       par = Object.assign(par , {'@DistributorId': item.Id} )
+      par = Object.assign(par , {'name': item.RealName})
       this.$router.open({
           name: 'echartdetail',
           type: 'PUSH',
@@ -433,5 +442,9 @@ export default {
   .select-two {
     border-color: rgb(237, 63, 20);
     color: rgb(237, 63, 20);
+  }
+  .select-three {
+    border-color: blue;
+    color: blue;
   }
 </style>

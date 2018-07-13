@@ -51,7 +51,7 @@
                   :has-top-border="true"
                   @wxcCellClicked="pickType('payType')"></wxc-cell>
         <wxc-cell v-if="type != '补印'"
-                  :title="`退款金额(最多${listItem.ReceivedAmount}元)`"
+                  :title="`退款金额(最多${tuiqian}元)`"
                   :has-arrow="false"
                   :has-top-border="true">
             <div class="wxc-search-bar"
@@ -140,7 +140,7 @@ const RefundPayType = [
   { text: "退到预付款", id: 3 },
   { text: "减订单款", id: 4 }
 ];
-const ReasonItems = ["质量问题", "少数量", "客户休息", "拒收"];
+const ReasonItems = ["质量问题", "少数量", "没货", "拒收" ,"贴错标" , "取消单"];
 
 export default {
   components: {
@@ -159,6 +159,7 @@ export default {
       payType: "请选择",
       payTypeIndex: 0,
       listItem: {},
+      tuiqian: 0,
       form: {
         Amount: 0,
         ReturnQuantity: 1,
@@ -258,7 +259,7 @@ export default {
         par.Reason == undefined
       ) {
         isEnter = false;
-        this.toast("请补充完整售后类型");
+        this.toast("请补充完整售后类型或售后理由");
       }
 
       if (par.RefundType == 1 || par.RefundType == 2) {
@@ -281,9 +282,9 @@ export default {
         isEnter = false;
         this.toast("请补充必填资料");
       }
-      if (par.Amount > this.listItem.ReceivedAmount) {
+      if (par.Amount > this.tuiqian) {
         isEnter = false;
-        this.toast(`退款金额不能大于${this.listItem.ReceivedAmount}`);
+        this.toast(`退款金额不能大于${this.listItem.tuiqian}`);
       }
 
       return isEnter;
@@ -363,15 +364,19 @@ export default {
       );
     },
     init() {
+      // 如果有给过钱的
       if (this.listItem.ReceivedAmount > 0) {
         this.payType = "退到预付款";
+        this.tuiqian = this.form.Amount = this.listItem.ReceivedAmount;
       } else {
+        // 如果没给过钱的
         this.payType = "减订单款";
         this.type = "未付款减款";
+        this.tuiqian = this.form.Amount = this.listItem.OrderAmount
       }
       this.form.ContactPerson = this.userInfo.RealName;
       this.form.ContactCellPhone = this.userInfo.Mobile;
-      this.form.Amount = this.listItem.ReceivedAmount;
+      
     },
     pick() {
       var index = 0;

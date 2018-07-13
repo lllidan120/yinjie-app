@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="card" @click="onClick">
         <div class="card-left">
             <text class="card-left-title">{{title}}</text>
             <text class="card-left-text">{{text}}</text>
@@ -16,6 +16,11 @@ export default {
         title: String,
         text: String,
         image: String
+    },
+    methods: {
+      onClick () {
+         this.$emit("onClick");
+      }
     }
 };
 </script>

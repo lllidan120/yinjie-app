@@ -15,23 +15,27 @@
 				title="已付款总金额"
 				:text='homeData.payMoney'
 				image="http://yj.kiy.cn/Content/Images/App/assets/icon/充值流量.png"
+				@onClick="goPage(1)"
 				></card>
 				<card style="background-color: rgb(222,247,243);"
 				class="center-right"
 				title="未付款总金额"
 				:text='homeData.unPayMoney'
+				@onClick="goPage(1)"
 				image="http://yj.kiy.cn/Content/Images/App/assets/icon/设备统计.png"
 				></card>
 				<card style="background-color: rgb(232,247,224);"
 				class="center-left"
 				title="已收货数量"
 				:text='homeData.distribution'
+				@onClick="goPage(0)"
 				image="http://yj.kiy.cn/Content/Images/App/assets/icon/文件.png"
 				></card>
 				<card style="background-color: rgb(231,214,246);"
 				class="center-right"
 				title="待配送数量"
 				:text='homeData.unDistribution'
+				@onClick="goPage(0)"
 				image="http://yj.kiy.cn/Content/Images/App/assets/icon/分账系统.png"
 				></card>
 			</div>
@@ -82,13 +86,25 @@
 				const DATA = JSON.parse(RES.DATA)
 				this.homeData = DATA[0]
 			},
-	    	goPage (item) {
+	    	goPage (num) {
+				var config = [{
+					title: '配送率',
+					name: 'echartlist'
+				},
+				{
+					title: '应收款率',
+					type: {
+					'@bPay': 0
+					},
+					name: 'echartlist'
+				}]
+				console.log(num)
 	    		this.$router.open({
-	    			name: 'batch-list',
+	    			name: config[num].name,
 	    			type: 'PUSH',
 	    			params: {
-	    				params: item,
-	    				type: item.type
+	    				params: config[num],
+	    				type: config[num].type
 	    			}
 	    		})
 	    	},

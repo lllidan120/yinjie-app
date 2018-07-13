@@ -6,11 +6,17 @@ const modal = weex.requireModule('modal')
 const userInfoStorage = storage.getDataSync('userInfo')
 
 let axios = {}
-axios.YJdomain = 'http://yj.kiy.cn/'
-axios.kiyDomain = 'http://kiy.cn/'
-// 91
-// axios.YJdomain = 'http://192.168.0.91:9152/'
-// axios.kiyDomain = 'http://192.168.0.91:8008/'
+if (weex && weex.config && weex.config.eros && weex.config.eros.appName == 'yjapp-test') {
+    axios.YJdomain = 'http://192.168.0.91:9152/'
+    axios.kiyDomain = 'http://192.168.0.91:8008/'
+} else {
+    axios.YJdomain = 'http://yj.kiy.cn/'
+    axios.kiyDomain = 'http://kiy.cn/'
+    // axios.YJdomain = 'http://192.168.0.91:9152/'
+    // axios.kiyDomain = 'http://192.168.0.91:8008/'
+}
+
+
 axios.getAjaxData = (param , TYPE , strMethod , uid) => new Promise((resolve , reject) => {
     var paramData = param;
     if (userInfoStorage.status === 0){

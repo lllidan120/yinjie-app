@@ -2,7 +2,7 @@ import axios from './axios.js'
 
 
 let api = { 
-	App_Version : '2.3',
+	App_Version : '2.4',
 	YJ_GETORDER : (data) => axios.getAjaxData(data , 'search' , 'YJApp_OrderInfo'),
 	YJ_ENTER  : (data) => axios.getAjaxData(data , 'enterIn'),
 	YJ_SEARCH : (data) => axios.getAjaxData(data , 'search'),
@@ -44,7 +44,9 @@ let api = {
 	get_CollectedOrder: (data, methodName) => axios.getAjaxData(data, 'search', methodName),
 	// 物流后台业务员配送率
 	get_QueryDistributionRateList: (data) => axios.getAjaxData(data, 'search', 'QueryDistributionRateList', '217141a5-01d0-4696-9500-ae2d82a8cb4c'),
-	// 物流后台业务员配送率详情
+	// 全部
+	get_QueryBusinessDistributionSummaryDetails: (data) => axios.getAjaxData(data, 'search', 'QueryBusinessDistributionSummaryDetailsListNew', '217141a5-01d0-4696-9500-ae2d82a8cb4c'),
+	// 物流后台业务员配送率详情（未收款）
 	get_QueryDistributionRateDetail: (data) => axios.getAjaxData(data, 'search', 'QueryBusinessDistributionSummaryDetailsList', '217141a5-01d0-4696-9500-ae2d82a8cb4c'),
 	// 首页数据统计
 	get_GetHomeData: (data) => axios.getAjaxData(data, 'search', 'GetHomeData'),
@@ -131,7 +133,10 @@ let api = {
 	    	break;
 	    	case 'week' :
 	    		return forweek
-	    	break;
+			break;
+			case 'beginMonth':
+				const monthOne = fornow.split('-')
+				return monthOne[0] + '-' + monthOne[1] + '-' + '01'
 	    	default:
 	    		return {'@beginDate' : fornow , '@endDate' : fornow}
 	    }

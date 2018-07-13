@@ -98,9 +98,11 @@ export default {
       } else {
         this.$notice.loading.show("正在加载");
       }
-      
-      var RES = await API.get_QueryDistributionRateDetail(param);
-      console.log(RES)
+      if(param['@bPay'] == 0){
+        var RES = await API.get_QueryDistributionRateDetail(param);
+      } else {
+        var RES = await API.get_QueryBusinessDistributionSummaryDetails(param);
+      }
 
       if (RES.map.result === 'ok') {
           this.listData = []
@@ -126,13 +128,18 @@ export default {
     },
     init(param) {
       this.param  = Object.assign(this.param , param)
-      var title = '业务员配送率详情'
+      var title = '应收款详情'
+      if(this.param['@bPay'] != 0) {
+        title = '配送率详情'
+      }
       if(this.param['@fStatus']) {
           title = title + '(已配送)'
       }
       if(this.param['@nStatus']) {
           title = title + '(未配送)'
       }
+      console.log(param)
+      title = this.param.name + title
       this.$navigator.setCenterItem({
           text: title,                               // 展示的文字 (和图片 二选一)    
           textColor: '',                          // 文字颜色 (默认为白色)
