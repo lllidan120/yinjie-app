@@ -16,6 +16,7 @@ let api = {
 	YJ_PAYCHECK : (data) => axios.getAjaxData(data ,'search' , 'YJApp_IsPay'),
 	// 修i该用户资料
 	YJ_USERMANAGE : (data) => axios.getAjaxData(data, 'userManage' ),
+	// 财务记录
 	YJ_PAYMENTLIST: (data) => axios.getAjaxData(data, 'search', 'YJAPP_PaymentList'),
 	// 签到记录
 	YJ_GETDRIVINGRECORD: (data) => axios.getAjaxData(data, 'search', 'GetDriving_record'),

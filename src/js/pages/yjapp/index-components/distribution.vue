@@ -64,7 +64,7 @@
 			_this.getHomeData()
 			setInterval(function() {
 				_this.getHomeData()
-			} , 60000)
+			} , 120000)
 	    	
 	    },
 	    computed :  {

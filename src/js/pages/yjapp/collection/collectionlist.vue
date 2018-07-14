@@ -12,6 +12,7 @@
             <text class="text overflow">订单号：{{item.strIDs}}</text>
             <text class="text" style="color: #333;">{{item.realName}} {{item.dCreateTime}}</text>
           </div>
+          <text class="tag">{{item.strPayStatus}}</text>
           <text class="right">{{item.intMoney}}元</text>
         </div>
       </cell>
@@ -203,5 +204,16 @@ export default {
     height: 40px;
     width: 40px;
     color: blue;
+  }
+  .tag {
+    position: absolute;
+    left: 570px;
+    top: 50px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: red;
+    border-style: solid;
+    padding: 5px;
+    color: red;
   }
 </style>

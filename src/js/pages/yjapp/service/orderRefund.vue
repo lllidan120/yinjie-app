@@ -174,7 +174,6 @@ export default {
     beforeAppear(params, options) {
       this.listItem = params;
       this.init();
-      console.log(JSON.stringify(params));
     }
   },
   computed: {
@@ -203,8 +202,10 @@ export default {
       var par = {
         OrderId: this.listItem.Id
       };
+      
       if (this.imageGroup.length > 0) {
         const imageGroup = await this.uploadImage();
+        console.log(imageGroup)
         par = Object.assign(par, { CertPic1: imageGroup[0] });
         par = Object.assign(par, { CertPic2: imageGroup[1] });
         par = Object.assign(par, { CertPic3: imageGroup[2] });

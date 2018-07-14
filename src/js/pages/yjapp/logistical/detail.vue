@@ -77,7 +77,7 @@
             </div>
             <div>
                 <image src='http://img.lanrentuku.com/img/allimg/1212/5-121204194026.gif' v-if="showload" style="height:40px;width:300px,align-items:center;background-color:#fff;" resize="contain" quality="original"></image>
-                <div class="top-three-center" v-for="(item , index) in list" :key="index">
+                <div class="top-three-center" v-for="(item , index) in list" :key="index" @click="getChildOrder(undefined , item.LogisticsNo_Key)">
                     <image src="http://yj.kiy.cn/Content/Images/App/assets/icon/tabimg.png" class="content-left order"></image>
                     <div class="content-right">
                         <div class="content-right-col">
@@ -168,15 +168,19 @@ export default {
       }
       
     },
-    async getChildOrder (orderId) {
-      const RES = await API.YJ_ORDERLIST({'@LogisticsNO_PKey' : orderId})
-      const DATA = JSON.parse(RES.DATA)
-      const Status = await API.YJ_ORDERLISTSTATUS({'$oId': DATA[0].LogisticsNo_Key})
+    async getChildOrder (orderId , childOrderId) {
+      this.showload = true
+      if(orderId != undefined) {
+        const RES = await API.YJ_ORDERLIST({'@LogisticsNO_PKey' : orderId})
+        const DATA = JSON.parse(RES.DATA)
+        this.list = []
+        DATA.map(item => {
+          this.list.push(item)
+        })
+      }
+      var childId = childOrderId ? childOrderId : this.listItem.Id + '-001'
+      const Status = await API.YJ_ORDERLISTSTATUS({'$oId': childId})
       
-      this.list = []
-      DATA.map(item => {
-        this.list.push(item)
-      })
       this.testData = []
       var StatusArr = Status.map.dgData
       StatusArr.map((item , index) => {
@@ -191,6 +195,7 @@ export default {
         this.testData.push(data)
       })
       this.showload = false
+
     },
     refresh() {
       this.$router.refresh();
