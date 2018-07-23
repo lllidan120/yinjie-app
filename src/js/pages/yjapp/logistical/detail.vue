@@ -207,15 +207,6 @@ export default {
             this.$notice.loading.show();
             const status = await API.get_IsOrderRefunds({'orderId': this.listItem.CytMallId})
             this.$notice.loading.hide();
-            // let par = {
-            //   Id : this.listItem.CytMallId,
-            //   OrderDate : this.listItem.CreateDate,
-            //   Shuliang: this.listItem.Goods_Qty,
-            //   OrderAmount: this.listItem.OrderSumPrice,
-            //   RealName: this.listItem.ReceiveName,
-            //   OrderStatusStr: this.listItem.logState,
-            //   ReceivedAmount: this.listItem.OrderSumPrice - this.listItem.Price
-            // }
             if(status.Success) {
               var par = {
                   "orderId" : this.listItem.CytMallId,

@@ -13,7 +13,7 @@
             <div class="table-td table-head"><text class="table-text">{{UnPayCollectionMoneySum}}</text></div>
             
             
-            <!-- <div class="table-td table-head"><text class="table-text">{{sumMoney}}</text></div> -->
+            <div class="table-td table-head"><text class="table-text">{{sumMoney}}</text></div>
             <div class="table-td table-head"><text class="table-text">{{percentage}}</text></div>
         </div>
         <div class="table-cell">
@@ -23,7 +23,7 @@
             <div class="table-td table-head"><text class="table-text">未配送数</text></div>
             <div class="table-td table-head"><text class="table-text">已收款</text></div>
             <div class="table-td table-head"><text class="table-text">应收款</text></div>
-            <!-- <div class="table-td table-head"><text class="table-text">代收金额</text></div> -->
+            <div class="table-td table-head"><text class="table-text">订单总金额</text></div>
             <div class="table-td table-head"><text class="table-text">完成比率</text></div>
         </div>
         <!-- @loadmore="getData" -->
@@ -35,7 +35,7 @@
                 <div class="table-td" @click="toDetail(item , {'@nStatus': 50})"><text class="table-text select select-two">{{item.未配送数}}</text></div>
                 <div class="table-td"><text class="table-text ">{{item.已收款}}</text></div>
                 <div class="table-td"><text class="table-text">{{item.应收款}}</text></div>
-                <!-- <div class="table-td"><text class="table-text">{{item.代收金额}}</text></div> -->
+                <div class="table-td"><text class="table-text">{{item.订单总金额}}</text></div>
                 <div class="table-td"><text class="table-text">{{item.完成比率}}</text></div>
             </cell>
         </list>
@@ -143,7 +143,7 @@ export default {
             this.orderSumPriceSum += item.订单总数
             this.dispatched += item.已配送数
            this.dispatching += item.未配送数
-           this.sumMoney += item.代收金额
+           this.sumMoney += item.订单总金额
            this.percentage += item.完成比率
             newData.push(item)
           });
@@ -376,12 +376,12 @@ export default {
   margin-left: 10px;
 }
 .table {
-    width: 1400px;
+    width: 1600px;
     min-height:750px;
 }
 .table-cell {
     position:relative;
-    width: 1400px;
+    width: 1600px;
     flex-direction: row;
 }
 .table-td {
