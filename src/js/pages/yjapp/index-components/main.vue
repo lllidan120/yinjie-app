@@ -104,7 +104,6 @@
 						this.isScan = false
 						this.$notice.loading.show();
 						var res = await API.YJ_SCAN(par)
-						console.log(res)
 						this.$notice.loading.hide();
 						if(res.DATA) {
 							if(typeof res.DATA === 'string') {
@@ -162,10 +161,17 @@
 					this.deviceorientaion()
 				}, 3200);
 	    	},
-	    	async getWarhoursCode () {
-				var warhoursCode = API.get_warhoursCode(this)
-	    		if( warhoursCode == '') {
+	    	async getWarhoursCode (load) {
+				// var warhoursCode = API.get_warhoursCode(this)
+				// warhoursCode = ''
+	    		// if( warhoursCode == '') {
+					if(load) {
+						this.$notice.loading.show('正在加载仓库,稍后再试...');
+					}
 					const RES = await API.YJ_WARHOURSCODE({})
+					if(load) {
+						this.$notice.loading.hide();
+					}
 		    		if(RES.SUCCESS) {
 						var arr = []
 						JSON.parse(RES.DATA).map(item => {
@@ -174,11 +180,11 @@
 							arr.push(item)
 						})
 						this.warhours = arr
-		    			this.$storage.setSync('warhoursCode', arr)
+		    			// this.$storage.setSync('warhoursCode', arr)
 		    		}
-	    		} else {
-	    			this.warhours = warhoursCode
-	    		}
+	    		// } else {
+	    		// 	this.warhours = warhoursCode
+	    		// }
 	    	},
 	        wxcTabBarCurrentTabSelected (e) {
 	        	const index = e.page;
@@ -186,6 +192,11 @@
 	        
 	        
 	        selectWarhoursCode () {
+				var _this = this;
+				if(this.warhours.length == 0)  {
+					this.getWarhoursCode(true)
+					return
+				}
 				var warhours = this.warhours
 				var items = [];
 	        	if(items.length === 0){
@@ -199,7 +210,8 @@
 		          items
 		        }, event => {
 		          if (event.result === 'success') {
-		          	this.selectWarhours = warhours[event.data]
+					_this.index = event.data
+		          	_this.selectWarhours = warhours[event.data]
 		          }
 				})
 			},

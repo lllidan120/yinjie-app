@@ -84,7 +84,7 @@
                     <wxc-simple-flow :list="testData" ></wxc-simple-flow>
                 </div>
                 <div class="bottom-btn" v-if="true">
-                    <wxc-button text="发起售后"
+                    <wxc-button text="发起反馈"
                         type="red"
                         @wxcButtonClicked="wxcButtonClicked"></wxc-button>
                 </div>

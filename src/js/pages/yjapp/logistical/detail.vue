@@ -66,7 +66,7 @@
             </div>
         </div>
         <div class="bottom-btn" v-if="true">
-            <wxc-button text="发起售后"
+            <wxc-button text="发起反馈"
                 type="blue"
                 @wxcButtonClicked="wxcButtonClicked"></wxc-button>
         </div>
